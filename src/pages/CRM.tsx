@@ -857,10 +857,8 @@ const CRM = () => {
       toast({ title: "Aviso", description: "Configure o Google Client ID nas configurações primeiro.", variant: "destructive" });
       return;
     }
-    // Para o domínio oficial, usamos o callback2. Para qualquer outro (como lovable.app), usamos o callback original.
-    // No Lovable, usamos o domínio de preview. No domínio oficial, usamos o callback2.
-    const redirectPath = window.location.origin.includes('lovable.app') ? '/google-callback' : '/google-callback2';
-    const redirectUri = encodeURIComponent(window.location.origin + redirectPath);
+     // Usamos um callback único /google-callback. O usuário deve registrar este URL no Google Cloud Console.
+     const redirectUri = encodeURIComponent(window.location.origin + '/google-callback');
     
     // Escopos: incluímos o de email/profile para identificar a conta e o de contatos para sincronizar
     const scopes = [
@@ -5739,23 +5737,18 @@ const CRM = () => {
                             </p>
                           </div>
                           
-                          {!googleContactsEnabled ? (
-                            <div className="flex flex-col sm:flex-row gap-3">
-                              <Button 
-                                variant="secondary" 
-                                className="flex-1 h-11 rounded-xl font-bold border-primary/20"
-                                onClick={() => {
-                                  const redirectUri = encodeURIComponent(window.location.origin + '/google-callback');
-                                  const scope = encodeURIComponent('https://www.googleapis.com/auth/contacts');
-                                  const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${metaSettings.google_client_id}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}&access_type=offline&prompt=consent`;
-                                  window.location.href = url;
-                                }}
-                              >
-                                <Users className="w-4 h-4 mr-2" />
-                                Conectar Conta Google
-                              </Button>
-                            </div>
-                          ) : (
+                           {!googleContactsEnabled ? (
+                             <div className="flex flex-col sm:flex-row gap-3">
+                               <Button 
+                                 variant="secondary" 
+                                 className="flex-1 h-11 rounded-xl font-bold border-primary/20"
+                                 onClick={handleConnectGoogle}
+                               >
+                                 <Users className="w-4 h-4 mr-2" />
+                                 Conectar Conta Google
+                               </Button>
+                             </div>
+                           ) : (
                             <div className="flex flex-col sm:flex-row gap-3">
                               <Button 
                                 className="flex-1 font-bold h-11 bg-primary text-white hover:bg-primary/90 rounded-xl"
