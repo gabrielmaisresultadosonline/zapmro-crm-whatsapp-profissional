@@ -20,8 +20,8 @@ NC='\033[0m' # No Color
 # Variáveis
 APP_NAME="ia-mro"
 APP_DIR="/var/www/$APP_NAME"
-DOMAIN="maisresultadosonline.com.br"
-REPO_URL="https://github.com/gabrielmaisresultadosonline/instaboost-mro.git"
+DOMAIN="${1:-maisresultadosonline.com.br}"
+REPO_URL="https://github.com/gabrielmaisresultadosonline/zapmro-crm-whatsapp-profissional.git"
 
 echo -e "${YELLOW}Atualizando sistema...${NC}"
 sudo apt update && sudo apt upgrade -y
