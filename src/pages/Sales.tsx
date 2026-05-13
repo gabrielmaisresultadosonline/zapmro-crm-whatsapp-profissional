@@ -1,4 +1,90 @@
- import { Check, MessageCircle, ShieldCheck, Zap, BarChart3, Bot, Clock, Users, ArrowRight, Star } from "lucide-react";
+  import { Check, MessageCircle, ShieldCheck, Zap, BarChart3, Bot, Clock, Users, ArrowRight, Star, Layout, Smartphone } from "lucide-react";
+       {/* Message Types / Formatos de Mensagem */}
+       <section className="py-24 bg-white">
+         <div className="container mx-auto px-4">
+           <div className="text-center mb-16">
+             <Badge className="mb-4 bg-blue-100 text-blue-700 hover:bg-blue-100 border-none px-4 py-1">
+               ✨ Experiência Interativa
+             </Badge>
+             <h2 className="text-3xl md:text-5xl font-bold mb-4">Envie mensagens que convertem</h2>
+             <p className="text-slate-600 max-w-2xl mx-auto">
+               Utilize os formatos mais modernos e interativos do WhatsApp para engajar seus clientes de forma profissional.
+             </p>
+           </div>
+ 
+           <div className="grid md:grid-cols-3 gap-8">
+             {/* Templates com Botões */}
+             <div className="bg-slate-50 rounded-[2.5rem] p-8 border border-slate-100 relative overflow-hidden group">
+               <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500"></div>
+               <div className="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6">
+                 <Zap className="w-7 h-7 text-green-600" />
+               </div>
+               <h3 className="text-2xl font-bold mb-4">Templates com Botões</h3>
+               <p className="text-slate-600 mb-8">
+                 Envie mensagens pré-aprovadas pela Meta com botões de chamada para ação (CTA) ou respostas rápidas.
+               </p>
+               <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/50">
+                 <div className="bg-slate-50 h-3 w-3/4 rounded-full mb-2"></div>
+                 <div className="bg-slate-50 h-3 w-1/2 rounded-full mb-4"></div>
+                 <div className="flex gap-2">
+                   <div className="h-8 flex-1 bg-green-600 rounded-lg flex items-center justify-center text-[10px] text-white font-bold uppercase">Visitar Site</div>
+                   <div className="h-8 flex-1 bg-slate-100 rounded-lg flex items-center justify-center text-[10px] text-slate-400 font-bold uppercase">Ligar Agora</div>
+                 </div>
+               </div>
+             </div>
+ 
+             {/* Mensagens Interativas */}
+             <div className="bg-slate-50 rounded-[2.5rem] p-8 border border-slate-100 relative overflow-hidden group">
+               <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500"></div>
+               <div className="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6">
+                 <Layout className="w-7 h-7 text-blue-600" />
+               </div>
+               <h3 className="text-2xl font-bold mb-4">Listas e Respostas</h3>
+               <p className="text-slate-600 mb-8">
+                 Crie menus de opções e listas de seleção para facilitar a jornada de compra do seu cliente.
+               </p>
+               <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/50">
+                 <div className="flex items-center gap-3 mb-4">
+                   <div className="w-8 h-8 rounded-full bg-blue-100"></div>
+                   <div className="flex-1">
+                     <div className="bg-slate-50 h-2 w-1/2 rounded-full mb-1"></div>
+                     <div className="bg-slate-50 h-2 w-1/4 rounded-full"></div>
+                   </div>
+                 </div>
+                 <div className="space-y-2">
+                   <div className="h-8 w-full border border-blue-200 rounded-lg flex items-center px-3 text-[10px] text-blue-600 font-medium">Ver Cardápio</div>
+                   <div className="h-8 w-full border border-blue-200 rounded-lg flex items-center px-3 text-[10px] text-blue-600 font-medium">Falar com Consultor</div>
+                 </div>
+               </div>
+             </div>
+ 
+             {/* Carrossel de Mensagens */}
+             <div className="bg-slate-50 rounded-[2.5rem] p-8 border border-slate-100 relative overflow-hidden group">
+               <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500"></div>
+               <div className="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6">
+                 <Smartphone className="w-7 h-7 text-purple-600" />
+               </div>
+               <h3 className="text-2xl font-bold mb-4">Carrossel Completo</h3>
+               <p className="text-slate-600 mb-8">
+                 Apresente diversos produtos ou opções em um único slide, permitindo que o cliente deslize e escolha.
+               </p>
+               <div className="flex gap-2 overflow-hidden">
+                 <div className="bg-white rounded-xl p-3 shadow-sm border border-slate-200/50 min-w-[120px]">
+                   <div className="aspect-square bg-slate-100 rounded-lg mb-2"></div>
+                   <div className="h-2 w-3/4 bg-slate-50 rounded-full mb-1"></div>
+                   <div className="h-5 w-full bg-purple-600 rounded-md"></div>
+                 </div>
+                 <div className="bg-white rounded-xl p-3 shadow-sm border border-slate-200/50 min-w-[120px] opacity-40">
+                   <div className="aspect-square bg-slate-100 rounded-lg mb-2"></div>
+                   <div className="h-2 w-3/4 bg-slate-50 rounded-full mb-1"></div>
+                   <div className="h-5 w-full bg-purple-600 rounded-md"></div>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+       </section>
+ 
  import { Button } from "@/components/ui/button";
  import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
  import { Badge } from "@/components/ui/badge";
