@@ -1625,12 +1625,10 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
       })
     }
 
-    if (action === 'exchangeGoogleCode') {
-      const { code, redirectPath } = params;
-      const { google_client_id, google_client_secret } = settings;
-      const origin = req.headers.get('origin') || 'https://maisresultadosonline.com.br';
-      const redirectUri = `${origin}${redirectPath || (origin.includes('maisresultadosonline.com.br') ? '/google-callback2' : '/google-callback')}`;
-
+     if (action === 'exchangeGoogleCode') {
+       const { code, redirectUri } = params;
+       const { google_client_id, google_client_secret } = settings;
+ 
       const response = await fetch('https://oauth2.googleapis.com/token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -1653,18 +1651,19 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
       const userInfo = await userResponse.json();
       const email = userInfo.email;
 
-      // Store in crm_google_accounts
-      const { data: account, error: accError } = await supabase
-        .from('crm_google_accounts')
-        .upsert({
-          email,
-          access_token: tokens.access_token,
-          refresh_token: tokens.refresh_token,
-          expiry_date: Date.now() + (tokens.expires_in * 1000),
-          updated_at: new Date().toISOString()
-        }, { onConflict: 'email' })
-        .select()
-        .single();
+       // Store in crm_google_accounts
+       const { data: account, error: accError } = await supabase
+         .from('crm_google_accounts')
+         .upsert({
+           email,
+           access_token: tokens.access_token,
+           refresh_token: tokens.refresh_token,
+           expiry_date: Date.now() + (tokens.expires_in * 1000),
+           updated_at: new Date().toISOString(),
+           user_id: userId
+         }, { onConflict: 'user_id, email' })
+         .select()
+         .single();
 
       if (accError) throw accError;
 
@@ -1679,13 +1678,13 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
       
       console.log(`[SYNC] Invocando syncGoogleContacts. accountId: ${accountId || 'recente'}`);
       
-      if (accountId) {
-        const { data } = await supabase.from('crm_google_accounts').select('*').eq('id', accountId).single();
-        account = data;
-      } else {
-        const { data } = await supabase.from('crm_google_accounts').select('*').order('updated_at', { ascending: false }).limit(1).single();
-        account = data;
-      }
+       if (accountId) {
+         const { data } = await supabase.from('crm_google_accounts').select('*').eq('id', accountId).eq('user_id', userId).single();
+         account = data;
+       } else {
+         const { data } = await supabase.from('crm_google_accounts').select('*').eq('user_id', userId).order('updated_at', { ascending: false }).limit(1).single();
+         account = data;
+       }
 
       if (!account) {
         console.error('[SYNC] Nenhuma conta Google conectada encontrada.');
