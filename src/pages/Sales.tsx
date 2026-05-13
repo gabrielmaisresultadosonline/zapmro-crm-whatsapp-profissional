@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/Logo";
 import { Link } from "react-router-dom";
-import metaPartnerImg from "@/assets/sales-meta-partner.webp";
+ import metaPartnerImg from "@/assets/logo-meta-mro.png";
 import carouselExampleImg from "@/assets/sales-carousel-example.png";
 import buttonMessageImg from "@/assets/sales-button-message.png";
 import quickReplyImg from "@/assets/sales-quick-reply.png";
@@ -107,11 +107,20 @@ import metaGirlImg from "@/assets/mila-souza.png";
                   <div className="p-8 text-left w-full">
                     <div className="flex items-center gap-5">
                       <div className="relative shrink-0">
-                        <img 
-                          src={metaGirlImg} 
-                          alt="Especialista Meta" 
-                          className="w-20 h-20 rounded-2xl object-cover border-2 border-green-500 shadow-xl shadow-green-500/20" 
-                        />
+                        <div className="flex items-center gap-4 bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/20">
+                          <img 
+                             src={metaGirlImg} 
+                             alt="Especialista Meta" 
+                             className="w-16 h-16 rounded-xl object-cover border-2 border-green-500 shadow-lg" 
+                           />
+                          <div className="bg-white/90 p-2 rounded-lg">
+                            <img 
+                              src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" 
+                              alt="Meta Logo" 
+                              className="h-6 w-auto"
+                            />
+                          </div>
+                        </div>
                         <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-1 border-2 border-slate-900">
                           <Check className="w-3 h-3 text-white" />
                         </div>
