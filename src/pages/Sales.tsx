@@ -110,10 +110,13 @@
                <div className="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6">
                  <Zap className="w-7 h-7 text-green-600" />
                </div>
-               <h3 className="text-2xl font-bold mb-4">Templates com Botões</h3>
-               <p className="text-slate-600 mb-8">
-                 Envie mensagens pré-aprovadas pela Meta com botões de chamada para ação (CTA) ou respostas rápidas.
+               <h3 className="text-2xl font-bold mb-4">Muito mais Profissional: Mensagens com Botões</h3>
+               <p className="text-slate-600 mb-6">
+                 Esqueça o texto comum. Envie mensagens com botões interativos de CTA (Call-to-Action) que aumentam em até 3x a taxa de cliques.
                </p>
+               <div className="mb-6 rounded-2xl overflow-hidden border border-slate-200">
+                 <img src="/src/assets/whatsappapi-banner.png" alt="Exemplo de Botões" className="w-full h-auto" />
+               </div>
                <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/50">
                  <div className="bg-slate-50 h-3 w-3/4 rounded-full mb-2"></div>
                  <div className="bg-slate-50 h-3 w-1/2 rounded-full mb-4"></div>
@@ -155,10 +158,13 @@
                <div className="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6">
                  <Smartphone className="w-7 h-7 text-purple-600" />
                </div>
-               <h3 className="text-2xl font-bold mb-4">Carrossel Completo</h3>
-               <p className="text-slate-600 mb-8">
-                 Apresente diversos produtos ou opções em um único slide, permitindo que o cliente deslize e escolha.
+               <h3 className="text-2xl font-bold mb-4">Carrossel de Produtos</h3>
+               <p className="text-slate-600 mb-6">
+                 Apresente diversos produtos ou opções em um único slide, permitindo que o cliente deslize e escolha o que deseja.
                </p>
+               <div className="mb-6 rounded-2xl overflow-hidden border border-slate-200">
+                 <img src="/src/assets/whatsapp-direto-banner.png" alt="Exemplo Carrossel" className="w-full h-auto" />
+               </div>
                <div className="flex gap-2 overflow-hidden">
                  <div className="bg-white rounded-xl p-3 shadow-sm border border-slate-200/50 min-w-[120px]">
                    <div className="aspect-square bg-slate-100 rounded-lg mb-2"></div>
