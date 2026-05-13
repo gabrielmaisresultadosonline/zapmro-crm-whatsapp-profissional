@@ -289,7 +289,7 @@ import { Link } from "react-router-dom";
                   Passe uma imagem muito mais profissional. Esqueça o texto comum e use botões de ação imediata.
                 </p>
                 <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50">
-                  <img src="/src/assets/bonus-5mil.png" alt="Exemplo de Botões Profissionais" className="w-full h-auto hover:scale-105 transition-transform duration-700 object-cover" />
+                  <img src="/src/assets/creative-2.jpg" alt="Exemplo de Botões Profissionais" className="w-full h-auto hover:scale-105 transition-transform duration-700 object-cover" />
                 </div>
                 <div className="flex flex-col gap-2">
                   <div className="h-10 w-full bg-green-600 rounded-xl flex items-center justify-center text-xs text-white font-bold shadow-lg shadow-green-200">VISITAR SITE</div>
@@ -335,7 +335,7 @@ import { Link } from "react-router-dom";
                   A forma mais profissional de exibir seu catálogo. Permita que seus clientes deslizem entre suas melhores ofertas.
                 </p>
                 <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50">
-                  <img src="/src/assets/renda-extra-mro-banner.jpeg" alt="Exemplo Carrossel Profissional" className="w-full h-auto hover:scale-105 transition-transform duration-700 object-cover" />
+                  <img src="/src/assets/creative-3.jpg" alt="Exemplo Carrossel Profissional" className="w-full h-auto hover:scale-105 transition-transform duration-700 object-cover" />
                 </div>
                 <div className="flex gap-2 overflow-hidden justify-center">
                   <div className="w-2 h-2 rounded-full bg-purple-600"></div>
@@ -381,7 +381,7 @@ import { Link } from "react-router-dom";
               </div>
               <div className="lg:w-1/2 relative">
                 <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border border-slate-200 bg-slate-50">
-                  <img src="/src/assets/zero-anuncios-banner.png" alt="Área de Prompts I.A" className="w-full h-auto hover:scale-105 transition-transform duration-700" />
+                  <img src="/src/assets/creative-4.jpg" alt="Área de Prompts I.A" className="w-full h-auto hover:scale-105 transition-transform duration-700" />
                 </div>
                 <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-3xl shadow-xl border border-slate-100 hidden md:block max-w-[240px]">
                   <div className="flex items-center gap-3 mb-3">
