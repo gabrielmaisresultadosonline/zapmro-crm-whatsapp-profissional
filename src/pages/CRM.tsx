@@ -754,11 +754,31 @@ const CRM = () => {
     setFilteredContacts(filtered);
   }, [statusFilter, contacts, activeTab]);
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const { data: settingsData } = await supabase.from('crm_settings').select('*').maybeSingle();
-      if (settingsData) setMetaSettings(settingsData);
+   const fetchData = async () => {
+     setLoading(true);
+     try {
+       const { data: { user } } = await supabase.auth.getUser();
+       if (!user) return;
+ 
+       let { data: settingsData } = await supabase
+         .from('crm_settings')
+         .select('*')
+         .eq('user_id', user.id)
+         .maybeSingle();
+       
+       if (!settingsData) {
+         const { data: newSettings, error: createError } = await supabase
+           .from('crm_settings')
+           .insert({
+             user_id: user.id,
+             webhook_identifier: crypto.randomUUID()
+           })
+           .select()
+           .maybeSingle();
+         if (!createError && newSettings) settingsData = newSettings;
+       }
+ 
+       if (settingsData) setMetaSettings(settingsData);
 
       const { data: metricsData } = await supabase
         .from('crm_metrics')
@@ -800,26 +820,29 @@ const CRM = () => {
     }
   };
 
-  const handleSaveSettings = async () => {
-    setSaving(true);
-    try {
-      const { id, created_at, updated_at, webhook_verify_token, vps_status, ...rest } = metaSettings;
-      const { error } = await supabase.from('crm_settings').upsert({
-        ...rest,
-        google_auto_sync: metaSettings.google_auto_sync,
-        id: '00000000-0000-0000-0000-000000000001',
-        strategy_generation_prompt: 'Analise o histórico acima e gere uma análise detalhada. Destaque pontos positivos da conversa e sugira o que dizer daqui para frente para converter este cliente. Sugira também 2 perguntas que eliminem as principais dúvidas dele sob o cabeçalho \"### Perguntas para Eliminar Dúvidas\". As perguntas devem ser diretas para copiar e colar.',
-        updated_at: new Date().toISOString()
-      }, { onConflict: 'id' });
-      if (error) throw error;
-      toast({ title: "Configurações salvas!" });
-      fetchData();
-    } catch (error) {
-      toast({ title: "Erro ao salvar", variant: "destructive" });
-    } finally {
-      setSaving(false);
-    }
-  };
+   const handleSaveSettings = async () => {
+     setSaving(true);
+     try {
+       const { data: { user } } = await supabase.auth.getUser();
+       if (!user) return;
+ 
+       const { id, created_at, updated_at, webhook_verify_token, vps_status, user_id, ...rest } = metaSettings;
+       const { error } = await supabase.from('crm_settings').upsert({
+         ...rest,
+         user_id: user.id,
+         updated_at: new Date().toISOString()
+       }, { onConflict: 'user_id' });
+       
+       if (error) throw error;
+       toast({ title: "Configurações salvas!" });
+       fetchData();
+     } catch (error) {
+       console.error("Erro ao salvar:", error);
+       toast({ title: "Erro ao salvar", variant: "destructive" });
+     } finally {
+       setSaving(false);
+     }
+   };
 
   const handleConnectGoogle = () => {
     if (!metaSettings.google_client_id) {
