@@ -5634,10 +5634,49 @@ const CRM = () => {
                           <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Phone Number ID</Label>
                           <Input placeholder="Ex: 109..." className="bg-muted/30 border-none h-11 rounded-xl" value={metaSettings.meta_phone_number_id} onChange={e => setMetaSettings({...metaSettings, meta_phone_number_id: e.target.value})} />
                         </div>
-                        <div className="space-y-2">
-                          <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Business Account ID (WABA)</Label>
-                          <Input placeholder="Ex: 105..." className="bg-muted/30 border-none h-11 rounded-xl" value={metaSettings.meta_waba_id} onChange={e => setMetaSettings({...metaSettings, meta_waba_id: e.target.value})} />
-                        </div>
+                         <div className="space-y-2">
+                           <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Business Account ID (WABA)</Label>
+                           <Input placeholder="Ex: 105..." className="bg-muted/30 border-none h-11 rounded-xl" value={metaSettings.meta_waba_id} onChange={e => setMetaSettings({...metaSettings, meta_waba_id: e.target.value})} />
+                         </div>
+ 
+                         <div className="space-y-2 p-3 bg-primary/5 rounded-xl border border-primary/10">
+                           <Label className="text-xs font-bold uppercase tracking-wider text-primary flex items-center gap-2">
+                             <Webhook className="w-3 h-3" />
+                             Webhook URL
+                           </Label>
+                           <div className="flex gap-2">
+                             <Input 
+                               readOnly 
+                               value={`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/meta-whatsapp-crm?id=${metaSettings.webhook_identifier}`} 
+                               className="bg-background/50 border-none text-[10px] h-9" 
+                             />
+                             <Button 
+                               variant="outline" 
+                               size="sm" 
+                               className="h-9 px-2"
+                               onClick={() => {
+                                 const url = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/meta-whatsapp-crm?id=${metaSettings.webhook_identifier}`;
+                                 navigator.clipboard.writeText(url);
+                                 toast({ title: "Copiado!" });
+                               }}
+                             >
+                               <Copy className="w-4 h-4" />
+                             </Button>
+                           </div>
+                           <p className="text-[10px] text-muted-foreground">Configure esta URL no Painel da Meta para receber mensagens.</p>
+                         </div>
+ 
+                         <div className="flex items-center gap-2 pt-2">
+                           <div className={cn(
+                             "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest flex items-center gap-2",
+                             (metaSettings.meta_access_token && metaSettings.meta_phone_number_id && metaSettings.meta_waba_id)
+                               ? "bg-red-500 text-white animate-pulse" 
+                               : "bg-muted text-muted-foreground"
+                           )}>
+                             <div className={cn("w-2 h-2 rounded-full", (metaSettings.meta_access_token && metaSettings.meta_phone_number_id && metaSettings.meta_waba_id) ? "bg-white" : "bg-muted-foreground")} />
+                             {(metaSettings.meta_access_token && metaSettings.meta_phone_number_id && metaSettings.meta_waba_id) ? "ATIVADO LIGADO" : "AGUARDANDO CONFIGURAÇÃO"}
+                           </div>
+                         </div>
                       </CardContent>
                     </Card>
                     
