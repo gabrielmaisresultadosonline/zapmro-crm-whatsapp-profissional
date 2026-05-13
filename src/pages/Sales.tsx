@@ -513,7 +513,7 @@ const appDashboardImg = "https://images.unsplash.com/photo-1675271591211-126ad94
                       <Clock className="w-7 h-7 text-green-600" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-xlAgendamento Preciso</h4>
+                      <h4 className="font-bold text-xl">Agendamento Preciso</h4>
                       <p className="text-slate-500">Defina o dia e a hora exata para o envio.</p>
                     </div>
                   </div>
