@@ -68,9 +68,10 @@ import {
   Pencil,
   Camera,
   LayoutList,
-  MessageCircle,
-  RotateCw
-} from "lucide-react";
+   MessageCircle, 
+   RotateCw,
+   ShieldCheck
+ } from "lucide-react";
 import * as LucideIcons from 'lucide-react';
 const Instagram = (LucideIcons as any).Instagram || Camera;
 import TemplatePreview from "@/components/whatsapp/TemplatePreview";
@@ -2676,10 +2677,10 @@ const CRM = () => {
                   activeTab === 'google-synced' ? 'Sincronizados Google' :
                   activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
                  {userRole === 'super_admin' && (
-                   <Button 
-                     variant="outline" 
-                     size="xs" 
-                     className="ml-2 h-7 px-2 text-[10px] border-primary/30 bg-primary/10 text-primary hover:bg-primary/20"
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="ml-2 h-7 px-2 text-[10px] border-primary/30 bg-primary/10 text-primary hover:bg-primary/20"
                      onClick={() => navigate('/admincentral')}
                    >
                      <ShieldCheck className="w-3 h-3 mr-1" /> ADMIN CENTRAL
