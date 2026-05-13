@@ -10,6 +10,7 @@ import buttonMessageImg from "@/assets/sales-button-message.png";
 import quickReplyImg from "@/assets/sales-quick-reply.png";
 import appMenuImg from "@/assets/sales-app-menu.png";
 import appConversationsImg from "@/assets/sales-app-conversations.png";
+import metaGirlImg from "@/assets/mila-souza.png";
  
  const Sales = () => {
    const features = [
@@ -104,9 +105,16 @@ import appConversationsImg from "@/assets/sales-app-conversations.png";
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end">
                   <div className="p-8 text-left w-full">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center shadow-lg">
-                        <MessageCircle className="text-white w-6 h-6" />
+                    <div className="flex items-center gap-5">
+                      <div className="relative shrink-0">
+                        <img 
+                          src={metaGirlImg} 
+                          alt="Especialista Meta" 
+                          className="w-20 h-20 rounded-2xl object-cover border-2 border-green-500 shadow-xl shadow-green-500/20" 
+                        />
+                        <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-1 border-2 border-slate-900">
+                          <Check className="w-3 h-3 text-white" />
+                        </div>
                       </div>
                       <div>
                         <h3 className="text-white font-bold text-xl">Plataforma Oficial Meta</h3>
