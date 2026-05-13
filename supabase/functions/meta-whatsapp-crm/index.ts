@@ -1613,10 +1613,9 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
         throw new Error('Google Client ID não configurado nas configurações');
       }
 
-      const origin = req.headers.get('origin') || 'https://maisresultadosonline.com.br';
-      // Priorizar o redirectPath enviado pelo frontend, mas garantir que bata com o domínio
-      const redirectPath = params.redirectPath || (origin.includes('maisresultadosonline.com.br') ? '/google-callback2' : '/google-callback');
-      const redirectUri = `${origin}${redirectPath}`;
+       const origin = req.headers.get('origin') || 'https://maisresultadosonline.com.br';
+       // Usamos sempre /google-callback para consistência SaaS
+       const redirectUri = `${origin}/google-callback`;
       const scope = 'https://www.googleapis.com/auth/contacts.readonly';
       const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${google_client_id}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent(scope)}&access_type=offline&prompt=consent`;
 
