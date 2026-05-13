@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/Logo";
 import { Link } from "react-router-dom";
 import whatsappGirlBgImg from "@/assets/whatsapp-meta-hero.png";
-const metaGirlImg = "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=800";
 const metaBgImg = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=2000";
 const professionalButtonsImg = "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&q=80&w=800";
 const interactiveChatImg = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800";
@@ -117,16 +116,9 @@ const appDashboardImg = "https://images.unsplash.com/photo-1512428559087-560fa5c
                           </div>
                           
                           <div className="relative shrink-0 z-10">
-                           <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden border-2 border-blue-500 shadow-2xl bg-white flex items-center justify-center">
-                             <img 
-                               src={metaGirlImg} 
-                               alt="Especialista Meta" 
-                               className="w-full h-full object-cover" 
-                             />
-                           </div>
-                           <div className="absolute -bottom-2 -right-2 bg-blue-600 p-1.5 rounded-full border-2 border-slate-900 shadow-lg">
-                             <Check className="w-4 h-4 text-white" />
-                           </div>
+                            <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl border-2 border-blue-500 shadow-2xl bg-white flex items-center justify-center">
+                              <ShieldCheck className="w-12 h-12 text-blue-600" />
+                            </div>
                          </div>
                          
                           <div className="text-center md:text-left z-10">
