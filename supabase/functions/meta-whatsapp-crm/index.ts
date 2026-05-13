@@ -179,7 +179,7 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
     if (reply.includes('[[TRANSFER_TO_HUMAN]]') && history.split('\n').filter(line => line.startsWith('Assistente:')).length >= 2) {
       console.log(`[AI-AGENT] AI decided to transfer contact ${waId} to human.`);
       
-      const { data: flow } = await supabase.from('crm_flows').select('*').eq('id', contact.current_flow_id).single();
+             const { data: flow } = await supabase.from('crm_flows').select('*').eq('id', contact.current_flow_id).eq('user_id', contact.user_id).single();
       if (flow) {
         const currentNodeId = contact.current_node_id;
         const transferEdge = flow.edges?.find((e: any) => e.source === currentNodeId && e.sourceHandle === 'human_transfer');
