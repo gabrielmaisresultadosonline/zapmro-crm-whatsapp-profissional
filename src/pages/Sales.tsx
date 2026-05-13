@@ -343,12 +343,6 @@ const appDashboardImg = "https://images.unsplash.com/photo-1512428559087-560fa5c
             <div className="grid md:grid-cols-3 gap-8 mb-16">
               {/* Templates com Botões */}
               <div className="bg-white rounded-[2.5rem] p-8 border border-green-100 shadow-xl shadow-green-500/5 relative overflow-hidden group scale-105 z-10">
-                <div className="absolute top-0 right-0 bg-green-500 text-white text-[10px] font-bold px-4 py-1 rounded-bl-xl uppercase tracking-widest">
-                  Mais Profissional
-                </div>
-                <div className="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center mb-6">
-                  <Zap className="w-7 h-7 text-green-600" />
-                </div>
                 <h3 className="text-2xl font-bold mb-4">Templates com Botões</h3>
                 <p className="text-slate-600 mb-6">
                   Passe uma imagem muito mais profissional. Esqueça o texto comum e use botões de ação imediata.
@@ -357,12 +351,6 @@ const appDashboardImg = "https://images.unsplash.com/photo-1512428559087-560fa5c
 
                {/* Respostas Rápidas */}
                <div className="bg-white rounded-[2.5rem] p-8 border border-blue-100 shadow-xl shadow-blue-500/5 relative overflow-hidden group">
-                 <div className="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-4 py-1 rounded-bl-xl uppercase tracking-widest">
-                   Qualifica Leads
-                 </div>
-                 <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mb-6">
-                   <Layout className="w-7 h-7 text-blue-600" />
-                 </div>
                  <h3 className="text-2xl font-bold mb-4">Respostas Rápidas (Sim / Não)</h3>
                  <p className="text-slate-600 mb-6">
                    O cliente responde com 1 toque. A I.A já qualifica e direciona automaticamente para o próximo passo da venda.
@@ -371,12 +359,6 @@ const appDashboardImg = "https://images.unsplash.com/photo-1512428559087-560fa5c
 
               {/* Carrossel de Mensagens */}
               <div className="bg-white rounded-[2.5rem] p-8 border border-purple-100 shadow-xl shadow-purple-500/5 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 bg-purple-500 text-white text-[10px] font-bold px-4 py-1 rounded-bl-xl uppercase tracking-widest">
-                  Impacto Visual
-                </div>
-                <div className="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center mb-6">
-                  <Smartphone className="w-7 h-7 text-purple-600" />
-                </div>
                 <h3 className="text-2xl font-bold mb-4">Carrossel de Produtos</h3>
                 <p className="text-slate-600 mb-6">
                   A forma mais profissional de exibir seu catálogo. Permita que seus clientes deslizem entre suas melhores ofertas.
