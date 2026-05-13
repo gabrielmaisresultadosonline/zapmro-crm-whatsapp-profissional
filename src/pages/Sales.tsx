@@ -98,9 +98,9 @@ import appConversationsImg from "@/assets/sales-app-conversations.png";
               <div className="absolute -inset-1 bg-gradient-to-r from-green-600 to-blue-600 rounded-[2.5rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
               <div className="relative aspect-[16/9] md:aspect-[21/9] bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden">
                 <img 
-                  src="/src/assets/creative-1.webp" 
-                  alt="WhatsApp API Oficial" 
-                  className="w-full h-full object-cover transform transition duration-500 group-hover:scale-105"
+                  src={appConversationsImg} 
+                  alt="WhatsApp CRM em uso real" 
+                  className="w-full h-full object-contain bg-slate-900 transform transition duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end">
                   <div className="p-8 text-left w-full">
@@ -125,7 +125,7 @@ import appConversationsImg from "@/assets/sales-app-conversations.png";
           <div className="container mx-auto px-4">
             <div className="flex flex-col md:flex-row items-center justify-center gap-12 mb-16">
               <div className="flex flex-col items-center gap-4">
-                <img src="/src/assets/meta-logo.png" alt="Meta Business Partner" className="h-12 w-auto object-contain opacity-80" />
+                <img src={metaPartnerImg} alt="Meta Business Partner" className="h-16 w-auto object-contain" />
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Parceiro Oficial</p>
               </div>
               <div className="h-12 w-px bg-slate-200 hidden md:block"></div>
@@ -294,8 +294,8 @@ import appConversationsImg from "@/assets/sales-app-conversations.png";
                 <p className="text-slate-600 mb-6">
                   Passe uma imagem muito mais profissional. Esqueça o texto comum e use botões de ação imediata.
                 </p>
-                <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50">
-                  <img src="/src/assets/whatsappapi-banner.png" alt="Exemplo de Botões Profissionais" className="w-full h-auto hover:scale-105 transition-transform duration-700 object-cover" />
+                <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner bg-[#efeae2]">
+                  <img src={buttonMessageImg} alt="Mensagem com botão Acessar o site" className="w-full h-auto hover:scale-105 transition-transform duration-700 object-contain" />
                 </div>
                 <div className="flex flex-col gap-2">
                   <div className="h-10 w-full bg-green-600 rounded-xl flex items-center justify-center text-xs text-white font-bold shadow-lg shadow-green-200">VISITAR SITE</div>
