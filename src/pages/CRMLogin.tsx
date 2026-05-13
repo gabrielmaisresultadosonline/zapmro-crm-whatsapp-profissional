@@ -117,93 +117,94 @@ const CRMLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="glass-card glow-border p-8 max-w-md w-full animate-slide-up">
-        <div className="flex flex-col items-center mb-8">
-          <Logo size="md" />
-          <h1 className="text-2xl font-display font-bold mt-4">CRM Meta SaaS</h1>
-          <p className="text-muted-foreground text-sm">Gestão Multi-usuário</p>
-        </div>
+     <div className="min-h-screen bg-[#F0FDF4] flex items-center justify-center p-4">
+       <div className="bg-white rounded-3xl shadow-xl shadow-green-900/5 p-8 max-w-md w-full animate-slide-up border border-green-100">
+         <div className="flex flex-col items-center mb-8">
+           <div className="bg-green-50 p-4 rounded-2xl mb-4 border border-green-100">
+             <Logo size="md" />
+           </div>
+           <h1 className="text-3xl font-display font-black mt-2 text-[#166534] tracking-tight text-center">CRM Meta SaaS</h1>
+           <p className="text-green-600/70 font-medium text-sm text-center">Gestão Profissional de WhatsApp</p>
+         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {error && (
-            <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/30 flex items-center gap-2 text-destructive text-sm">
-              <AlertCircle className="w-4 h-4" />
-              {error}
-            </div>
-          )}
+         <form onSubmit={handleSubmit} className="space-y-5">
+           {error && (
+             <div className="p-4 rounded-xl bg-red-50 border border-red-100 flex items-center gap-2 text-red-600 text-sm font-medium">
+               <AlertCircle className="w-4 h-4 shrink-0" />
+               {error}
+             </div>
+           )}
 
           {isRegistering && (
             <>
               <div className="space-y-2">
-                <Label htmlFor="fullName" className="flex items-center gap-2">
-                  <User className="w-4 h-4" />
-                  Nome Completo
-                </Label>
-                <Input
-                  id="fullName"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Seu nome completo"
-                  className="bg-secondary/50"
-                  required={isRegistering}
-                />
+                 <Label htmlFor="fullName" className="flex items-center gap-2 text-green-800 font-semibold text-xs uppercase tracking-wider">
+                   <User className="w-3.5 h-3.5" />
+                   Nome Completo
+                 </Label>
+                 <Input
+                   id="fullName"
+                   value={fullName}
+                   onChange={(e) => setFullName(e.target.value)}
+                   placeholder="Seu nome completo"
+                   className="bg-green-50/50 border-green-100 focus:border-green-400 focus:ring-green-400 h-12 rounded-xl"
+                   required={isRegistering}
+                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="whatsapp" className="flex items-center gap-2">
-                  <Phone className="w-4 h-4" />
-                  WhatsApp
-                </Label>
-                <Input
-                  id="whatsapp"
-                  value={whatsapp}
-                  onChange={(e) => setWhatsapp(e.target.value)}
-                  placeholder="Ex: 5551999999999"
-                  className="bg-secondary/50"
-                  required={isRegistering}
-                />
+                 <Label htmlFor="whatsapp" className="flex items-center gap-2 text-green-800 font-semibold text-xs uppercase tracking-wider">
+                   <Phone className="w-3.5 h-3.5" />
+                   WhatsApp
+                 </Label>
+                 <Input
+                   id="whatsapp"
+                   value={whatsapp}
+                   onChange={(e) => setWhatsapp(e.target.value)}
+                   placeholder="Ex: 5551999999999"
+                   className="bg-green-50/50 border-green-100 focus:border-green-400 focus:ring-green-400 h-12 rounded-xl"
+                   required={isRegistering}
+                 />
               </div>
             </>
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="email" className="flex items-center gap-2">
-              <Mail className="w-4 h-4" />
-              Email
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Digite seu email"
-              className="bg-secondary/50"
-              required
-            />
+             <Label htmlFor="email" className="flex items-center gap-2 text-green-800 font-semibold text-xs uppercase tracking-wider">
+               <Mail className="w-3.5 h-3.5" />
+               Email
+             </Label>
+             <Input
+               id="email"
+               type="email"
+               value={email}
+               onChange={(e) => setEmail(e.target.value)}
+               placeholder="Digite seu email"
+               className="bg-green-50/50 border-green-100 focus:border-green-400 focus:ring-green-400 h-12 rounded-xl"
+               required
+             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password" className="flex items-center gap-2">
-              <Lock className="w-4 h-4" />
-              Senha
-            </Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Digite sua senha"
-              className="bg-secondary/50"
-              required
-            />
+             <Label htmlFor="password" className="flex items-center gap-2 text-green-800 font-semibold text-xs uppercase tracking-wider">
+               <Lock className="w-3.5 h-3.5" />
+               Senha
+             </Label>
+             <Input
+               id="password"
+               type="password"
+               value={password}
+               onChange={(e) => setPassword(e.target.value)}
+               placeholder="Digite sua senha"
+               className="bg-green-50/50 border-green-100 focus:border-green-400 focus:ring-green-400 h-12 rounded-xl"
+               required
+             />
           </div>
 
           <Button
             type="submit"
-            variant="gradient"
-            size="lg"
-            className="w-full cursor-pointer"
+             size="lg"
+             className="w-full cursor-pointer bg-[#22C55E] hover:bg-[#16A34A] text-white h-12 rounded-xl font-bold text-base shadow-lg shadow-green-200 transition-all active:scale-95"
             disabled={isLoading}
           >
             {isLoading ? 'Processando...' : isRegistering ? 'Criar Minha Conta' : 'Entrar no CRM'}
@@ -213,14 +214,14 @@ const CRMLogin = () => {
         <div className="mt-6 text-center">
           <button
             onClick={() => setIsRegistering(!isRegistering)}
-            className="text-sm text-primary hover:underline"
+             className="text-sm text-[#16A34A] hover:text-[#15803D] font-bold transition-colors"
           >
             {isRegistering ? 'Já tem uma conta? Entre aqui' : 'Não tem uma conta? Cadastre-se agora'}
           </button>
         </div>
 
         <p className="text-xs text-muted-foreground text-center mt-4">
-          Acesso seguro via Supabase Auth
+           Plataforma Segura & Criptografada
         </p>
       </div>
     </div>
