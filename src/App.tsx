@@ -1,117 +1,38 @@
-import { useEffect } from "react";
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { getAdminData } from "./lib/adminConfig";
-import { trackPageView } from "./lib/facebookTracking";
-import ToolSelector from "./pages/ToolSelector";
-import Index from "./pages/Index";
-import ZapMRO from "./pages/ZapMRO";
-import NotFound from "./pages/NotFound";
-import Admin from "./pages/Admin";
-import AdminLogin from "./pages/AdminLogin";
-import MROFerramenta from "./pages/MROFerramenta";
-import MROPagamento from "./pages/MROPagamento";
-import MROObrigado from "./pages/MROObrigado";
-import Vendas from "./pages/Vendas";
-import VendasCompleta from "./pages/VendasCompleta";
-import InstagramNovaAdmin from "./pages/InstagramNovaAdmin";
-import InstagramNovaAdminEmail from "./pages/InstagramNovaAdminEmail";
-import InstagramNovaEuro from "./pages/InstagramNovaEuro";
-import InstagramNovaEuroAdmin from "./pages/InstagramNovaEuroAdmin";
-import InstagramNovaPromo from "./pages/InstagramNovaPromo";
-import InstagramNovaPromoo2 from "./pages/InstagramNovaPromoo2";
-import DescontoAlunosRendaExtra from "./pages/DescontoAlunosRendaExtra";
-import DescontoAlunosRendaExtraAdmin from "./pages/DescontoAlunosRendaExtraAdmin";
-import DescontoAlunosRendaExtras from "./pages/DescontoAlunosRendaExtras";
-import DescontoAlunosRendaExtrasss from "./pages/DescontoAlunosRendaExtrasss";
-import DescontoAlunosRendaExtrass from "./pages/DescontoAlunosRendaExtrass";
-import InstagramPromoMila from "./pages/InstagramPromoMila";
-import AffiliatePromoPage from "./pages/AffiliatePromoPage";
-import AffiliateResumo from "./pages/AffiliateResumo";
-import Membro from "./pages/Membro";
-import Ligacao from "./pages/Ligacao";
-import Obrigado from "./pages/Obrigado";
-import ObrigadoZapmro from "./pages/ObrigadoZapmro";
-import ZapMROVendas from "./pages/ZapMROVendas";
-import ZapMROVendasProm from "./pages/ZapMROVendasProm";
-import ZapmroVendasAdmin from "./pages/ZapmroVendasAdmin";
-import Promo33 from "./pages/Promo33";
-import Promo33Dashboard from "./pages/Promo33Dashboard";
-import Promo33Obrigado from "./pages/Promo33Obrigado";
-import Promo33Admin from "./pages/Promo33Admin";
-import GestaoMensal from "./pages/GestaoMensal";
-import AdminUsuario from "./pages/AdminUsuario";
-import MelhorarPublico from "./pages/MelhorarPublico";
-import Pagamento from "./pages/Pagamento";
-import PagamentoObrigado from "./pages/PagamentoObrigado";
-import PagamentoAdmin from "./pages/PagamentoAdmin";
-import ComprouSeguidores from "./pages/ComprouSeguidores";
-import MetodoSeguidorMembro from "./pages/MetodoSeguidorMembro";
-import MetodoSeguidorAdmin from "./pages/MetodoSeguidorAdmin";
-import AreaDeMembros from "./pages/AreaDeMembros";
-import AdsNews from "./pages/AdsNews";
-import AdsNewsDash from "./pages/AdsNewsDash";
-import AdsNewsAdmin from "./pages/AdsNewsAdmin";
-import AdsNewsObrigado from "./pages/AdsNewsObrigado";
-import AdsNewsObrigadoSaldo from "./pages/AdsNewsObrigadoSaldo";
-import PoliticaCancelamento from "./pages/PoliticaCancelamento";
-import WhatsAppLanding from "./pages/WhatsAppLanding";
-import WhatsAppAdmin from "./pages/WhatsAppAdmin";
-import BemVindoMembroVip from "./pages/BemVindoMembroVip";
-import VendasCompletaPro from "./pages/VendasCompletaPro";
-import TesteGratis from "./pages/TesteGratis";
-import TesteGratisAdmin from "./pages/TesteGratisAdmin";
-import TesteGratisUsuario from "./pages/TesteGratisUsuario";
-import RendaExtra from "./pages/RendaExtra";
-import RendaExtra2 from "./pages/RendaExtra2";
-import RendaExtraAdmin from "./pages/RendaExtraAdmin";
-import RendaExt from "./pages/RendaExt";
-import RendaExtAdmin from "./pages/RendaExtAdmin";
-import RendaExtraOf from "./pages/RendaExtraOf";
-import CorretorMRO from "./pages/CorretorMRO";
-import CorretorMROAdmin from "./pages/CorretorMROAdmin";
-import CorretorMROObrigado from "./pages/CorretorMROObrigado";
-import RateLimitHard from "./pages/RateLimitHard";
-import InteligenciaFotos from "./pages/InteligenciaFotos";
-import InteligenciaFotosDashboard from "./pages/InteligenciaFotosDashboard";
-import InteligenciaFotosAdmin from "./pages/InteligenciaFotosAdmin";
-import InstagramNovaP from "./pages/InstagramNovaP";
-import Live from "./pages/Live";
-import LiveAdmin from "./pages/LiveAdmin";
-import LicencaAdmin from "./pages/LicencaAdmin";
-import PromptsMRO from "./pages/PromptsMRO";
-import PromptsMROAdmin from "./pages/PromptsMROAdmin";
-import PromptsMRODashboard from "./pages/PromptsMRODashboard";
-import PromptsIN from "./pages/PromptsIN";
-import PromptsINAdmin from "./pages/PromptsINAdmin";
-import PromptsINDashboard from "./pages/PromptsINDashboard";
-import PoliticaDePrivacidadeIG from "./pages/PoliticaDePrivacidadeIG";
-import MRODirectMais from "./pages/MRODirectMais";
-import IAVendeMais from "./pages/IAVendeMais";
-import IAVendeMaisAdmin from "./pages/IAVendeMaisAdmin";
-import RendaExtraLigacao from "./pages/RendaExtraLigacao";
-import RendaExtraLigacaoAdmin from "./pages/RendaExtraLigacaoAdmin";
-import Relatorios from "./pages/Relatorios";
-import EstruturaRendaExtra from "./pages/EstruturaRendaExtra";
-import WhatsAppDireto from "./pages/WhatsAppDireto";
-import ApiWhatsAppAccess from "./pages/ApiWhatsAppAccess";
-import RendaExtraAula from "./pages/RendaExtraAula";
-import RendaExtraAulaAdmin from "./pages/RendaExtraAulaAdmin";
-import Addmin from "./pages/Addmin";
-import RendaExtObrigado from "./pages/RendaExtObrigado";
+ import { Toaster } from "@/components/ui/toaster";
+ import { Toaster as Sonner } from "@/components/ui/sonner";
+ import { TooltipProvider } from "@/components/ui/tooltip";
+ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+ import { BrowserRouter, Routes, Route } from "react-router-dom";
+ import NotFound from "./pages/NotFound";
 import CRM from "./pages/CRM";
 import CRMLogin from "./pages/CRMLogin";
-import MROCriativo from "./pages/MROCriativo";
-import MROCriativoAdmin from "./pages/MROCriativoAdmin";
-import MROCriativoTerms from "./pages/MROCriativoTerms";
-import MROCriativoPrivacy from "./pages/MROCriativoPrivacy";
 import MROCriativoCallback from "./pages/MROCriativoCallback";
-import MROCriativoWebhook from "./pages/MROCriativoWebhook";
-import MROCriativoOAuth from "./pages/MROCriativoOAuth";
 import GoogleContactsCallback from "./pages/GoogleContactsCallback";
+ 
+ const queryClient = new QueryClient();
+ 
+ const App = () => (
+   <QueryClientProvider client={queryClient}>
+     <TooltipProvider>
+       <Toaster />
+       <Sonner />
+       <BrowserRouter>
+         <Routes>
+           <Route path="/" element={<CRM />} />
+           <Route path="/crm" element={<CRM />} />
+           <Route path="/crm/login" element={<CRMLogin />} />
+           <Route path="/google-callback" element={<GoogleContactsCallback />} />
+           <Route path="/google-callback2" element={<GoogleContactsCallback />} />
+           <Route path="/mrocriativo/callback.php" element={<MROCriativoCallback />} />
+           
+           <Route path="*" element={<NotFound />} />
+         </Routes>
+       </BrowserRouter>
+     </TooltipProvider>
+   </QueryClientProvider>
+ );
+ 
+ export default App;
 
 
 
