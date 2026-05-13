@@ -378,8 +378,8 @@ import appConversationsImg from "@/assets/sales-app-conversations.png";
                 </Link>
               </div>
               <div className="lg:w-1/2 relative">
-                <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border border-slate-200 bg-slate-50">
-                  <img src="/src/assets/creative-4.jpg" alt="Área de Prompts I.A" className="w-full h-auto hover:scale-105 transition-transform duration-700" />
+                <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border border-slate-200 bg-slate-900 max-w-sm mx-auto">
+                  <img src={appMenuImg} alt="Menu do app MRO no celular" className="w-full h-auto hover:scale-105 transition-transform duration-700" />
                 </div>
                 <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-3xl shadow-xl border border-slate-100 hidden md:block max-w-[240px]">
                   <div className="flex items-center gap-3 mb-3">
