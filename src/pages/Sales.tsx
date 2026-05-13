@@ -343,62 +343,26 @@ const appDashboardImg = "https://images.unsplash.com/photo-1512428559087-560fa5c
             <div className="grid md:grid-cols-3 gap-8 mb-16">
               {/* Templates com Botões */}
               <div className="bg-white rounded-[2.5rem] p-8 border border-green-100 shadow-xl shadow-green-500/5 relative overflow-hidden group scale-105 z-10">
-                <div className="absolute top-0 right-0 bg-green-500 text-white text-[10px] font-bold px-4 py-1 rounded-bl-xl uppercase tracking-widest">
-                  Mais Profissional
-                </div>
-                <div className="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center mb-6">
-                  <Zap className="w-7 h-7 text-green-600" />
-                </div>
                 <h3 className="text-2xl font-bold mb-4">Templates com Botões</h3>
                 <p className="text-slate-600 mb-6">
                   Passe uma imagem muito mais profissional. Esqueça o texto comum e use botões de ação imediata.
                 </p>
-                 <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50">
-                   <img src={professionalButtonsImg} alt="Interface profissional com botões" className="w-full h-48 object-cover hover:scale-105 transition-transform duration-700" />
-                 </div>
-                <div className="flex flex-col gap-2">
-                  <div className="h-10 w-full bg-green-600 rounded-xl flex items-center justify-center text-xs text-white font-bold shadow-lg shadow-green-200">VISITAR SITE</div>
-                  <div className="h-10 w-full border border-slate-200 rounded-xl flex items-center justify-center text-xs text-slate-400 font-bold">FALAR COM ATENDENTE</div>
-                </div>
               </div>
 
                {/* Respostas Rápidas */}
                <div className="bg-white rounded-[2.5rem] p-8 border border-blue-100 shadow-xl shadow-blue-500/5 relative overflow-hidden group">
-                 <div className="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-4 py-1 rounded-bl-xl uppercase tracking-widest">
-                   Qualifica Leads
-                 </div>
-                 <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mb-6">
-                   <Layout className="w-7 h-7 text-blue-600" />
-                 </div>
                  <h3 className="text-2xl font-bold mb-4">Respostas Rápidas (Sim / Não)</h3>
                  <p className="text-slate-600 mb-6">
                    O cliente responde com 1 toque. A I.A já qualifica e direciona automaticamente para o próximo passo da venda.
                  </p>
-                  <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50">
-                    <img src={interactiveChatImg} alt="Chat interativo qualificado" className="w-full h-48 object-cover hover:scale-105 transition-transform duration-700" />
-                  </div>
                </div>
 
               {/* Carrossel de Mensagens */}
               <div className="bg-white rounded-[2.5rem] p-8 border border-purple-100 shadow-xl shadow-purple-500/5 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 bg-purple-500 text-white text-[10px] font-bold px-4 py-1 rounded-bl-xl uppercase tracking-widest">
-                  Impacto Visual
-                </div>
-                <div className="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center mb-6">
-                  <Smartphone className="w-7 h-7 text-purple-600" />
-                </div>
                 <h3 className="text-2xl font-bold mb-4">Carrossel de Produtos</h3>
                 <p className="text-slate-600 mb-6">
                   A forma mais profissional de exibir seu catálogo. Permita que seus clientes deslizem entre suas melhores ofertas.
                 </p>
-                 <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50">
-                   <img src={productCarouselImg} alt="Carrossel de produtos profissional" className="w-full h-48 object-cover hover:scale-105 transition-transform duration-700" />
-                 </div>
-                <div className="flex gap-2 overflow-hidden justify-center">
-                  <div className="w-2 h-2 rounded-full bg-purple-600"></div>
-                  <div className="w-2 h-2 rounded-full bg-slate-200"></div>
-                  <div className="w-2 h-2 rounded-full bg-slate-200"></div>
-                </div>
               </div>
             </div>
           </div>
