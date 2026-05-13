@@ -4,6 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/Logo";
 import { Link } from "react-router-dom";
+import metaPartnerImg from "@/assets/sales-meta-partner.webp";
+import carouselExampleImg from "@/assets/sales-carousel-example.png";
+import buttonMessageImg from "@/assets/sales-button-message.png";
+import quickReplyImg from "@/assets/sales-quick-reply.png";
+import appMenuImg from "@/assets/sales-app-menu.png";
+import appConversationsImg from "@/assets/sales-app-conversations.png";
  
  const Sales = () => {
    const features = [
@@ -92,9 +98,9 @@ import { Link } from "react-router-dom";
               <div className="absolute -inset-1 bg-gradient-to-r from-green-600 to-blue-600 rounded-[2.5rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
               <div className="relative aspect-[16/9] md:aspect-[21/9] bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden">
                 <img 
-                  src="/src/assets/creative-1.webp" 
-                  alt="WhatsApp API Oficial" 
-                  className="w-full h-full object-cover transform transition duration-500 group-hover:scale-105"
+                  src={appConversationsImg} 
+                  alt="WhatsApp CRM em uso real" 
+                  className="w-full h-full object-contain bg-slate-900 transform transition duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end">
                   <div className="p-8 text-left w-full">
@@ -119,7 +125,7 @@ import { Link } from "react-router-dom";
           <div className="container mx-auto px-4">
             <div className="flex flex-col md:flex-row items-center justify-center gap-12 mb-16">
               <div className="flex flex-col items-center gap-4">
-                <img src="/src/assets/meta-logo.png" alt="Meta Business Partner" className="h-12 w-auto object-contain opacity-80" />
+                <img src={metaPartnerImg} alt="Meta Business Partner" className="h-16 w-auto object-contain" />
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Parceiro Oficial</p>
               </div>
               <div className="h-12 w-px bg-slate-200 hidden md:block"></div>
@@ -288,8 +294,8 @@ import { Link } from "react-router-dom";
                 <p className="text-slate-600 mb-6">
                   Passe uma imagem muito mais profissional. Esqueça o texto comum e use botões de ação imediata.
                 </p>
-                <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50">
-                  <img src="/src/assets/whatsappapi-banner.png" alt="Exemplo de Botões Profissionais" className="w-full h-auto hover:scale-105 transition-transform duration-700 object-cover" />
+                <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner bg-[#efeae2]">
+                  <img src={buttonMessageImg} alt="Mensagem com botão Acessar o site" className="w-full h-auto hover:scale-105 transition-transform duration-700 object-contain" />
                 </div>
                 <div className="flex flex-col gap-2">
                   <div className="h-10 w-full bg-green-600 rounded-xl flex items-center justify-center text-xs text-white font-bold shadow-lg shadow-green-200">VISITAR SITE</div>
@@ -297,30 +303,22 @@ import { Link } from "react-router-dom";
                 </div>
               </div>
 
-              {/* Mensagens Interativas */}
-              <div className="bg-slate-50 rounded-[2.5rem] p-8 border border-slate-100 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500"></div>
-                <div className="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6">
-                  <Layout className="w-7 h-7 text-blue-600" />
-                </div>
-                <h3 className="text-2xl font-bold mb-4">Listas e Respostas</h3>
-                <p className="text-slate-600 mb-8">
-                  Crie menus de opções e listas de seleção para facilitar a jornada de compra do seu cliente.
-                </p>
-                <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/50">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-8 h-8 rounded-full bg-blue-100"></div>
-                    <div className="flex-1">
-                      <div className="bg-slate-50 h-2 w-1/2 rounded-full mb-1"></div>
-                      <div className="bg-slate-50 h-2 w-1/4 rounded-full"></div>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="h-8 w-full border border-blue-200 rounded-lg flex items-center px-3 text-[10px] text-blue-600 font-medium">Ver Cardápio</div>
-                    <div className="h-8 w-full border border-blue-200 rounded-lg flex items-center px-3 text-[10px] text-blue-600 font-medium">Falar com Consultor</div>
-                  </div>
-                </div>
-              </div>
+               {/* Respostas Rápidas */}
+               <div className="bg-white rounded-[2.5rem] p-8 border border-blue-100 shadow-xl shadow-blue-500/5 relative overflow-hidden group">
+                 <div className="absolute top-0 right-0 bg-blue-500 text-white text-[10px] font-bold px-4 py-1 rounded-bl-xl uppercase tracking-widest">
+                   Qualifica Leads
+                 </div>
+                 <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mb-6">
+                   <Layout className="w-7 h-7 text-blue-600" />
+                 </div>
+                 <h3 className="text-2xl font-bold mb-4">Respostas Rápidas (Sim / Não)</h3>
+                 <p className="text-slate-600 mb-6">
+                   O cliente responde com 1 toque. A I.A já qualifica e direciona automaticamente para o próximo passo da venda.
+                 </p>
+                 <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner bg-[#efeae2]">
+                   <img src={quickReplyImg} alt="Mensagem com botões Sim e Não" className="w-full h-auto hover:scale-105 transition-transform duration-700 object-contain" />
+                 </div>
+               </div>
 
               {/* Carrossel de Mensagens */}
               <div className="bg-white rounded-[2.5rem] p-8 border border-purple-100 shadow-xl shadow-purple-500/5 relative overflow-hidden group">
@@ -334,8 +332,8 @@ import { Link } from "react-router-dom";
                 <p className="text-slate-600 mb-6">
                   A forma mais profissional de exibir seu catálogo. Permita que seus clientes deslizem entre suas melhores ofertas.
                 </p>
-                <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50">
-                  <img src="/src/assets/whatsapp-direto-banner.png" alt="Exemplo Carrossel Profissional" className="w-full h-auto hover:scale-105 transition-transform duration-700 object-cover" />
+                <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner bg-[#efeae2]">
+                  <img src={carouselExampleImg} alt="Carrossel de mensagens com botões" className="w-full h-auto hover:scale-105 transition-transform duration-700 object-contain" />
                 </div>
                 <div className="flex gap-2 overflow-hidden justify-center">
                   <div className="w-2 h-2 rounded-full bg-purple-600"></div>
@@ -380,8 +378,8 @@ import { Link } from "react-router-dom";
                 </Link>
               </div>
               <div className="lg:w-1/2 relative">
-                <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border border-slate-200 bg-slate-50">
-                  <img src="/src/assets/creative-4.jpg" alt="Área de Prompts I.A" className="w-full h-auto hover:scale-105 transition-transform duration-700" />
+                <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border border-slate-200 bg-slate-900 max-w-sm mx-auto">
+                  <img src={appMenuImg} alt="Menu do app MRO no celular" className="w-full h-auto hover:scale-105 transition-transform duration-700" />
                 </div>
                 <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-3xl shadow-xl border border-slate-100 hidden md:block max-w-[240px]">
                   <div className="flex items-center gap-3 mb-3">
