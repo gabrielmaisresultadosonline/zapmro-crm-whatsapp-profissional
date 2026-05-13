@@ -152,21 +152,52 @@ import metaGirlImg from "@/assets/mila-souza.png";
          </div>
        </section>
  
-        {/* Meta Integration & Brands */}
-        <section className="py-16 bg-slate-50 border-y border-slate-100 overflow-hidden">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col md:flex-row items-center justify-center gap-12 mb-16">
-              <div className="flex flex-col items-center gap-4">
-                <img src={metaPartnerImg} alt="Meta Business Partner" className="h-16 w-auto object-contain" />
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Parceiro Oficial</p>
-              </div>
-              <div className="h-12 w-px bg-slate-200 hidden md:block"></div>
-              <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale">
-                {brands.map(brand => (
-                  <span key={brand} className="text-2xl font-black text-slate-800 tracking-tighter">{brand}</span>
-                ))}
-              </div>
-            </div>
+         {/* Meta Integration & Brands */}
+         <section className="py-20 bg-white border-y border-slate-100 overflow-hidden relative">
+           <div className="container mx-auto px-4">
+             <div className="flex flex-col lg:flex-row items-center justify-between gap-12 mb-16">
+               <div className="flex flex-col md:flex-row items-center gap-8 bg-slate-50 p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                 <div className="flex items-center gap-6">
+                   <img 
+                     src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" 
+                     alt="Meta" 
+                     className="h-10 w-auto" 
+                   />
+                   <div className="w-px h-8 bg-slate-300"></div>
+                   <img 
+                     src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png" 
+                     alt="Facebook" 
+                     className="h-10 w-auto" 
+                   />
+                 </div>
+                 <div className="hidden md:block w-px h-12 bg-slate-200"></div>
+                 <div className="flex items-center gap-4">
+                   <div className="relative">
+                     <img 
+                       src={metaGirlImg} 
+                       alt="Especialista" 
+                       className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-md"
+                     />
+                     <div className="absolute -bottom-1 -right-1 bg-green-500 rounded-full p-0.5 border-2 border-white">
+                       <Check className="w-2.5 h-2.5 text-white" />
+                     </div>
+                   </div>
+                   <div>
+                     <p className="text-xs font-bold text-slate-900">Mila Souza</p>
+                     <p className="text-[10px] text-slate-500 font-medium">Especialista em API Oficial</p>
+                   </div>
+                 </div>
+               </div>
+ 
+               <div className="flex flex-col items-center lg:items-end gap-4">
+                 <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Empresas que confiam em nossa tecnologia</p>
+                 <div className="flex flex-wrap justify-center lg:justify-end items-center gap-8 md:gap-12 opacity-40 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-700">
+                   {brands.map(brand => (
+                     <span key={brand} className="text-xl md:text-2xl font-black text-slate-800 tracking-tighter">{brand}</span>
+                   ))}
+                 </div>
+               </div>
+             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
