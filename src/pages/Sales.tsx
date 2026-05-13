@@ -417,8 +417,145 @@ const appDashboardImg = "https://images.unsplash.com/photo-1675271591211-126ad94
             </div>
           </div>
         </section>
- 
-       {/* Pricing */}
+
+        {/* CRM Kanban & Mass Messaging Sections */}
+        <section className="py-24 bg-slate-50 overflow-hidden">
+          <div className="container mx-auto px-4">
+            {/* Kanban CRM */}
+            <div className="flex flex-col lg:flex-row items-center gap-16 mb-32">
+              <div className="lg:w-1/2 order-2 lg:order-1">
+                <div className="relative">
+                  <div className="absolute -inset-4 bg-green-500/10 blur-3xl rounded-full"></div>
+                  <div className="relative bg-white p-4 rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden">
+                    <div className="grid grid-cols-3 gap-4 h-[300px]">
+                      <div className="bg-slate-50 rounded-xl p-3 border-t-4 border-blue-500">
+                        <div className="text-[10px] font-bold text-slate-400 uppercase mb-3">Leads</div>
+                        <div className="space-y-2">
+                          <div className="h-12 bg-white rounded-lg shadow-sm border border-slate-100 p-2">
+                            <div className="w-full h-1.5 bg-slate-100 rounded-full mb-2"></div>
+                            <div className="w-1/2 h-1 bg-slate-50 rounded-full"></div>
+                          </div>
+                          <div className="h-12 bg-white rounded-lg shadow-sm border border-slate-100 p-2">
+                            <div className="w-full h-1.5 bg-slate-100 rounded-full mb-2"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-slate-50 rounded-xl p-3 border-t-4 border-yellow-500">
+                        <div className="text-[10px] font-bold text-slate-400 uppercase mb-3">Em Negociação</div>
+                        <div className="space-y-2">
+                          <div className="h-12 bg-white rounded-lg shadow-sm border border-slate-100 p-2">
+                            <div className="w-full h-1.5 bg-slate-100 rounded-full mb-2"></div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="bg-slate-50 rounded-xl p-3 border-t-4 border-green-500">
+                        <div className="text-[10px] font-bold text-slate-400 uppercase mb-3">Fechado</div>
+                        <div className="space-y-2">
+                          <div className="h-12 bg-white rounded-lg shadow-sm border border-slate-100 p-2">
+                            <div className="w-full h-1.5 bg-slate-100 rounded-full mb-2"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="absolute -bottom-8 -right-8 bg-green-600 p-6 rounded-3xl shadow-xl border-4 border-white hidden md:block">
+                    <Columns className="w-8 h-8 text-white" />
+                  </div>
+                </div>
+              </div>
+              <div className="lg:w-1/2 order-1 lg:order-2">
+                <Badge className="mb-4 bg-green-100 text-green-700 hover:bg-green-100 border-none px-4 py-1">
+                  📈 Gestão Comercial
+                </Badge>
+                <h2 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
+                  Organize suas vendas com um <span className="text-green-600">CRM Kanban</span> completo
+                </h2>
+                <p className="text-slate-600 text-lg mb-8 leading-relaxed">
+                  Transforme conversas em vendas com nossa visualização em colunas. Arraste e solte seus contatos, organize por etapas de fechamento e tenha o controle total do seu funil comercial. Nunca mais esqueça de um cliente no meio do processo.
+                </p>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {["Arrastar e Soltar", "Tags Personalizadas", "Funil de Vendas", "Histórico de Conversas"].map(item => (
+                    <li key={item} className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center shrink-0">
+                        <Check className="w-4 h-4 text-green-600" />
+                      </div>
+                      <span className="font-semibold text-slate-700">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* Mass Messaging & Scheduling */}
+            <div className="flex flex-col lg:flex-row items-center gap-16">
+              <div className="lg:w-1/2">
+                <Badge className="mb-4 bg-blue-100 text-blue-700 hover:bg-blue-100 border-none px-4 py-1">
+                  🚀 Escala Máxima
+                </Badge>
+                <h2 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
+                  Disparos em Massa e <span className="text-blue-600">Agendamento Inteligente</span>
+                </h2>
+                <p className="text-slate-600 text-lg mb-8 leading-relaxed">
+                  Alcance mais de <span className="font-bold text-slate-900">1.000 pessoas por dia</span> com segurança total e sem riscos de bloqueio através da API Oficial. Agende mensagens para datas específicas e automatize seu pós-venda para converter mais.
+                </p>
+                <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-xl mb-8">
+                  <div className="flex items-center gap-6 mb-6">
+                    <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center shrink-0">
+                      <Send className="w-7 h-7 text-blue-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-xl">+1.000 Disparos/Dia</h4>
+                      <p className="text-slate-500">Sem limites e com entrega garantida.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-6">
+                    <div className="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center shrink-0">
+                      <Clock className="w-7 h-7 text-green-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-xlAgendamento Preciso</h4>
+                      <p className="text-slate-500">Defina o dia e a hora exata para o envio.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="lg:w-1/2">
+                <div className="relative">
+                  <div className="absolute -inset-4 bg-blue-500/10 blur-3xl rounded-full"></div>
+                  <div className="relative bg-slate-900 rounded-[2.5rem] p-8 shadow-2xl overflow-hidden border border-white/10">
+                    <div className="flex items-center justify-between mb-8 border-b border-white/10 pb-6">
+                      <div className="text-white font-bold">Relatório de Envio</div>
+                      <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Processando</Badge>
+                    </div>
+                    <div className="space-y-6">
+                      <div>
+                        <div className="flex justify-between text-xs text-slate-400 mb-2">
+                          <span>Progresso do Disparo</span>
+                          <span>842 / 1000</span>
+                        </div>
+                        <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
+                          <div className="w-[84%] h-full bg-blue-500"></div>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
+                          <div className="text-[10px] text-slate-400 uppercase mb-1">Enviadas</div>
+                          <div className="text-2xl font-bold text-white">842</div>
+                        </div>
+                        <div className="bg-white/5 p-4 rounded-2xl border border-white/5">
+                          <div className="text-[10px] text-slate-400 uppercase mb-1">Abertas</div>
+                          <div className="text-2xl font-bold text-green-500">712</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Pricing */}
        <section id="precos" className="py-24 bg-slate-50">
          <div className="container mx-auto px-4">
            <div className="text-center mb-16">
