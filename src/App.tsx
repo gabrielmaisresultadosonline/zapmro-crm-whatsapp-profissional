@@ -17,14 +17,14 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<CRM />} />
+          <Route path="/" element={<Sales />} />
           <Route path="/crm" element={<CRM />} />
            <Route path="/crm/login" element={<CRMLogin />} />
            <Route path="/vendas" element={<Sales />} />
            <Route path="/google-callback" element={<GoogleContactsCallback />} />
            <Route path="/google-callback2" element={<GoogleContactsCallback />} />
           
-           <Route path="*" element={<CRM />} />
+           <Route path="*" element={<Sales />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
