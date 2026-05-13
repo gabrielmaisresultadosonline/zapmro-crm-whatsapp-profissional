@@ -6,7 +6,7 @@ Conecte via SSH na sua VPS e execute:
 
 ```bash
 # 1. Baixe e execute o script de instalação
-curl -fsSL https://raw.githubusercontent.com/gabrielmaisresultadosonline/zapmro-crm-whatsapp-profissional/main/deploy/install.sh | bash -s seu-dominio.com
+curl -fsSL https://raw.githubusercontent.com/gabrielmaisresultadosonline/zapmro-crm-whatsapp-profissional/main/deploy/install.sh | bash -s zapmro.com.br
 ```
 
 ## 📋 Instalação Manual Passo a Passo
@@ -60,7 +60,7 @@ Cole esta configuração:
 ```nginx
 server {
     listen 80;
-    server_name seu-dominio.com;
+    server_name zapmro.com.br;
     root /var/www/ia-mro/dist;
     index index.html;
 
@@ -85,7 +85,7 @@ sudo systemctl restart nginx
 ### 8. SSL Gratuito (Let's Encrypt)
 
 ```bash
-sudo certbot --nginx -d seu-dominio.com
+sudo certbot --nginx -d zapmro.com.br
 ```
 
 ## 🔄 Atualizar Aplicação

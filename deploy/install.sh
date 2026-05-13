@@ -4,7 +4,7 @@
 # Script de Instalação Automática - I.A MRO
 # Para Ubuntu LTS (VPS Hostinger)
 # Repositório: https://github.com/gabrielmaisresultadosonline/instaboost-mro.git
-# Domínio: maisresultadosonline.com.br
+# Domínio: zapmro.com.br
 # =============================================================
 
 set -e
@@ -20,7 +20,7 @@ NC='\033[0m' # No Color
 # Variáveis
 APP_NAME="ia-mro"
 APP_DIR="/var/www/$APP_NAME"
-DOMAIN="${1:-maisresultadosonline.com.br}"
+DOMAIN="${1:-zapmro.com.br}"
 REPO_URL="https://github.com/gabrielmaisresultadosonline/zapmro-crm-whatsapp-profissional.git"
 
 echo -e "${YELLOW}Atualizando sistema...${NC}"
