@@ -120,7 +120,7 @@ const CRMLogin = () => {
      <div className="min-h-screen bg-[#F0FDF4] flex items-center justify-center p-4">
        <div className="bg-white rounded-3xl shadow-xl shadow-green-900/5 p-8 max-w-md w-full animate-slide-up border border-green-100">
          <div className="flex flex-col items-center mb-8">
-           <div className="bg-green-50 p-4 rounded-2xl mb-4 border border-green-100">
+           <div className="bg-[#050508] p-5 rounded-3xl mb-4 border border-white/10 shadow-2xl">
              <Logo size="md" />
            </div>
            <h1 className="text-3xl font-display font-black mt-2 text-[#166534] tracking-tight text-center">CRM Meta SaaS</h1>
