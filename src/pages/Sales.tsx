@@ -5,8 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/Logo";
 import { Link } from "react-router-dom";
 const metaGirlImg = "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=800";
-const metaBgImg = "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=2000";
-const whatsappGirlBgImg = "https://images.unsplash.com/photo-1581291417004-6e7398463c68?auto=format&fit=crop&q=80&w=2000";
+const metaBgImg = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=2000";
+const whatsappGirlBgImg = "https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&q=80&w=2000";
 const professionalButtonsImg = "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&q=80&w=800";
 const interactiveChatImg = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800";
 const productCarouselImg = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800";
@@ -98,11 +98,11 @@ const appDashboardImg = "https://images.unsplash.com/photo-1512428559087-560fa5c
             <div className="mt-16 relative max-w-5xl mx-auto group">
               <div className="absolute -inset-1 bg-gradient-to-r from-green-600 to-blue-600 rounded-[2.5rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
                <div className="relative aspect-[16/9] md:aspect-[21/9] bg-slate-900 rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden">
-                 <img 
-                   src={whatsappGirlBgImg} 
-                   alt="Mulher profissional usando WhatsApp" 
-                   className="w-full h-full object-cover opacity-60 transform transition duration-500 group-hover:scale-105"
-                 />
+                  <img
+                    src={whatsappGirlBgImg}
+                    alt="WhatsApp CRM em uso real"
+                    className="w-full h-full object-contain bg-slate-900 transform transition duration-500 group-hover:scale-105"
+                  />
                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent flex items-end">
                   <div className="p-8 text-left w-full">
                     <div className="flex items-center gap-5">
