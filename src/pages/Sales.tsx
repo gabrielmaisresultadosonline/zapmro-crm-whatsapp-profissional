@@ -106,29 +106,44 @@ import metaGirlImg from "@/assets/mila-souza.png";
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end">
                   <div className="p-8 text-left w-full">
                     <div className="flex items-center gap-5">
-                      <div className="relative shrink-0">
-                        <div className="flex items-center gap-4 bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/20">
-                          <img 
+                       <div className="flex flex-col md:flex-row items-center gap-6 bg-white/10 backdrop-blur-xl p-6 rounded-[2rem] border border-white/20 shadow-2xl">
+                         <div className="relative shrink-0">
+                           <img 
                              src={metaGirlImg} 
                              alt="Especialista Meta" 
-                             className="w-16 h-16 rounded-xl object-cover border-2 border-green-500 shadow-lg" 
+                             className="w-20 h-20 md:w-24 md:h-24 rounded-2xl object-cover border-2 border-green-400 shadow-2xl" 
                            />
-                          <div className="bg-white/90 p-2 rounded-lg">
-                            <img 
-                              src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" 
-                              alt="Meta Logo" 
-                              className="h-6 w-auto"
-                            />
-                          </div>
-                        </div>
-                        <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-1 border-2 border-slate-900">
-                          <Check className="w-3 h-3 text-white" />
-                        </div>
-                      </div>
-                      <div>
-                        <h3 className="text-white font-bold text-xl">Plataforma Oficial Meta</h3>
-                        <p className="text-green-400 text-sm font-medium">Conexão segura e sem riscos de bloqueio</p>
-                      </div>
+                           <div className="absolute -bottom-2 -right-2 bg-green-500 rounded-full p-1.5 border-4 border-slate-900">
+                             <Check className="w-4 h-4 text-white" />
+                           </div>
+                         </div>
+                         
+                         <div className="text-center md:text-left">
+                           <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
+                             <div className="bg-white px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-3">
+                               <img 
+                                 src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" 
+                                 alt="Meta" 
+                                 className="h-4 w-auto"
+                               />
+                               <div className="w-px h-3 bg-slate-200"></div>
+                               <img 
+                                 src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png" 
+                                 alt="Facebook" 
+                                 className="h-4 w-auto"
+                               />
+                             </div>
+                             <Badge className="bg-green-500 hover:bg-green-500 text-white border-none text-[10px] font-bold uppercase tracking-wider">
+                               Oficial
+                             </Badge>
+                           </div>
+                           <h3 className="text-white font-black text-2xl md:text-3xl tracking-tight">Plataforma Oficial Meta</h3>
+                           <p className="text-green-400 font-semibold flex items-center justify-center md:justify-start gap-2">
+                             <ShieldCheck className="w-5 h-5" />
+                             Segurança e estabilidade garantida pela Meta
+                           </p>
+                         </div>
+                       </div>
                     </div>
                   </div>
                 </div>
@@ -137,21 +152,52 @@ import metaGirlImg from "@/assets/mila-souza.png";
          </div>
        </section>
  
-        {/* Meta Integration & Brands */}
-        <section className="py-16 bg-slate-50 border-y border-slate-100 overflow-hidden">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col md:flex-row items-center justify-center gap-12 mb-16">
-              <div className="flex flex-col items-center gap-4">
-                <img src={metaPartnerImg} alt="Meta Business Partner" className="h-16 w-auto object-contain" />
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Parceiro Oficial</p>
-              </div>
-              <div className="h-12 w-px bg-slate-200 hidden md:block"></div>
-              <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale">
-                {brands.map(brand => (
-                  <span key={brand} className="text-2xl font-black text-slate-800 tracking-tighter">{brand}</span>
-                ))}
-              </div>
-            </div>
+         {/* Meta Integration & Brands */}
+         <section className="py-20 bg-white border-y border-slate-100 overflow-hidden relative">
+           <div className="container mx-auto px-4">
+             <div className="flex flex-col lg:flex-row items-center justify-between gap-12 mb-16">
+               <div className="flex flex-col md:flex-row items-center gap-8 bg-slate-50 p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                 <div className="flex items-center gap-6">
+                   <img 
+                     src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" 
+                     alt="Meta" 
+                     className="h-10 w-auto" 
+                   />
+                   <div className="w-px h-8 bg-slate-300"></div>
+                   <img 
+                     src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png" 
+                     alt="Facebook" 
+                     className="h-10 w-auto" 
+                   />
+                 </div>
+                 <div className="hidden md:block w-px h-12 bg-slate-200"></div>
+                 <div className="flex items-center gap-4">
+                   <div className="relative">
+                     <img 
+                       src={metaGirlImg} 
+                       alt="Especialista" 
+                       className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-md"
+                     />
+                     <div className="absolute -bottom-1 -right-1 bg-green-500 rounded-full p-0.5 border-2 border-white">
+                       <Check className="w-2.5 h-2.5 text-white" />
+                     </div>
+                   </div>
+                   <div>
+                     <p className="text-xs font-bold text-slate-900">Mila Souza</p>
+                     <p className="text-[10px] text-slate-500 font-medium">Especialista em API Oficial</p>
+                   </div>
+                 </div>
+               </div>
+ 
+               <div className="flex flex-col items-center lg:items-end gap-4">
+                 <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Empresas que confiam em nossa tecnologia</p>
+                 <div className="flex flex-wrap justify-center lg:justify-end items-center gap-8 md:gap-12 opacity-40 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-700">
+                   {brands.map(brand => (
+                     <span key={brand} className="text-xl md:text-2xl font-black text-slate-800 tracking-tighter">{brand}</span>
+                   ))}
+                 </div>
+               </div>
+             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
