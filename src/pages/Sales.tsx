@@ -6,7 +6,7 @@ import { Logo } from "@/components/Logo";
 import { Link } from "react-router-dom";
 const metaGirlImg = "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=800";
 const metaBgImg = "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=2000";
-const whatsappGirlBgImg = "https://images.unsplash.com/photo-1573166364524-d9dbfd8bbf83?auto=format&fit=crop&q=80&w=2000";
+const whatsappGirlBgImg = "https://images.unsplash.com/photo-1581291417004-6e7398463c68?auto=format&fit=crop&q=80&w=2000";
 const professionalButtonsImg = "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&q=80&w=800";
 const interactiveChatImg = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800";
 const productCarouselImg = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800";
