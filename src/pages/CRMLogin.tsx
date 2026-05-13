@@ -154,7 +154,7 @@ const CRMLogin = () => {
                    value={fullName}
                    onChange={(e) => setFullName(e.target.value)}
                    placeholder="Seu nome completo"
-                   className="bg-green-50/50 border-green-100 focus:border-green-400 focus:ring-green-400 h-12 rounded-xl"
+                    className="bg-green-50/50 border-green-100 focus:border-green-400 focus:ring-green-400 h-12 rounded-xl text-black"
                    required={isRegistering}
                  />
               </div>
@@ -169,7 +169,7 @@ const CRMLogin = () => {
                    value={whatsapp}
                    onChange={(e) => setWhatsapp(e.target.value)}
                    placeholder="Ex: 5551999999999"
-                   className="bg-green-50/50 border-green-100 focus:border-green-400 focus:ring-green-400 h-12 rounded-xl"
+                    className="bg-green-50/50 border-green-100 focus:border-green-400 focus:ring-green-400 h-12 rounded-xl text-black"
                    required={isRegistering}
                  />
               </div>
@@ -187,7 +187,7 @@ const CRMLogin = () => {
                value={email}
                onChange={(e) => setEmail(e.target.value)}
                placeholder="Digite seu email"
-               className="bg-green-50/50 border-green-100 focus:border-green-400 focus:ring-green-400 h-12 rounded-xl"
+                className="bg-green-50/50 border-green-100 focus:border-green-400 focus:ring-green-400 h-12 rounded-xl text-black"
                required
              />
           </div>
@@ -203,7 +203,7 @@ const CRMLogin = () => {
                value={password}
                onChange={(e) => setPassword(e.target.value)}
                placeholder="Digite sua senha"
-               className="bg-green-50/50 border-green-100 focus:border-green-400 focus:ring-green-400 h-12 rounded-xl"
+                className="bg-green-50/50 border-green-100 focus:border-green-400 focus:ring-green-400 h-12 rounded-xl text-black"
                required
              />
           </div>
