@@ -194,12 +194,12 @@
              </Card>
  
              {/* Annual */}
-             <Card className="rounded-3xl border-green-500 overflow-hidden shadow-2xl relative scale-105 z-10 bg-white">
+              <Card className="rounded-3xl border-green-500 overflow-hidden shadow-2xl relative scale-105 z-10 bg-white text-slate-900">
                <div className="absolute top-0 right-0 bg-green-500 text-white text-xs font-bold px-4 py-1 rounded-bl-xl uppercase tracking-wider">
                  Mais Popular - Economize 77%
                </div>
                <CardHeader className="p-8 text-center pb-0">
-                 <CardTitle className="text-2xl">Anual</CardTitle>
+                  <CardTitle className="text-2xl text-slate-900">Anual</CardTitle>
                  <CardDescription>O melhor custo-benefício</CardDescription>
                  <div className="mt-6">
                    <span className="text-sm text-slate-500 block line-through">R$ 1.764 /ano</span>
