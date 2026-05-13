@@ -4,8 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/Logo";
 import { Link } from "react-router-dom";
-import whatsappGirlBgImg from "@/assets/whatsapp-meta-hero.png";
-const metaBgImg = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=2000";
+ const whatsappGirlBgImg = "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1200";
+ const metaBgImg = "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=2000";
 const professionalButtonsImg = "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&q=80&w=800";
 const interactiveChatImg = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800";
 const productCarouselImg = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800";
