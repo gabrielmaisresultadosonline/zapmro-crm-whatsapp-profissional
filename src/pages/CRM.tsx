@@ -168,7 +168,8 @@ const CRM = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState('dashboard');
+   const [activeTab, setActiveTab] = useState('dashboard');
+   const [userRole, setUserRole] = useState<string | null>(null);
   const [metaSettings, setMetaSettings] = useState<any>({
     meta_access_token: '',
     meta_phone_number_id: '',
@@ -778,6 +779,13 @@ const CRM = () => {
        }
  
        if (settingsData) setMetaSettings(settingsData);
+ 
+       const { data: profile } = await supabase
+         .from('crm_profiles')
+         .select('role')
+         .eq('user_id', user.id)
+         .maybeSingle();
+       if (profile) setUserRole(profile.role);
 
       const { data: metricsData } = await supabase
         .from('crm_metrics')
@@ -2662,12 +2670,22 @@ const CRM = () => {
             <div className="flex items-center gap-2 md:gap-4 overflow-hidden">
               <SidebarTrigger className="hover:bg-muted shrink-0" />
               <div className="h-4 w-px bg-border/50 mx-1 hidden md:block" />
-              <h1 className="font-bold text-xs md:text-base text-foreground tracking-tight truncate">
-                {activeTab === 'contact-list' ? 'Contatos' : 
-                 activeTab === 'contacts' ? 'Conversas' : 
-                 activeTab === 'google-synced' ? 'Sincronizados Google' :
-                 activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
-              </h1>
+               <h1 className="font-bold text-xs md:text-base text-foreground tracking-tight truncate flex items-center gap-2">
+                 {activeTab === 'contact-list' ? 'Contatos' : 
+                  activeTab === 'contacts' ? 'Conversas' : 
+                  activeTab === 'google-synced' ? 'Sincronizados Google' :
+                  activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
+                 {userRole === 'super_admin' && (
+                   <Button 
+                     variant="outline" 
+                     size="xs" 
+                     className="ml-2 h-7 px-2 text-[10px] border-primary/30 bg-primary/10 text-primary hover:bg-primary/20"
+                     onClick={() => navigate('/admincentral')}
+                   >
+                     <ShieldCheck className="w-3 h-3 mr-1" /> ADMIN CENTRAL
+                   </Button>
+                 )}
+               </h1>
             </div>
             {activeTab === 'contacts' && (
               <div className="flex items-center gap-1.5 md:gap-3">
