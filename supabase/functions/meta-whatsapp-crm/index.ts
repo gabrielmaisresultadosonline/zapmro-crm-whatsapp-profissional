@@ -47,11 +47,11 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
   }
 }
 
-async function processAiAgentResponse(supabase: any, contact: any, waId: string, text?: string, sourceMessageId?: string) {
+ async function processAiAgentResponse(supabase: any, contact: any, waId: string, text?: string, sourceMessageId?: string, userId?: string) {
   console.log(`[AI-AGENT] Processing response for contact ${waId}. Flow AI Agent.`);
   let messageText = text;
 
-  const { data: settings } = await supabase.from('crm_settings').select('openai_api_key, meta_phone_number_id, meta_access_token, vps_transcoder_url').single();
+   const { data: settings } = await supabase.from('crm_settings').select('openai_api_key, meta_phone_number_id, meta_access_token, vps_transcoder_url').eq('user_id', userId).maybeSingle();
   const OPENAI_API_KEY = settings?.openai_api_key || Deno.env.get('OPENAI_API_KEY');
 
   if (!OPENAI_API_KEY) {
