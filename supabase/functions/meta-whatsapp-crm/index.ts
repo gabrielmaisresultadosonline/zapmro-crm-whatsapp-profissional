@@ -255,7 +255,7 @@ async function processAiAgentResponse(supabase: any, contact: any, waId: string,
   }
 }
 
-async function handleProcessWebhook(supabase: any, entry: any, skipSave = false) {
+ async function handleProcessWebhook(supabase: any, entry: any, skipSave = false, userId?: string) {
   if (!entry?.[0]?.changes?.[0]?.value?.messages?.[0]) {
     return jsonResponse({ success: true });
   }
@@ -266,11 +266,12 @@ async function handleProcessWebhook(supabase: any, entry: any, skipSave = false)
   let buttonId = '';
 
   if (!skipSave && message.id) {
-    const { data: existingInbound } = await supabase
-      .from('crm_messages')
-      .select('id')
-      .eq('meta_message_id', message.id)
-      .maybeSingle();
+     const { data: existingInbound } = await supabase
+       .from('crm_messages')
+       .select('id')
+       .eq('meta_message_id', message.id)
+       .eq('user_id', userId)
+       .maybeSingle();
 
     if (existingInbound) {
       console.log(`[WEBHOOK] Duplicate inbound message ${message.id} ignored before save for ${waId}`);
@@ -287,22 +288,24 @@ async function handleProcessWebhook(supabase: any, entry: any, skipSave = false)
     }
   }
 
-  const { data: contactForSave } = await supabase
-    .from('crm_contacts')
-    .select('id')
-    .eq('wa_id', waId)
-    .single();
+   const { data: contactForSave } = await supabase
+     .from('crm_contacts')
+     .select('id')
+     .eq('wa_id', waId)
+     .eq('user_id', userId)
+     .maybeSingle();
 
   if (contactForSave && !skipSave) {
-    await supabase.from('crm_messages').insert({
-      contact_id: contactForSave.id,
-      direction: 'inbound',
-      message_type: message.type,
-      content: text || `[${message.type}]`,
-      status: 'received',
-      meta_message_id: message.id,
-      metadata: { raw: message }
-    });
+     await supabase.from('crm_messages').insert({
+       contact_id: contactForSave.id,
+       direction: 'inbound',
+       message_type: message.type,
+       content: text || `[${message.type}]`,
+       status: 'received',
+       meta_message_id: message.id,
+       metadata: { raw: message },
+       user_id: userId
+     });
     await supabase.from('crm_contacts').update({ last_interaction: new Date().toISOString() }).eq('id', contactForSave.id);
   }
 
