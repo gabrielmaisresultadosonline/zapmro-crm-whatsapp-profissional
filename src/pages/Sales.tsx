@@ -52,11 +52,13 @@ const appDashboardImg = "https://images.unsplash.com/photo-1675271591211-126ad94
        {/* Header */}
        <header className="fixed top-0 w-full bg-white/80 backdrop-blur-md z-50 border-b border-slate-100">
          <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-           <div className="bg-[#050508] p-2 rounded-xl">
-             <Logo size="sm" />
-           </div>
+            <Link to="/vendas" className="bg-[#050508] p-2 rounded-xl">
+              <Logo size="sm" />
+            </Link>
            <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
              <a href="#funcionalidades" className="hover:text-green-600 transition-colors">Funcionalidades</a>
+              <a href="#crm-kanban" className="hover:text-green-600 transition-colors">CRM Kanban</a>
+              <a href="#disparos" className="hover:text-green-600 transition-colors">Disparos</a>
              <a href="#precos" className="hover:text-green-600 transition-colors">Preços</a>
              <a href="#seguranca" className="hover:text-green-600 transition-colors">Segurança</a>
            </nav>
@@ -237,7 +239,7 @@ const appDashboardImg = "https://images.unsplash.com/photo-1675271591211-126ad94
         </section>
 
         {/* AI Agent Deep Dive */}
-        <section className="py-24 bg-slate-950 text-white overflow-hidden relative">
+         <section id="funcionalidades" className="py-24 bg-slate-950 text-white overflow-hidden relative">
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.1),transparent_50%)]"></div>
           <div className="container mx-auto px-4 relative z-10">
             <div className="flex flex-col lg:flex-row items-center gap-16">
@@ -419,7 +421,7 @@ const appDashboardImg = "https://images.unsplash.com/photo-1675271591211-126ad94
         </section>
 
         {/* CRM Kanban & Mass Messaging Sections */}
-        <section className="py-24 bg-slate-50 overflow-hidden">
+         <section id="crm-kanban" className="py-24 bg-slate-50 overflow-hidden">
           <div className="container mx-auto px-4">
             {/* Kanban CRM */}
             <div className="flex flex-col lg:flex-row items-center gap-16 mb-32">
@@ -486,8 +488,8 @@ const appDashboardImg = "https://images.unsplash.com/photo-1675271591211-126ad94
               </div>
             </div>
 
-            {/* Mass Messaging & Scheduling */}
-            <div className="flex flex-col lg:flex-row items-center gap-16">
+             {/* Mass Messaging & Scheduling */}
+             <div id="disparos" className="flex flex-col lg:flex-row items-center gap-16 pt-32">
               <div className="lg:w-1/2">
                 <Badge className="mb-4 bg-blue-100 text-blue-700 hover:bg-blue-100 border-none px-4 py-1">
                   🚀 Escala Máxima
