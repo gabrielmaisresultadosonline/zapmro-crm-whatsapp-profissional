@@ -559,12 +559,16 @@ const CRM = () => {
     }
   }, [chatMessages]);
 
-  useEffect(() => {
-    if (!isAdminLoggedIn()) {
-      navigate('/crm/login');
-      return;
-    }
-    fetchData();
+   useEffect(() => {
+     const checkAuth = async () => {
+       const { data: { session } } = await supabase.auth.getSession();
+       if (!session) {
+         navigate('/crm/login');
+         return;
+       }
+       fetchData();
+     };
+     checkAuth();
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
