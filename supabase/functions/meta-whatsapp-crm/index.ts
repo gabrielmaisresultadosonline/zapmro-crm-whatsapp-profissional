@@ -309,11 +309,12 @@ async function processAiAgentResponse(supabase: any, contact: any, waId: string,
     await supabase.from('crm_contacts').update({ last_interaction: new Date().toISOString() }).eq('id', contactForSave.id);
   }
 
-  const { data: contact } = await supabase
-    .from('crm_contacts')
-    .select('*')
-    .eq('wa_id', waId)
-    .single();
+   const { data: contact } = await supabase
+     .from('crm_contacts')
+     .select('*')
+     .eq('wa_id', waId)
+     .eq('user_id', userId)
+     .maybeSingle();
 
   // CRITICAL: Ensure we capture messages for AI processing if the contact is in any AI-related state
   const isInAiNode = contact?.current_node_id?.includes('aiAgent');
@@ -323,7 +324,7 @@ async function processAiAgentResponse(supabase: any, contact: any, waId: string,
 
   if (contact && (isAiHandling || (hasActiveFlow && (isInAiNode || isAiActive)))) {
     console.log(`[WEBHOOK] CAPTURING message from ${waId} for AI Agent. State: ${contact.flow_state}, Node: ${contact.current_node_id}, AI Active: ${contact.ai_active}`);
-    const result = await processAiAgentResponse(supabase, contact, waId, text, message.id);
+     const result = await processAiAgentResponse(supabase, contact, waId, text, message.id, userId);
     return jsonResponse(result);
   } else if (contact && contact.ai_active && contact.flow_state === 'idle') {
     console.log(`[WEBHOOK] Contact ${waId} has AI active and is idle. Calling Global AI Agent...`);
