@@ -40,19 +40,34 @@ const CRMLogin = () => {
         
         if (signUpError) throw signUpError;
         
-        if (authData.user) {
-          // Create profile in crm_profiles
-          const { error: profileError } = await supabase
-            .from('crm_profiles')
-            .insert({
-              user_id: authData.user.id,
-              full_name: fullName,
-              whatsapp_number: whatsapp,
-              role: 'user'
-            });
-          
-          if (profileError) console.error("Error creating profile:", profileError);
-        }
+         if (authData.user) {
+           // Check if there are any profiles yet
+           const { count } = await supabase
+             .from('crm_profiles')
+             .select('*', { count: 'exact', head: true });
+ 
+           // The very first registered user becomes super_admin
+           const role = (count === 0) ? 'super_admin' : 'user';
+ 
+           // Create profile in crm_profiles
+           const { error: profileError } = await supabase
+             .from('crm_profiles')
+             .insert({
+               user_id: authData.user.id,
+               full_name: fullName,
+               whatsapp_number: whatsapp,
+               role: role
+             });
+           
+           if (profileError) console.error("Error creating profile:", profileError);
+           
+           if (role === 'super_admin') {
+             toast({
+               title: "Perfil Administrativo Criado!",
+               description: "Você foi definido como administrador central por ser o primeiro cadastro.",
+             });
+           }
+         }
 
         toast({
           title: "Cadastro realizado!",
