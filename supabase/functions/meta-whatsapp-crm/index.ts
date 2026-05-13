@@ -47,11 +47,11 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
   }
 }
 
-async function processAiAgentResponse(supabase: any, contact: any, waId: string, text?: string, sourceMessageId?: string) {
+ async function processAiAgentResponse(supabase: any, contact: any, waId: string, text?: string, sourceMessageId?: string, userId?: string) {
   console.log(`[AI-AGENT] Processing response for contact ${waId}. Flow AI Agent.`);
   let messageText = text;
 
-  const { data: settings } = await supabase.from('crm_settings').select('openai_api_key, meta_phone_number_id, meta_access_token, vps_transcoder_url').single();
+   const { data: settings } = await supabase.from('crm_settings').select('openai_api_key, meta_phone_number_id, meta_access_token, vps_transcoder_url').eq('user_id', userId).maybeSingle();
   const OPENAI_API_KEY = settings?.openai_api_key || Deno.env.get('OPENAI_API_KEY');
 
   if (!OPENAI_API_KEY) {
@@ -179,7 +179,7 @@ async function processAiAgentResponse(supabase: any, contact: any, waId: string,
     if (reply.includes('[[TRANSFER_TO_HUMAN]]') && history.split('\n').filter(line => line.startsWith('Assistente:')).length >= 2) {
       console.log(`[AI-AGENT] AI decided to transfer contact ${waId} to human.`);
       
-      const { data: flow } = await supabase.from('crm_flows').select('*').eq('id', contact.current_flow_id).single();
+             const { data: flow } = await supabase.from('crm_flows').select('*').eq('id', contact.current_flow_id).eq('user_id', contact.user_id).single();
       if (flow) {
         const currentNodeId = contact.current_node_id;
         const transferEdge = flow.edges?.find((e: any) => e.source === currentNodeId && e.sourceHandle === 'human_transfer');
@@ -255,7 +255,7 @@ async function processAiAgentResponse(supabase: any, contact: any, waId: string,
   }
 }
 
-async function handleProcessWebhook(supabase: any, entry: any, skipSave = false) {
+ async function handleProcessWebhook(supabase: any, entry: any, skipSave = false, userId?: string) {
   if (!entry?.[0]?.changes?.[0]?.value?.messages?.[0]) {
     return jsonResponse({ success: true });
   }
@@ -266,11 +266,12 @@ async function handleProcessWebhook(supabase: any, entry: any, skipSave = false)
   let buttonId = '';
 
   if (!skipSave && message.id) {
-    const { data: existingInbound } = await supabase
-      .from('crm_messages')
-      .select('id')
-      .eq('meta_message_id', message.id)
-      .maybeSingle();
+     const { data: existingInbound } = await supabase
+       .from('crm_messages')
+       .select('id')
+       .eq('meta_message_id', message.id)
+       .eq('user_id', userId)
+       .maybeSingle();
 
     if (existingInbound) {
       console.log(`[WEBHOOK] Duplicate inbound message ${message.id} ignored before save for ${waId}`);
@@ -287,30 +288,33 @@ async function handleProcessWebhook(supabase: any, entry: any, skipSave = false)
     }
   }
 
-  const { data: contactForSave } = await supabase
-    .from('crm_contacts')
-    .select('id')
-    .eq('wa_id', waId)
-    .single();
+   const { data: contactForSave } = await supabase
+     .from('crm_contacts')
+     .select('id')
+     .eq('wa_id', waId)
+     .eq('user_id', userId)
+     .maybeSingle();
 
   if (contactForSave && !skipSave) {
-    await supabase.from('crm_messages').insert({
-      contact_id: contactForSave.id,
-      direction: 'inbound',
-      message_type: message.type,
-      content: text || `[${message.type}]`,
-      status: 'received',
-      meta_message_id: message.id,
-      metadata: { raw: message }
-    });
+     await supabase.from('crm_messages').insert({
+       contact_id: contactForSave.id,
+       direction: 'inbound',
+       message_type: message.type,
+       content: text || `[${message.type}]`,
+       status: 'received',
+       meta_message_id: message.id,
+       metadata: { raw: message },
+       user_id: userId
+     });
     await supabase.from('crm_contacts').update({ last_interaction: new Date().toISOString() }).eq('id', contactForSave.id);
   }
 
-  const { data: contact } = await supabase
-    .from('crm_contacts')
-    .select('*')
-    .eq('wa_id', waId)
-    .single();
+   const { data: contact } = await supabase
+     .from('crm_contacts')
+     .select('*')
+     .eq('wa_id', waId)
+     .eq('user_id', userId)
+     .maybeSingle();
 
   // CRITICAL: Ensure we capture messages for AI processing if the contact is in any AI-related state
   const isInAiNode = contact?.current_node_id?.includes('aiAgent');
@@ -320,7 +324,7 @@ async function handleProcessWebhook(supabase: any, entry: any, skipSave = false)
 
   if (contact && (isAiHandling || (hasActiveFlow && (isInAiNode || isAiActive)))) {
     console.log(`[WEBHOOK] CAPTURING message from ${waId} for AI Agent. State: ${contact.flow_state}, Node: ${contact.current_node_id}, AI Active: ${contact.ai_active}`);
-    const result = await processAiAgentResponse(supabase, contact, waId, text, message.id);
+     const result = await processAiAgentResponse(supabase, contact, waId, text, message.id, userId);
     return jsonResponse(result);
   } else if (contact && contact.ai_active && contact.flow_state === 'idle') {
     console.log(`[WEBHOOK] Contact ${waId} has AI active and is idle. Calling Global AI Agent...`);
@@ -954,28 +958,79 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
 }
 
 
-serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
-  }
-
-  const supabase = createClient(
-    Deno.env.get('SUPABASE_URL') ?? '',
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-  )
-
-  try {
-    const { action, ...params } = await req.json()
+ serve(async (req) => {
+   if (req.method === 'OPTIONS') {
+     return new Response('ok', { headers: corsHeaders })
+   }
+ 
+   const url = new URL(req.url);
+   const webhookIdentifier = url.searchParams.get('id');
+   
+   const supabase = createClient(
+     Deno.env.get('SUPABASE_URL') ?? '',
+     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+   )
+ 
+   let userId: string | null = null;
+   let userSettings: any = null;
+ 
+   // Handle Meta Webhook Verification (GET)
+   if (req.method === 'GET') {
+     const hubMode = url.searchParams.get('hub.mode');
+     const hubChallenge = url.searchParams.get('hub.challenge');
+     const hubVerifyToken = url.searchParams.get('hub.verify_token');
+ 
+     if (hubMode === 'subscribe' && hubVerifyToken && webhookIdentifier) {
+       const { data: settings } = await supabase
+         .from('crm_settings')
+         .select('webhook_verify_token')
+         .eq('webhook_identifier', webhookIdentifier)
+         .single();
+       
+       if (settings && (settings.webhook_verify_token === hubVerifyToken || !settings.webhook_verify_token)) {
+         return new Response(hubChallenge, { status: 200 });
+       }
+     }
+     return new Response('Forbidden', { status: 403 });
+   }
+ 
+   // Identify User
+   if (webhookIdentifier) {
+     const { data: settings } = await supabase
+       .from('crm_settings')
+       .select('*')
+       .eq('webhook_identifier', webhookIdentifier)
+       .single();
+     if (settings) {
+       userId = settings.user_id;
+       userSettings = settings;
+     }
+   } else {
+     const authHeader = req.headers.get('Authorization');
+     if (authHeader) {
+       const { data: { user } } = await supabase.auth.getUser(authHeader.replace('Bearer ', ''));
+       if (user) userId = user.id;
+     }
+   }
+ 
+   try {
+     const body = await req.json().catch(() => ({}));
+     const { action, ...params } = body;
+ 
+     // Handle Meta POST (Webhook Events)
+     if (!action && body.object === 'whatsapp_business_account' && userSettings) {
+       return await handleProcessWebhook(supabase, body.entry, false, userId);
+     }
     if (action === 'processScheduled') {
       console.log('Processing scheduled flow nodes...');
       const now = new Date().toISOString();
       
       // Select only what's needed and use a more strict query
-      const { data: contactsToProcess, error: fetchError } = await supabase
-        .from('crm_contacts')
-        .select('id, wa_id, current_flow_id, current_node_id, flow_timeout_minutes, flow_timeout_node_id, last_flow_interaction, flow_state, next_execution_time')
-        .neq('flow_state', 'idle')
-        .limit(50);
+       const { data: contactsToProcess, error: fetchError } = await supabase
+         .from('crm_contacts')
+         .select('id, wa_id, user_id, current_flow_id, current_node_id, flow_timeout_minutes, flow_timeout_node_id, last_flow_interaction, flow_state, next_execution_time')
+         .neq('flow_state', 'idle')
+         .limit(50);
         
       if (fetchError) throw fetchError;
       
@@ -999,14 +1054,14 @@ serve(async (req) => {
                   flow_timeout_node_id: null
                 }).eq('id', contact.id).eq('flow_state', 'waiting_response').select();
 
-                if (updated && updated.length > 0) {
-                  const { data: flow } = await supabase.from('crm_flows').select('*').eq('id', contact.current_flow_id).single();
-                  const nextNode = flow?.nodes?.find((n: any) => n.id === contact.flow_timeout_node_id);
-                  if (nextNode) {
-                    const res = await executeVisualNode(supabase, flow, nextNode, contact.id, contact.wa_id);
-                    results.push({ contactId: contact.id, result: res });
-                  }
-                }
+                 if (updated && updated.length > 0) {
+                   const { data: flow } = await supabase.from('crm_flows').select('*').eq('id', contact.current_flow_id).eq('user_id', contact.user_id).single();
+                   const nextNode = flow?.nodes?.find((n: any) => n.id === contact.flow_timeout_node_id);
+                   if (nextNode) {
+                     const res = await executeVisualNode(supabase, flow, nextNode, contact.id, contact.wa_id);
+                     results.push({ contactId: contact.id, result: res });
+                   }
+                 }
               } else {
                 await supabase.from('crm_contacts').update({ flow_state: 'idle', current_flow_id: null, current_node_id: null }).eq('id', contact.id);
               }
@@ -1044,9 +1099,9 @@ serve(async (req) => {
                 console.log(`[SCHEDULED] Node resulted in AI handling state. Triggering AI response for ${contact.wa_id}`);
                 // Re-fetch contact to get updated flow_state and metadata from executeVisualNode
                 const { data: updatedContact } = await supabase.from('crm_contacts').select('*').eq('id', contact.id).single();
-                if (updatedContact) {
-                    await processAiAgentResponse(supabase, updatedContact, contact.wa_id);
-                }
+                 if (updatedContact) {
+                     await processAiAgentResponse(supabase, updatedContact, contact.wa_id, undefined, undefined, contact.user_id);
+                 }
               }
             } else {
               await supabase.from('crm_contacts').update({ flow_state: 'idle' }).eq('id', contact.id);
@@ -1420,9 +1475,9 @@ serve(async (req) => {
         if (res?.message?.includes('AI handling state') && params.text) {
           console.log(`[START-FLOW] Started in AI handling state. Triggering AI response for ${waId}`);
           const { data: updatedContact } = await supabase.from('crm_contacts').select('*').eq('id', contactId).single();
-          if (updatedContact) {
-            await processAiAgentResponse(supabase, updatedContact, waId, params.text, params.sourceMessageId);
-          }
+           if (updatedContact) {
+             await processAiAgentResponse(supabase, updatedContact, waId, params.text, params.sourceMessageId, updatedContact.user_id);
+           }
         }
         
         return jsonResponse(res)
@@ -1530,9 +1585,9 @@ serve(async (req) => {
           if (res?.message?.includes('AI handling state') && text) {
             console.log(`[CONTINUE-FLOW] Moved to AI handling state. Triggering AI response for ${waId}`);
             const { data: updatedContact } = await supabase.from('crm_contacts').select('*').eq('id', contactId).single();
-            if (updatedContact) {
-              await processAiAgentResponse(supabase, updatedContact, waId, text, sourceMessageId);
-            }
+             if (updatedContact) {
+               await processAiAgentResponse(supabase, updatedContact, waId, text, sourceMessageId, updatedContact.user_id);
+             }
           }
           
           return jsonResponse(res)
@@ -1760,7 +1815,7 @@ serve(async (req) => {
         
       if (!contact) return jsonResponse({ success: false, error: 'Contact not found' });
       
-      const result = await processAiAgentResponse(supabase, contact, params.to || params.waId, params.text, params.sourceMessageId);
+       const result = await processAiAgentResponse(supabase, contact, params.to || params.waId, params.text, params.sourceMessageId, contact.user_id);
       return jsonResponse(result);
     }
 
