@@ -4,6 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/Logo";
 import { Link } from "react-router-dom";
+import metaPartnerImg from "@/assets/sales-meta-partner.webp";
+import carouselExampleImg from "@/assets/sales-carousel-example.png";
+import buttonMessageImg from "@/assets/sales-button-message.png";
+import quickReplyImg from "@/assets/sales-quick-reply.png";
+import appMenuImg from "@/assets/sales-app-menu.png";
+import appConversationsImg from "@/assets/sales-app-conversations.png";
  
  const Sales = () => {
    const features = [
