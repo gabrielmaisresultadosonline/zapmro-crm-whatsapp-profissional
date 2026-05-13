@@ -6,7 +6,7 @@ Conecte via SSH na sua VPS e execute:
 
 ```bash
 # 1. Baixe e execute o script de instalação
-curl -fsSL https://raw.githubusercontent.com/SEU_USUARIO/SEU_REPO/main/deploy/install.sh | bash -s seu-dominio.com
+curl -fsSL https://raw.githubusercontent.com/gabrielmaisresultadosonline/zapmro-crm-whatsapp-profissional/main/deploy/install.sh | bash -s seu-dominio.com
 ```
 
 ## 📋 Instalação Manual Passo a Passo
@@ -38,7 +38,7 @@ sudo apt install -y nodejs
 
 ```bash
 cd /var/www
-git clone https://github.com/SEU_USUARIO/SEU_REPO.git ia-mro
+git clone https://github.com/gabrielmaisresultadosonline/zapmro-crm-whatsapp-profissional.git ia-mro
 cd ia-mro
 ```
 
