@@ -1026,11 +1026,11 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
       const now = new Date().toISOString();
       
       // Select only what's needed and use a more strict query
-      const { data: contactsToProcess, error: fetchError } = await supabase
-        .from('crm_contacts')
-        .select('id, wa_id, current_flow_id, current_node_id, flow_timeout_minutes, flow_timeout_node_id, last_flow_interaction, flow_state, next_execution_time')
-        .neq('flow_state', 'idle')
-        .limit(50);
+       const { data: contactsToProcess, error: fetchError } = await supabase
+         .from('crm_contacts')
+         .select('id, wa_id, user_id, current_flow_id, current_node_id, flow_timeout_minutes, flow_timeout_node_id, last_flow_interaction, flow_state, next_execution_time')
+         .neq('flow_state', 'idle')
+         .limit(50);
         
       if (fetchError) throw fetchError;
       
