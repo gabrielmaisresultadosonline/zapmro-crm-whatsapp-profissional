@@ -92,7 +92,7 @@ import { Link } from "react-router-dom";
               <div className="absolute -inset-1 bg-gradient-to-r from-green-600 to-blue-600 rounded-[2.5rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
               <div className="relative aspect-[16/9] md:aspect-[21/9] bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden">
                 <img 
-                  src="/src/assets/whatsappapi-banner.png" 
+                  src="/src/assets/creative-1.webp" 
                   alt="WhatsApp API Oficial" 
                   className="w-full h-full object-cover transform transition duration-500 group-hover:scale-105"
                 />
