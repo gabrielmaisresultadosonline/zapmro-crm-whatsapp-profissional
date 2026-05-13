@@ -1,4 +1,4 @@
-  import { Check, MessageCircle, ShieldCheck, Zap, BarChart3, Bot, Clock, Users, ArrowRight, Star, Layout, Smartphone, BrainCircuit, Sparkles, MessageSquareQuote } from "lucide-react";
+  import { Check, MessageCircle, ShieldCheck, Zap, BarChart3, Bot, Clock, Users, ArrowRight, Star, Layout, Smartphone, BrainCircuit, Sparkles, MessageSquareQuote, MousePointerClick } from "lucide-react";
        {/* AI Agent Deep Dive */}
        <section className="py-24 bg-slate-950 text-white overflow-hidden relative">
          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.1),transparent_50%)]"></div>
@@ -296,42 +296,112 @@
          </div>
        </section>
  
-       {/* Brands */}
-       <section className="py-12 border-y border-slate-100 bg-slate-50/50">
-         <div className="container mx-auto px-4">
-           <p className="text-center text-sm font-semibold text-slate-400 uppercase tracking-widest mb-8">
-             Utilizado pelas maiores marcas do mercado
-           </p>
-           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale">
-             {brands.map(brand => (
-               <span key={brand} className="text-2xl font-bold text-slate-700">{brand}</span>
-             ))}
-           </div>
-         </div>
-       </section>
+        {/* Meta Integration & Brands */}
+        <section className="py-16 bg-slate-50 border-y border-slate-100 overflow-hidden">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-12 mb-16">
+              <div className="flex flex-col items-center gap-4">
+                <img src="/src/assets/meta-logo.png" alt="Meta Business Partner" className="h-12 w-auto object-contain opacity-80" />
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Parceiro Oficial</p>
+              </div>
+              <div className="h-12 w-px bg-slate-200 hidden md:block"></div>
+              <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 grayscale">
+                {brands.map(brand => (
+                  <span key={brand} className="text-2xl font-black text-slate-800 tracking-tighter">{brand}</span>
+                ))}
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
+                <div className="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center shrink-0">
+                  <ShieldCheck className="w-6 h-6 text-green-600" />
+                </div>
+                <div>
+                  <p className="font-bold text-sm">Anti-Banimento</p>
+                  <p className="text-xs text-slate-500">API Oficial Meta</p>
+                </div>
+              </div>
+              <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
+                <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center shrink-0">
+                  <Zap className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <p className="font-bold text-sm">Escalabilidade</p>
+                  <p className="text-xs text-slate-500">Milhares de envios/dia</p>
+                </div>
+              </div>
+              <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
+                <div className="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center shrink-0">
+                  <Bot className="w-6 h-6 text-purple-600" />
+                </div>
+                <div>
+                  <p className="font-bold text-sm">I.A Nativa</p>
+                  <p className="text-xs text-slate-500">ChatGPT Integrado</p>
+                </div>
+              </div>
+              <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4">
+                <div className="w-12 h-12 bg-orange-50 rounded-2xl flex items-center justify-center shrink-0">
+                  <MousePointerClick className="w-6 h-6 text-orange-600" />
+                </div>
+                <div>
+                  <p className="font-bold text-sm">Botões CTA</p>
+                  <p className="text-xs text-slate-500">Alta Conversão</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
  
-       {/* Features */}
-       <section id="funcionalidades" className="py-24">
-         <div className="container mx-auto px-4">
-           <div className="text-center mb-16">
-             <h2 className="text-3xl md:text-4xl font-bold mb-4">Tudo o que você precisa para dominar o WhatsApp</h2>
-             <p className="text-slate-600 max-w-2xl mx-auto">
-               Se destaque como empresa e atenda seu cliente de forma mais profissional sem preocupação de perda de números.
-             </p>
-           </div>
-           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-             {features.map((feature, i) => (
-               <div key={i} className="p-8 rounded-3xl border border-slate-100 hover:border-green-200 hover:bg-green-50/30 transition-all group">
-                 <div className="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                   {feature.icon}
-                 </div>
-                 <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                 <p className="text-slate-600">{feature.description}</p>
-               </div>
-             ))}
-           </div>
-         </div>
-       </section>
+        {/* Dashboard Preview / Prompts Section */}
+        <section className="py-24 bg-white overflow-hidden">
+          <div className="container mx-auto px-4">
+            <div className="flex flex-col lg:flex-row items-center gap-16">
+              <div className="lg:w-1/2">
+                <h2 className="text-3xl md:text-5xl font-bold mb-6 leading-tight text-slate-900">
+                  Configure sua I.A e seus <span className="text-green-600">Prompts de Vendas</span> em segundos
+                </h2>
+                <p className="text-slate-600 text-lg mb-8">
+                  Tenha controle total sobre como o Agente de I.A se comporta. Defina a personalidade, o tom de voz e as regras de negócio para um atendimento impecável.
+                </p>
+                <div className="space-y-4 mb-8">
+                  {[
+                    "Definição de Personagem Personalizada",
+                    "Instruções Estratégicas para Conversão",
+                    "Integração com sua Base de Conhecimento",
+                    "Disparo Automático de Templates com Botão"
+                  ].map((text, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center shrink-0">
+                        <Check className="w-4 h-4 text-green-600" />
+                      </div>
+                      <span className="font-medium text-slate-700">{text}</span>
+                    </div>
+                  ))}
+                </div>
+                <Link to="/crm/login?mode=register">
+                  <Button className="bg-[#050508] text-white hover:bg-slate-800 rounded-2xl px-8 py-6 h-auto font-bold">
+                    Começar Agora
+                  </Button>
+                </Link>
+              </div>
+              <div className="lg:w-1/2 relative">
+                <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border border-slate-200">
+                  <img src="/src/assets/prompts-area-preview.png" alt="Área de Prompts I.A" className="w-full h-auto" />
+                </div>
+                <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-3xl shadow-xl border border-slate-100 hidden md:block max-w-[240px]">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-blue-100 rounded-2xl flex items-center justify-center">
+                      <BrainCircuit className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <span className="font-bold text-sm">IA Treinada</span>
+                  </div>
+                  <p className="text-xs text-slate-500 leading-relaxed">Sua inteligência artificial configurada com a expertise dos seus melhores vendedores.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
  
        {/* Pricing */}
        <section id="precos" className="py-24 bg-slate-50">
