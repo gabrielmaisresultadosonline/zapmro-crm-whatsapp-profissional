@@ -4,14 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Badge } from "@/components/ui/badge";
 import { Logo } from "@/components/Logo";
 import { Link } from "react-router-dom";
- import metaPartnerImg from "@/assets/logo-meta-mro.png";
-import carouselExampleImg from "@/assets/sales-carousel-example.png";
-import buttonMessageImg from "@/assets/sales-button-message.png";
-import quickReplyImg from "@/assets/sales-quick-reply.png";
-import appMenuImg from "@/assets/sales-app-menu.png";
-import appConversationsImg from "@/assets/sales-app-conversations.png";
 const metaGirlImg = "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=800";
 const metaBgImg = "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=2000";
+const whatsappGirlBgImg = "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&q=80&w=2000";
+const professionalButtonsImg = "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&q=80&w=800";
+const interactiveChatImg = "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800";
+const productCarouselImg = "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800";
+const appDashboardImg = "https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&q=80&w=800";
  
  const Sales = () => {
    const features = [
@@ -98,13 +97,13 @@ const metaBgImg = "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?
             {/* Main Banner / Hero Image */}
             <div className="mt-16 relative max-w-5xl mx-auto group">
               <div className="absolute -inset-1 bg-gradient-to-r from-green-600 to-blue-600 rounded-[2.5rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-              <div className="relative aspect-[16/9] md:aspect-[21/9] bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden">
-                <img 
-                  src={appConversationsImg} 
-                  alt="WhatsApp CRM em uso real" 
-                  className="w-full h-full object-contain bg-slate-900 transform transition duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end">
+               <div className="relative aspect-[16/9] md:aspect-[21/9] bg-slate-900 rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden">
+                 <img 
+                   src={whatsappGirlBgImg} 
+                   alt="Mulher profissional usando WhatsApp" 
+                   className="w-full h-full object-cover opacity-60 transform transition duration-500 group-hover:scale-105"
+                 />
+                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent flex items-end">
                   <div className="p-8 text-left w-full">
                     <div className="flex items-center gap-5">
                         <div className="flex flex-col md:flex-row items-center gap-6 bg-white/5 backdrop-blur-2xl p-6 rounded-[2rem] border border-white/20 shadow-2xl relative overflow-hidden group/meta">
@@ -362,9 +361,9 @@ const metaBgImg = "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?
                 <p className="text-slate-600 mb-6">
                   Passe uma imagem muito mais profissional. Esqueça o texto comum e use botões de ação imediata.
                 </p>
-                <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner bg-[#efeae2]">
-                  <img src={buttonMessageImg} alt="Mensagem com botão Acessar o site" className="w-full h-auto hover:scale-105 transition-transform duration-700 object-contain" />
-                </div>
+                 <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50">
+                   <img src={professionalButtonsImg} alt="Interface profissional com botões" className="w-full h-48 object-cover hover:scale-105 transition-transform duration-700" />
+                 </div>
                 <div className="flex flex-col gap-2">
                   <div className="h-10 w-full bg-green-600 rounded-xl flex items-center justify-center text-xs text-white font-bold shadow-lg shadow-green-200">VISITAR SITE</div>
                   <div className="h-10 w-full border border-slate-200 rounded-xl flex items-center justify-center text-xs text-slate-400 font-bold">FALAR COM ATENDENTE</div>
@@ -383,9 +382,9 @@ const metaBgImg = "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?
                  <p className="text-slate-600 mb-6">
                    O cliente responde com 1 toque. A I.A já qualifica e direciona automaticamente para o próximo passo da venda.
                  </p>
-                 <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner bg-[#efeae2]">
-                   <img src={quickReplyImg} alt="Mensagem com botões Sim e Não" className="w-full h-auto hover:scale-105 transition-transform duration-700 object-contain" />
-                 </div>
+                  <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50">
+                    <img src={interactiveChatImg} alt="Chat interativo qualificado" className="w-full h-48 object-cover hover:scale-105 transition-transform duration-700" />
+                  </div>
                </div>
 
               {/* Carrossel de Mensagens */}
@@ -400,9 +399,9 @@ const metaBgImg = "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?
                 <p className="text-slate-600 mb-6">
                   A forma mais profissional de exibir seu catálogo. Permita que seus clientes deslizem entre suas melhores ofertas.
                 </p>
-                <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner bg-[#efeae2]">
-                  <img src={carouselExampleImg} alt="Carrossel de mensagens com botões" className="w-full h-auto hover:scale-105 transition-transform duration-700 object-contain" />
-                </div>
+                 <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50">
+                   <img src={productCarouselImg} alt="Carrossel de produtos profissional" className="w-full h-48 object-cover hover:scale-105 transition-transform duration-700" />
+                 </div>
                 <div className="flex gap-2 overflow-hidden justify-center">
                   <div className="w-2 h-2 rounded-full bg-purple-600"></div>
                   <div className="w-2 h-2 rounded-full bg-slate-200"></div>
@@ -446,8 +445,8 @@ const metaBgImg = "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?
                 </Link>
               </div>
               <div className="lg:w-1/2 relative">
-                <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border border-slate-200 bg-slate-900 max-w-sm mx-auto">
-                  <img src={appMenuImg} alt="Menu do app MRO no celular" className="w-full h-auto hover:scale-105 transition-transform duration-700" />
+                <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border border-slate-200 bg-slate-100 max-w-sm mx-auto">
+                  <img src={appDashboardImg} alt="Dashboard CRM no celular" className="w-full h-auto hover:scale-105 transition-transform duration-700 object-cover" />
                 </div>
                 <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-3xl shadow-xl border border-slate-100 hidden md:block max-w-[240px]">
                   <div className="flex items-center gap-3 mb-3">
