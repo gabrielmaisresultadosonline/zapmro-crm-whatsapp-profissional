@@ -328,29 +328,24 @@ import { Link } from "react-router-dom";
               </div>
 
               {/* Carrossel de Mensagens */}
-              <div className="bg-slate-50 rounded-[2.5rem] p-8 border border-slate-100 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500"></div>
-                <div className="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6">
+              <div className="bg-white rounded-[2.5rem] p-8 border border-purple-100 shadow-xl shadow-purple-500/5 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 bg-purple-500 text-white text-[10px] font-bold px-4 py-1 rounded-bl-xl uppercase tracking-widest">
+                  Impacto Visual
+                </div>
+                <div className="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center mb-6">
                   <Smartphone className="w-7 h-7 text-purple-600" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4">Muito mais Visual: Carrossel</h3>
+                <h3 className="text-2xl font-bold mb-4">Carrossel de Produtos</h3>
                 <p className="text-slate-600 mb-6">
-                  Apresente diversos produtos ou opções em um único slide, permitindo que o cliente deslize e escolha o que deseja.
+                  A forma mais profissional de exibir seu catálogo. Permita que seus clientes deslizem entre suas melhores ofertas.
                 </p>
-                <div className="mb-6 rounded-2xl overflow-hidden border border-slate-200">
-                  <img src="/src/assets/whatsapp-direto-banner.png" alt="Exemplo Carrossel" className="w-full h-auto" />
+                <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner">
+                  <img src="/src/assets/whatsapp-direto-banner.png" alt="Exemplo Carrossel" className="w-full h-auto hover:scale-105 transition-transform duration-700" />
                 </div>
-                <div className="flex gap-2 overflow-hidden">
-                  <div className="bg-white rounded-xl p-3 shadow-sm border border-slate-200/50 min-w-[120px]">
-                    <div className="aspect-square bg-slate-100 rounded-lg mb-2"></div>
-                    <div className="h-2 w-3/4 bg-slate-50 rounded-full mb-1"></div>
-                    <div className="h-5 w-full bg-purple-600 rounded-md"></div>
-                  </div>
-                  <div className="bg-white rounded-xl p-3 shadow-sm border border-slate-200/50 min-w-[120px] opacity-40">
-                    <div className="aspect-square bg-slate-100 rounded-lg mb-2"></div>
-                    <div className="h-2 w-3/4 bg-slate-50 rounded-full mb-1"></div>
-                    <div className="h-5 w-full bg-purple-600 rounded-md"></div>
-                  </div>
+                <div className="flex gap-2 overflow-hidden justify-center">
+                  <div className="w-2 h-2 rounded-full bg-purple-600"></div>
+                  <div className="w-2 h-2 rounded-full bg-slate-200"></div>
+                  <div className="w-2 h-2 rounded-full bg-slate-200"></div>
                 </div>
               </div>
             </div>
