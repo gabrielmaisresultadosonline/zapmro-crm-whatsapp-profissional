@@ -1475,9 +1475,9 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
         if (res?.message?.includes('AI handling state') && params.text) {
           console.log(`[START-FLOW] Started in AI handling state. Triggering AI response for ${waId}`);
           const { data: updatedContact } = await supabase.from('crm_contacts').select('*').eq('id', contactId).single();
-          if (updatedContact) {
-            await processAiAgentResponse(supabase, updatedContact, waId, params.text, params.sourceMessageId);
-          }
+           if (updatedContact) {
+             await processAiAgentResponse(supabase, updatedContact, waId, params.text, params.sourceMessageId, updatedContact.user_id);
+           }
         }
         
         return jsonResponse(res)
@@ -1585,9 +1585,9 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
           if (res?.message?.includes('AI handling state') && text) {
             console.log(`[CONTINUE-FLOW] Moved to AI handling state. Triggering AI response for ${waId}`);
             const { data: updatedContact } = await supabase.from('crm_contacts').select('*').eq('id', contactId).single();
-            if (updatedContact) {
-              await processAiAgentResponse(supabase, updatedContact, waId, text, sourceMessageId);
-            }
+             if (updatedContact) {
+               await processAiAgentResponse(supabase, updatedContact, waId, text, sourceMessageId, updatedContact.user_id);
+             }
           }
           
           return jsonResponse(res)
@@ -1815,7 +1815,7 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
         
       if (!contact) return jsonResponse({ success: false, error: 'Contact not found' });
       
-      const result = await processAiAgentResponse(supabase, contact, params.to || params.waId, params.text, params.sourceMessageId);
+       const result = await processAiAgentResponse(supabase, contact, params.to || params.waId, params.text, params.sourceMessageId, contact.user_id);
       return jsonResponse(result);
     }
 
