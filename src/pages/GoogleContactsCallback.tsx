@@ -21,11 +21,11 @@ const GoogleContactsCallback = () => {
         return;
       }
 
-      if (code) {
-        const redirectPath = window.location.pathname; // Capture if it was /google-callback or /google-callback2
-        const { data, error: invokeError } = await supabase.functions.invoke('meta-whatsapp-crm', {
-          body: { action: 'exchangeGoogleCode', code, redirectPath }
-        });
+       if (code) {
+         const redirectUri = window.location.origin + window.location.pathname;
+         const { data, error: invokeError } = await supabase.functions.invoke('meta-whatsapp-crm', {
+           body: { action: 'exchangeGoogleCode', code, redirectUri }
+         });
 
         if (invokeError || !data?.success) {
           console.error("Erro ao trocar código Google:", invokeError || data?.error);
