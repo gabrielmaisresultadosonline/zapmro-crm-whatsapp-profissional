@@ -1099,9 +1099,9 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
                 console.log(`[SCHEDULED] Node resulted in AI handling state. Triggering AI response for ${contact.wa_id}`);
                 // Re-fetch contact to get updated flow_state and metadata from executeVisualNode
                 const { data: updatedContact } = await supabase.from('crm_contacts').select('*').eq('id', contact.id).single();
-                if (updatedContact) {
-                    await processAiAgentResponse(supabase, updatedContact, contact.wa_id);
-                }
+                 if (updatedContact) {
+                     await processAiAgentResponse(supabase, updatedContact, contact.wa_id, undefined, undefined, contact.user_id);
+                 }
               }
             } else {
               await supabase.from('crm_contacts').update({ flow_state: 'idle' }).eq('id', contact.id);
