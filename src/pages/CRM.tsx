@@ -2651,7 +2651,7 @@ const CRM = () => {
             <Button 
               variant="ghost" 
               className="w-full justify-start text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors" 
-              onClick={() => { logoutAdmin(); navigate('/crm/login'); }}
+               onClick={async () => { await supabase.auth.signOut(); navigate('/crm/login'); }}
             >
               <LogOut className="mr-2 h-4 w-4" /> Sair
             </Button>
