@@ -280,27 +280,25 @@ import { Link } from "react-router-dom";
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-8 mb-16">
               {/* Templates com Botões */}
-              <div className="bg-slate-50 rounded-[2.5rem] p-8 border border-slate-100 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500"></div>
-                <div className="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-6">
+              <div className="bg-white rounded-[2.5rem] p-8 border border-green-100 shadow-xl shadow-green-500/5 relative overflow-hidden group scale-105 z-10">
+                <div className="absolute top-0 right-0 bg-green-500 text-white text-[10px] font-bold px-4 py-1 rounded-bl-xl uppercase tracking-widest">
+                  Mais Profissional
+                </div>
+                <div className="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center mb-6">
                   <Zap className="w-7 h-7 text-green-600" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4">Muito mais Profissional: Mensagens com Botões</h3>
+                <h3 className="text-2xl font-bold mb-4">Templates com Botões</h3>
                 <p className="text-slate-600 mb-6">
-                  Esqueça o texto comum. Envie mensagens com botões interativos de CTA (Call-to-Action) que aumentam em até 3x a taxa de cliques.
+                  Passe uma imagem muito mais profissional. Esqueça o texto comum e use botões de ação imediata.
                 </p>
-                <div className="mb-6 rounded-2xl overflow-hidden border border-slate-200">
-                  <img src="/src/assets/whatsappapi-banner.png" alt="Exemplo de Botões" className="w-full h-auto" />
+                <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner">
+                  <img src="/src/assets/whatsappapi-banner.png" alt="Exemplo de Botões" className="w-full h-auto hover:scale-105 transition-transform duration-700" />
                 </div>
-                <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/50">
-                  <div className="bg-slate-50 h-3 w-3/4 rounded-full mb-2"></div>
-                  <div className="bg-slate-50 h-3 w-1/2 rounded-full mb-4"></div>
-                  <div className="flex gap-2">
-                    <div className="h-8 flex-1 bg-green-600 rounded-lg flex items-center justify-center text-[10px] text-white font-bold uppercase">Visitar Site</div>
-                    <div className="h-8 flex-1 bg-slate-100 rounded-lg flex items-center justify-center text-[10px] text-slate-400 font-bold uppercase">Ligar Agora</div>
-                  </div>
+                <div className="flex flex-col gap-2">
+                  <div className="h-10 w-full bg-green-600 rounded-xl flex items-center justify-center text-xs text-white font-bold shadow-lg shadow-green-200">VISITAR SITE</div>
+                  <div className="h-10 w-full border border-slate-200 rounded-xl flex items-center justify-center text-xs text-slate-400 font-bold">FALAR COM ATENDENTE</div>
                 </div>
               </div>
 
