@@ -954,18 +954,69 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
 }
 
 
-serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
-  }
-
-  const supabase = createClient(
-    Deno.env.get('SUPABASE_URL') ?? '',
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-  )
-
-  try {
-    const { action, ...params } = await req.json()
+ serve(async (req) => {
+   if (req.method === 'OPTIONS') {
+     return new Response('ok', { headers: corsHeaders })
+   }
+ 
+   const url = new URL(req.url);
+   const webhookIdentifier = url.searchParams.get('id');
+   
+   const supabase = createClient(
+     Deno.env.get('SUPABASE_URL') ?? '',
+     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+   )
+ 
+   let userId: string | null = null;
+   let userSettings: any = null;
+ 
+   // Handle Meta Webhook Verification (GET)
+   if (req.method === 'GET') {
+     const hubMode = url.searchParams.get('hub.mode');
+     const hubChallenge = url.searchParams.get('hub.challenge');
+     const hubVerifyToken = url.searchParams.get('hub.verify_token');
+ 
+     if (hubMode === 'subscribe' && hubVerifyToken && webhookIdentifier) {
+       const { data: settings } = await supabase
+         .from('crm_settings')
+         .select('webhook_verify_token')
+         .eq('webhook_identifier', webhookIdentifier)
+         .single();
+       
+       if (settings && (settings.webhook_verify_token === hubVerifyToken || !settings.webhook_verify_token)) {
+         return new Response(hubChallenge, { status: 200 });
+       }
+     }
+     return new Response('Forbidden', { status: 403 });
+   }
+ 
+   // Identify User
+   if (webhookIdentifier) {
+     const { data: settings } = await supabase
+       .from('crm_settings')
+       .select('*')
+       .eq('webhook_identifier', webhookIdentifier)
+       .single();
+     if (settings) {
+       userId = settings.user_id;
+       userSettings = settings;
+     }
+   } else {
+     const authHeader = req.headers.get('Authorization');
+     if (authHeader) {
+       const { data: { user } } = await supabase.auth.getUser(authHeader.replace('Bearer ', ''));
+       if (user) userId = user.id;
+     }
+   }
+ 
+   try {
+     const body = await req.json().catch(() => ({}));
+     const { action, ...params } = body;
+ 
+     // Handle Meta POST (Webhook Events)
+     if (!action && body.object === 'whatsapp_business_account' && userSettings) {
+       return await handleProcessWebhook(supabase, body.entry, false, userId);
+     }
     if (action === 'processScheduled') {
       console.log('Processing scheduled flow nodes...');
       const now = new Date().toISOString();
