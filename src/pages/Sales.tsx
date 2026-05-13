@@ -1,4 +1,95 @@
-  import { Check, MessageCircle, ShieldCheck, Zap, BarChart3, Bot, Clock, Users, ArrowRight, Star, Layout, Smartphone } from "lucide-react";
+  import { Check, MessageCircle, ShieldCheck, Zap, BarChart3, Bot, Clock, Users, ArrowRight, Star, Layout, Smartphone, BrainCircuit, Sparkles, MessageSquareQuote } from "lucide-react";
+       {/* AI Agent Deep Dive */}
+       <section className="py-24 bg-slate-950 text-white overflow-hidden relative">
+         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.1),transparent_50%)]"></div>
+         <div className="container mx-auto px-4 relative z-10">
+           <div className="flex flex-col lg:flex-row items-center gap-16">
+             <div className="lg:w-1/2">
+               <Badge className="mb-6 bg-green-500/20 text-green-400 hover:bg-green-500/20 border-green-500/30 px-4 py-1">
+                 <Sparkles className="w-3.5 h-3.5 mr-2" />
+                 Inteligência Artificial Ilimitada
+               </Badge>
+               <h2 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">
+                 Agente de I.A Completo <br/>
+                 <span className="text-green-500 italic">Integrado ao ChatGPT</span>
+               </h2>
+               <p className="text-slate-400 text-lg mb-8 leading-relaxed">
+                 Dê vida ao seu atendimento com um cérebro digital que não dorme. Nosso agente de I.A é treinado com o conhecimento do seu negócio para responder, qualificar e vender sem limites.
+               </p>
+               
+               <div className="space-y-6">
+                 <div className="flex items-start gap-4">
+                   <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center shrink-0 border border-white/10">
+                     <BrainCircuit className="w-6 h-6 text-green-500" />
+                   </div>
+                   <div>
+                     <h4 className="font-bold text-xl mb-1">Cérebro Sem Limites</h4>
+                     <p className="text-slate-400">Processamento ilimitado de mensagens utilizando a tecnologia GPT mais avançada do mercado.</p>
+                   </div>
+                 </div>
+                 
+                 <div className="flex items-start gap-4">
+                   <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center shrink-0 border border-white/10">
+                     <MessageSquareQuote className="w-6 h-6 text-blue-500" />
+                   </div>
+                   <div>
+                     <h4 className="font-bold text-xl mb-1">Integração Total com Templates</h4>
+                     <p className="text-slate-400">A I.A identifica a necessidade e envia automaticamente templates com botões interativos para fechar a venda.</p>
+                   </div>
+                 </div>
+               </div>
+ 
+               <div className="mt-12">
+                 <Link to="/crm/login?mode=register">
+                   <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white rounded-2xl px-8 h-14 font-bold shadow-xl shadow-green-500/20">
+                     Testar I.A Agora Grátis
+                   </Button>
+                 </Link>
+               </div>
+             </div>
+             
+             <div className="lg:w-1/2 relative">
+               {/* Mockup do Chat com IA */}
+               <div className="bg-[#0b141a] rounded-[2.5rem] p-6 shadow-2xl border border-white/5 max-w-sm mx-auto relative animate-float">
+                 <div className="flex items-center gap-3 mb-6 border-b border-white/5 pb-4">
+                   <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
+                     <Bot className="w-6 h-6 text-white" />
+                   </div>
+                   <div>
+                     <div className="font-bold text-sm text-white">Assistente I.A</div>
+                     <div className="text-[10px] text-green-500 flex items-center gap-1">
+                       <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                       Online e Processando
+                     </div>
+                   </div>
+                 </div>
+                 
+                 <div className="space-y-4">
+                   <div className="bg-white/5 rounded-2xl p-3 max-w-[85%]">
+                     <p className="text-xs text-slate-300">Olá! Gostaria de saber os preços dos planos anuais.</p>
+                   </div>
+                   <div className="bg-green-900/40 rounded-2xl p-3 max-w-[85%] ml-auto border border-green-500/20">
+                     <p className="text-xs text-white">Com certeza! Nosso plano anual está com 77% de desconto por apenas R$ 397/ano. Posso te enviar o link para assinatura?</p>
+                   </div>
+                   <div className="bg-green-900/20 rounded-2xl p-2 border border-green-500/10 flex flex-col gap-2">
+                     <Button size="sm" className="bg-green-600 hover:bg-green-700 h-8 text-[10px] text-white font-bold">ASSINAR AGORA</Button>
+                     <Button size="sm" variant="outline" className="h-8 text-[10px] text-white border-white/10 hover:bg-white/5">Falar com Humano</Button>
+                   </div>
+                 </div>
+               </div>
+               
+               {/* Decorative labels */}
+               <div className="absolute -top-4 -right-4 bg-blue-600 p-4 rounded-2xl shadow-xl hidden md:block rotate-12">
+                 <div className="text-xs font-black">ChatGPT 4.0</div>
+               </div>
+               <div className="absolute -bottom-8 -left-4 bg-purple-600 p-4 rounded-2xl shadow-xl hidden md:block -rotate-12">
+                 <div className="text-xs font-black">100% Automatizado</div>
+               </div>
+             </div>
+           </div>
+         </div>
+       </section>
+ 
        {/* Message Types / Formatos de Mensagem */}
        <section className="py-24 bg-white">
          <div className="container mx-auto px-4">
