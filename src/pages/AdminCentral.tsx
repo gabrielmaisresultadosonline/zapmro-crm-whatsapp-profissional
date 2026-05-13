@@ -77,7 +77,7 @@ const AdminCentral = () => {
         .select('*, crm_settings(meta_phone_number_id, meta_waba_id)');
       
       // For each user, fetch message stats and calculate costs
-      const usersWithStats = await Promise.all((profiles || []).map(async (p) => {
+       const usersWithStats = await Promise.all((profiles || []).map(async (p: any) => {
         const { data: msgs } = await supabase
           .from('crm_messages')
           .select('direction, created_at, contact_id')
