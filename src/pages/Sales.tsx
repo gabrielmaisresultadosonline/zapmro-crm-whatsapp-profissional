@@ -75,7 +75,7 @@
              Atenda seus clientes de forma profissional, automatize suas vendas e tenha a segurança de uma conexão oficial sem riscos de bloqueio.
            </p>
            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-             <Link to="/crm/login">
+             <Link to="/crm/login?mode=register">
                <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white text-lg px-8 py-6 rounded-2xl w-full sm:w-auto shadow-lg shadow-green-200 group">
                  Cadastrar Grátis no CRM
                  <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -185,7 +185,7 @@
                  </ul>
                </CardContent>
                <CardFooter className="p-8 pt-0">
-                 <Link to="/crm/login" className="w-full">
+                 <Link to="/crm/login?mode=register" className="w-full">
                    <Button variant="outline" className="w-full py-6 rounded-xl border-green-600 text-green-600 hover:bg-green-50">
                      Começar Agora
                    </Button>
@@ -221,7 +221,7 @@
                  </ul>
                </CardContent>
                <CardFooter className="p-8 pt-0">
-                 <Link to="/crm/login" className="w-full">
+                 <Link to="/crm/login?mode=register" className="w-full">
                    <Button className="w-full py-6 rounded-xl bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-200">
                      Assinar Plano Anual
                    </Button>
