@@ -10,8 +10,8 @@ import buttonMessageImg from "@/assets/sales-button-message.png";
 import quickReplyImg from "@/assets/sales-quick-reply.png";
 import appMenuImg from "@/assets/sales-app-menu.png";
 import appConversationsImg from "@/assets/sales-app-conversations.png";
-const metaGirlImg = "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&q=80&w=800";
-const metaBgImg = "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=2000";
+const metaGirlImg = "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=800";
+const metaBgImg = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2000";
  
  const Sales = () => {
    const features = [
@@ -118,14 +118,16 @@ const metaBgImg = "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?aut
                           </div>
                           
                           <div className="relative shrink-0 z-10">
-                           <img 
-                             src={metaGirlImg} 
-                             alt="Especialista Meta" 
-                             className="w-20 h-20 md:w-24 md:h-24 rounded-2xl object-cover border-2 border-green-400 shadow-2xl" 
-                           />
-                           <Badge className="absolute -bottom-2 -right-2 bg-blue-500 hover:bg-blue-500 p-1 rounded-full border-2 border-slate-900">
-                             <Check className="w-3 h-3 text-white" />
-                           </Badge>
+                           <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl overflow-hidden border-2 border-blue-500 shadow-2xl bg-white flex items-center justify-center">
+                             <img 
+                               src={metaGirlImg} 
+                               alt="Especialista Meta" 
+                               className="w-full h-full object-cover" 
+                             />
+                           </div>
+                           <div className="absolute -bottom-2 -right-2 bg-blue-600 p-1.5 rounded-full border-2 border-slate-900 shadow-lg">
+                             <Check className="w-4 h-4 text-white" />
+                           </div>
                          </div>
                          
                           <div className="text-center md:text-left z-10">
