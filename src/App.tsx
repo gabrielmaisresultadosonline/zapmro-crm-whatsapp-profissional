@@ -5,7 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import CRM from "./pages/CRM";
 import CRMLogin from "./pages/CRMLogin";
-import GoogleContactsCallback from "./pages/GoogleContactsCallback";
+ import GoogleContactsCallback from "./pages/GoogleContactsCallback";
+ import Sales from "./pages/Sales";
 
 const queryClient = new QueryClient();
 
@@ -18,7 +19,8 @@ const App = () => (
         <Routes>
           <Route path="/" element={<CRM />} />
           <Route path="/crm" element={<CRM />} />
-          <Route path="/crm/login" element={<CRMLogin />} />
+           <Route path="/crm/login" element={<CRMLogin />} />
+           <Route path="/vendas" element={<Sales />} />
            <Route path="/google-callback" element={<GoogleContactsCallback />} />
            <Route path="/google-callback2" element={<GoogleContactsCallback />} />
           

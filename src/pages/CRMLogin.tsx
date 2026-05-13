@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+ import { useState, useEffect } from 'react';
+ import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,7 +15,14 @@ const CRMLogin = () => {
   const [whatsapp, setWhatsapp] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isRegistering, setIsRegistering] = useState(false);
+   const [isRegistering, setIsRegistering] = useState(false);
+   const location = useLocation();
+   useEffect(() => {
+     const params = new URLSearchParams(location.search);
+     if (params.get('mode') === 'register') {
+       setIsRegistering(true);
+     }
+   }, [location]);
   const navigate = useNavigate();
   const { toast } = useToast();
 
