@@ -87,35 +87,30 @@ import { Link } from "react-router-dom";
              </div>
            </div>
  
-           {/* Floating elements/images placeholder */}
-           <div className="mt-16 relative max-w-5xl mx-auto">
-             <div className="aspect-video bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden relative">
-               <div className="absolute inset-0 bg-gradient-to-br from-green-50/50 to-transparent"></div>
-               <img 
-                 src="https://images.unsplash.com/photo-1611746872915-64382b5c76da?auto=format&fit=crop&q=80&w=2000" 
-                 alt="WhatsApp CRM Interface" 
-                 className="w-full h-full object-cover opacity-90"
-               />
-               <div className="absolute bottom-8 left-8 right-8 bg-white/90 backdrop-blur p-6 rounded-2xl shadow-lg border border-white/50 flex items-center justify-between flex-wrap gap-4">
-                 <div className="flex items-center gap-4">
-                   <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
-                     <MessageCircle className="text-white w-6 h-6" />
-                   </div>
-                   <div className="text-left">
-                     <div className="font-bold">Chat Multi-agente</div>
-                     <div className="text-sm text-slate-500">Gerencie todas conversas em um só lugar</div>
-                   </div>
-                 </div>
-                 <div className="flex -space-x-3">
-                   {[1, 2, 3, 4].map(i => (
-                     <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-slate-200">
-                       <img src={`https://i.pravatar.cc/100?img=${i+10}`} className="rounded-full" alt="User" />
-                     </div>
-                   ))}
-                 </div>
-               </div>
-             </div>
-           </div>
+            {/* Main Banner / Hero Image */}
+            <div className="mt-16 relative max-w-5xl mx-auto group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-green-600 to-blue-600 rounded-[2.5rem] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+              <div className="relative aspect-[16/9] md:aspect-[21/9] bg-white rounded-[2rem] shadow-2xl border border-slate-100 overflow-hidden">
+                <img 
+                  src="/src/assets/whatsappapi-banner.png" 
+                  alt="WhatsApp API Oficial" 
+                  className="w-full h-full object-cover transform transition duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end">
+                  <div className="p-8 text-left w-full">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-green-500 rounded-2xl flex items-center justify-center shadow-lg">
+                        <MessageCircle className="text-white w-6 h-6" />
+                      </div>
+                      <div>
+                        <h3 className="text-white font-bold text-xl">Plataforma Oficial Meta</h3>
+                        <p className="text-green-400 text-sm font-medium">Conexão segura e sem riscos de bloqueio</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
          </div>
        </section>
  
@@ -293,8 +288,8 @@ import { Link } from "react-router-dom";
                 <p className="text-slate-600 mb-6">
                   Passe uma imagem muito mais profissional. Esqueça o texto comum e use botões de ação imediata.
                 </p>
-                <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner">
-                  <img src="/src/assets/whatsappapi-banner.png" alt="Exemplo de Botões" className="w-full h-auto hover:scale-105 transition-transform duration-700" />
+                <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50">
+                  <img src="/src/assets/bonus-5mil.png" alt="Exemplo de Botões Profissionais" className="w-full h-auto hover:scale-105 transition-transform duration-700 object-cover" />
                 </div>
                 <div className="flex flex-col gap-2">
                   <div className="h-10 w-full bg-green-600 rounded-xl flex items-center justify-center text-xs text-white font-bold shadow-lg shadow-green-200">VISITAR SITE</div>
@@ -339,8 +334,8 @@ import { Link } from "react-router-dom";
                 <p className="text-slate-600 mb-6">
                   A forma mais profissional de exibir seu catálogo. Permita que seus clientes deslizem entre suas melhores ofertas.
                 </p>
-                <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner">
-                  <img src="/src/assets/whatsapp-direto-banner.png" alt="Exemplo Carrossel" className="w-full h-auto hover:scale-105 transition-transform duration-700" />
+                <div className="mb-6 rounded-2xl overflow-hidden border border-slate-100 shadow-inner bg-slate-50">
+                  <img src="/src/assets/renda-extra-mro-banner.jpeg" alt="Exemplo Carrossel Profissional" className="w-full h-auto hover:scale-105 transition-transform duration-700 object-cover" />
                 </div>
                 <div className="flex gap-2 overflow-hidden justify-center">
                   <div className="w-2 h-2 rounded-full bg-purple-600"></div>
@@ -385,8 +380,8 @@ import { Link } from "react-router-dom";
                 </Link>
               </div>
               <div className="lg:w-1/2 relative">
-                <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border border-slate-200">
-                  <img src="/src/assets/prompts-area-preview.png" alt="Área de Prompts I.A" className="w-full h-auto" />
+                <div className="relative rounded-[2rem] overflow-hidden shadow-2xl border border-slate-200 bg-slate-50">
+                  <img src="/src/assets/zero-anuncios-banner.png" alt="Área de Prompts I.A" className="w-full h-auto hover:scale-105 transition-transform duration-700" />
                 </div>
                 <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-3xl shadow-xl border border-slate-100 hidden md:block max-w-[240px]">
                   <div className="flex items-center gap-3 mb-3">
