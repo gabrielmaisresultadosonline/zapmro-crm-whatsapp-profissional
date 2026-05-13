@@ -10,7 +10,8 @@ import buttonMessageImg from "@/assets/sales-button-message.png";
 import quickReplyImg from "@/assets/sales-quick-reply.png";
 import appMenuImg from "@/assets/sales-app-menu.png";
 import appConversationsImg from "@/assets/sales-app-conversations.png";
-import metaGirlImg from "@/assets/mila-souza.png";
+const metaGirlImg = "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800";
+const metaBgImg = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=2000";
  
  const Sales = () => {
    const features = [
@@ -106,8 +107,17 @@ import metaGirlImg from "@/assets/mila-souza.png";
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end">
                   <div className="p-8 text-left w-full">
                     <div className="flex items-center gap-5">
-                       <div className="flex flex-col md:flex-row items-center gap-6 bg-white/10 backdrop-blur-xl p-6 rounded-[2rem] border border-white/20 shadow-2xl">
-                         <div className="relative shrink-0">
+                        <div className="flex flex-col md:flex-row items-center gap-6 bg-white/5 backdrop-blur-2xl p-6 rounded-[2rem] border border-white/20 shadow-2xl relative overflow-hidden group/meta">
+                          {/* Meta Background Image */}
+                          <div className="absolute inset-0 opacity-20 group-hover/meta:opacity-30 transition-opacity duration-700">
+                            <img 
+                              src={metaBgImg} 
+                              alt="Meta Background" 
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          
+                          <div className="relative shrink-0 z-10">
                            <img 
                              src={metaGirlImg} 
                              alt="Especialista Meta" 
@@ -118,7 +128,7 @@ import metaGirlImg from "@/assets/mila-souza.png";
                            </div>
                          </div>
                          
-                         <div className="text-center md:text-left">
+                          <div className="text-center md:text-left z-10">
                            <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
                              <div className="bg-white px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-3">
                                <img 
@@ -156,7 +166,7 @@ import metaGirlImg from "@/assets/mila-souza.png";
          <section className="py-20 bg-white border-y border-slate-100 overflow-hidden relative">
            <div className="container mx-auto px-4">
              <div className="flex flex-col lg:flex-row items-center justify-between gap-12 mb-16">
-               <div className="flex flex-col md:flex-row items-center gap-8 bg-slate-50 p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                <div className="flex flex-col md:flex-row items-center gap-8 bg-slate-50/50 backdrop-blur-sm p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
                  <div className="flex items-center gap-6">
                    <img 
                      src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" 
@@ -171,21 +181,14 @@ import metaGirlImg from "@/assets/mila-souza.png";
                    />
                  </div>
                  <div className="hidden md:block w-px h-12 bg-slate-200"></div>
-                 <div className="flex items-center gap-4">
-                   <div className="relative">
-                     <img 
-                       src={metaGirlImg} 
-                       alt="Especialista" 
-                       className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-md"
-                     />
-                     <div className="absolute -bottom-1 -right-1 bg-green-500 rounded-full p-0.5 border-2 border-white">
-                       <Check className="w-2.5 h-2.5 text-white" />
-                     </div>
-                   </div>
-                   <div>
-                     <p className="text-xs font-bold text-slate-900">Mila Souza</p>
-                     <p className="text-[10px] text-slate-500 font-medium">Especialista em API Oficial</p>
-                   </div>
+                  <div className="flex items-center gap-3 bg-white px-4 py-2.5 rounded-2xl shadow-sm border border-slate-100">
+                    <div className="bg-green-500 rounded-full p-2 shadow-sm shadow-green-200">
+                      <ShieldCheck className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Parceiro</p>
+                      <p className="text-sm font-black text-slate-900">Verificado</p>
+                    </div>
                  </div>
                </div>
  
