@@ -11,7 +11,7 @@ import quickReplyImg from "@/assets/sales-quick-reply.png";
 import appMenuImg from "@/assets/sales-app-menu.png";
 import appConversationsImg from "@/assets/sales-app-conversations.png";
 const metaGirlImg = "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=800";
-const metaBgImg = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2000";
+const metaBgImg = "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&q=80&w=2000";
  
  const Sales = () => {
    const features = [
