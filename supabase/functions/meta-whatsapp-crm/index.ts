@@ -1054,14 +1054,14 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
                   flow_timeout_node_id: null
                 }).eq('id', contact.id).eq('flow_state', 'waiting_response').select();
 
-                if (updated && updated.length > 0) {
-                  const { data: flow } = await supabase.from('crm_flows').select('*').eq('id', contact.current_flow_id).single();
-                  const nextNode = flow?.nodes?.find((n: any) => n.id === contact.flow_timeout_node_id);
-                  if (nextNode) {
-                    const res = await executeVisualNode(supabase, flow, nextNode, contact.id, contact.wa_id);
-                    results.push({ contactId: contact.id, result: res });
-                  }
-                }
+                 if (updated && updated.length > 0) {
+                   const { data: flow } = await supabase.from('crm_flows').select('*').eq('id', contact.current_flow_id).eq('user_id', contact.user_id).single();
+                   const nextNode = flow?.nodes?.find((n: any) => n.id === contact.flow_timeout_node_id);
+                   if (nextNode) {
+                     const res = await executeVisualNode(supabase, flow, nextNode, contact.id, contact.wa_id);
+                     results.push({ contactId: contact.id, result: res });
+                   }
+                 }
               } else {
                 await supabase.from('crm_contacts').update({ flow_state: 'idle', current_flow_id: null, current_node_id: null }).eq('id', contact.id);
               }
