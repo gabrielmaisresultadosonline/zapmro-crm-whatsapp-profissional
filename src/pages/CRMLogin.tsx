@@ -4,13 +4,15 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Logo } from '@/components/Logo';
-import { Lock, Mail, AlertCircle } from 'lucide-react';
+import { Lock, Mail, AlertCircle, User, Phone } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
 const CRMLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [whatsapp, setWhatsapp] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
@@ -24,28 +26,73 @@ const CRMLogin = () => {
 
     try {
       if (isRegistering) {
-        const { error: signUpError } = await supabase.auth.signUp({
+        // Sign up with Supabase
+        const { data: authData, error: signUpError } = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            data: {
+              full_name: fullName,
+              whatsapp_number: whatsapp
+            }
+          }
         });
+        
         if (signUpError) throw signUpError;
         
+        if (authData.user) {
+          // Create profile in crm_profiles
+          const { error: profileError } = await supabase
+            .from('crm_profiles')
+            .insert({
+              user_id: authData.user.id,
+              full_name: fullName,
+              whatsapp_number: whatsapp,
+              role: 'user'
+            });
+          
+          if (profileError) console.error("Error creating profile:", profileError);
+        }
+
         toast({
           title: "Cadastro realizado!",
-          description: "Verifique seu e-mail para confirmar a conta.",
+          description: "Verifique seu e-mail para confirmar a conta (se habilitado).",
         });
+        
+        // Auto-switch to login after registration success
+        setIsRegistering(false);
       } else {
-        const { error: signInError } = await supabase.auth.signInWithPassword({
+        const { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
         if (signInError) throw signInError;
         
-        toast({
-          title: "Login realizado!",
-          description: "Bem-vindo ao CRM Meta SaaS",
-        });
-        navigate('/crm');
+        if (authData.user) {
+          // Log access
+          await supabase.from('crm_access_logs').insert({
+            user_id: authData.user.id,
+            user_agent: navigator.userAgent
+          });
+          
+          // Check if admin to redirect correctly
+          const { data: profile } = await supabase
+            .from('crm_profiles')
+            .select('role')
+            .eq('user_id', authData.user.id)
+            .maybeSingle();
+
+          toast({
+            title: "Login realizado!",
+            description: "Bem-vindo ao CRM Meta SaaS",
+          });
+
+          if (profile?.role === 'super_admin') {
+            navigate('/admincentral');
+          } else {
+            navigate('/crm');
+          }
+        }
       }
     } catch (err: any) {
       setError(err.message || 'Ocorreu um erro');
@@ -69,6 +116,40 @@ const CRMLogin = () => {
               <AlertCircle className="w-4 h-4" />
               {error}
             </div>
+          )}
+
+          {isRegistering && (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="fullName" className="flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  Nome Completo
+                </Label>
+                <Input
+                  id="fullName"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="Seu nome completo"
+                  className="bg-secondary/50"
+                  required={isRegistering}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="whatsapp" className="flex items-center gap-2">
+                  <Phone className="w-4 h-4" />
+                  WhatsApp
+                </Label>
+                <Input
+                  id="whatsapp"
+                  value={whatsapp}
+                  onChange={(e) => setWhatsapp(e.target.value)}
+                  placeholder="Ex: 5551999999999"
+                  className="bg-secondary/50"
+                  required={isRegistering}
+                />
+              </div>
+            </>
           )}
 
           <div className="space-y-2">
@@ -110,7 +191,7 @@ const CRMLogin = () => {
             className="w-full cursor-pointer"
             disabled={isLoading}
           >
-            {isLoading ? 'Processando...' : isRegistering ? 'Criar Conta' : 'Entrar no CRM'}
+            {isLoading ? 'Processando...' : isRegistering ? 'Criar Minha Conta' : 'Entrar no CRM'}
           </Button>
         </form>
 
@@ -119,7 +200,7 @@ const CRMLogin = () => {
             onClick={() => setIsRegistering(!isRegistering)}
             className="text-sm text-primary hover:underline"
           >
-            {isRegistering ? 'Já tem uma conta? Entre aqui' : 'Não tem uma conta? Cadastre-se'}
+            {isRegistering ? 'Já tem uma conta? Entre aqui' : 'Não tem uma conta? Cadastre-se agora'}
           </button>
         </div>
 
