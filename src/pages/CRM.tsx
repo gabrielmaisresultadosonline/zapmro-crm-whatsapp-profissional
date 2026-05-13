@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+ import { useNavigate, Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -2609,9 +2609,11 @@ const CRM = () => {
     <SidebarProvider>
       <div className="h-[100dvh] w-full flex overflow-hidden bg-[#f0f2f5] dark:bg-[#0c1317]">
         <Sidebar className="border-r border-border/50 shadow-xl bg-[#111b21] dark:bg-[#111b21] text-white">
-          <SidebarHeader className="p-4 border-b border-white/5 flex items-center justify-center bg-[#202c33]">
-            <Logo size="sm" />
-          </SidebarHeader>
+           <SidebarHeader className="p-4 border-b border-white/5 flex items-center justify-center bg-[#202c33]">
+             <Link to="/vendas">
+               <Logo size="sm" />
+             </Link>
+           </SidebarHeader>
           <SidebarContent className="bg-[#111b21]">
             <SidebarGroup>
               <SidebarGroupLabel className="px-4 text-[10px] uppercase tracking-wider text-white/40 font-bold">Navegação</SidebarGroupLabel>

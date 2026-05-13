@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import CRM from "./pages/CRM";
 import CRMLogin from "./pages/CRMLogin";
  import GoogleContactsCallback from "./pages/GoogleContactsCallback";
@@ -16,9 +16,9 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Sales />} />
-          <Route path="/crm" element={<CRM />} />
+         <Routes>
+           <Route path="/" element={<Navigate to="/vendas" replace />} />
+           <Route path="/crm" element={<CRM />} />
            <Route path="/crm/login" element={<CRMLogin />} />
            <Route path="/vendas" element={<Sales />} />
            <Route path="/google-callback" element={<GoogleContactsCallback />} />
