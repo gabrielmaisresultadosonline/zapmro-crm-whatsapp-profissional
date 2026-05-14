@@ -8,6 +8,7 @@ import CRMLogin from "./pages/CRMLogin";
  import GoogleContactsCallback from "./pages/GoogleContactsCallback";
  import Sales from "./pages/Sales";
  import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
            <Route path="/google-callback" element={<GoogleContactsCallback />} />
             <Route path="/google-callback2" element={<GoogleContactsCallback />} />
             <Route path="/br/politicadeprivacidade" element={<PrivacyPolicy />} />
+            <Route path="/br/termosdoservico" element={<TermsOfService />} />
            <Route path="*" element={<Sales />} />
         </Routes>
       </BrowserRouter>
