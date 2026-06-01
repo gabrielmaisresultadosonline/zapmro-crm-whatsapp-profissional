@@ -228,6 +228,7 @@ const CRM = () => {
     vps_transcoder_url: 'https://vps.zapmro.com.br',
     vps_status: 'unknown' as 'unknown' | 'online' | 'offline'
   });
+  const [whatsAppConnectionConfirmed, setWhatsAppConnectionConfirmed] = useState(false);
 
   const [metrics, setMetrics] = useState<any>({
     sent_count: 0,
@@ -454,7 +455,17 @@ const CRM = () => {
           addConnectionLog('error', 'Falha ao salvar conexão retornada pelo servidor', data || error);
           throw new Error(data?.error || error?.message || 'Falha ao conectar');
         }
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) localStorage.setItem(`crm_whatsapp_connected_${user.id}`, 'true');
         addConnectionLog('success', 'Conexão salva no CRM com sucesso', data);
+        setWhatsAppConnectionConfirmed(true);
+        setMetaSettings(prev => ({
+          ...prev,
+          meta_waba_id: data.waba_id || prev.meta_waba_id,
+          meta_phone_number_id: data.phone_number_id || prev.meta_phone_number_id,
+          meta_display_phone_number: data.display_phone_number || prev.meta_display_phone_number,
+          meta_verified_name: data.verified_name || prev.meta_verified_name,
+        }));
         toast({ title: 'WhatsApp conectado!', description: `WABA: ${data.waba_id || '—'} · Phone: ${data.phone_number_id || '—'}` });
         await fetchData();
       } catch (e: any) {
@@ -745,6 +756,9 @@ const CRM = () => {
          navigate('/crm/login');
          return;
        }
+        if (localStorage.getItem(`crm_whatsapp_connected_${session.user.id}`) === 'true') {
+          setWhatsAppConnectionConfirmed(true);
+        }
        fetchData();
      };
      checkAuth();
@@ -957,7 +971,10 @@ const CRM = () => {
          if (!createError && newSettings) settingsData = newSettings;
        }
  
-       if (settingsData) setMetaSettings(settingsData);
+       if (settingsData) {
+         setMetaSettings(settingsData);
+         setWhatsAppConnectionConfirmed(!!(settingsData.meta_access_token && settingsData.meta_phone_number_id && settingsData.meta_waba_id));
+       }
  
        const { data: profile } = await supabase
          .from('crm_profiles')
@@ -2788,7 +2805,7 @@ const CRM = () => {
   if (loading && !contacts.length) return <div className="min-h-screen flex items-center justify-center"><RefreshCcw className="animate-spin" /></div>;
 
   // Gate: usuário precisa conectar o WhatsApp antes de acessar conversas/CRM
-  const isWhatsAppConnected = !!(metaSettings.meta_access_token && metaSettings.meta_phone_number_id && metaSettings.meta_waba_id);
+  const isWhatsAppConnected = whatsAppConnectionConfirmed || !!(metaSettings.meta_access_token && metaSettings.meta_phone_number_id && metaSettings.meta_waba_id);
   if (!loading && !isWhatsAppConnected) {
     return (
       <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-[#0c1317] via-[#111b21] to-[#0c1317] p-6">

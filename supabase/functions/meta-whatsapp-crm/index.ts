@@ -1259,7 +1259,7 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
           console.log('[Embedded Signup] legacy settings update result', { ok: !updErr, error: updErr?.message || null })
         }
 
-        return new Response(JSON.stringify({ success: !updErr, error: updErr?.message, access_token_preview: access_token.slice(0, 12) + '...', waba_id, phone_number_id: resolvedPhoneNumberId, business_id }), {
+        return new Response(JSON.stringify({ success: !updErr, error: updErr?.message, access_token_preview: access_token.slice(0, 12) + '...', waba_id, phone_number_id: resolvedPhoneNumberId, display_phone_number: resolvedDisplayPhone, verified_name: resolvedVerifiedName, business_id }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         })
       } catch (e: any) {
