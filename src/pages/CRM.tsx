@@ -212,6 +212,7 @@ const CRM = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [bizWarnExpanded, setBizWarnExpanded] = useState(false);
    const [activeTab, setActiveTab] = useState('dashboard');
    const [userRole, setUserRole] = useState<string | null>(null);
   const [isMyDataOpen, setIsMyDataOpen] = useState(false);
