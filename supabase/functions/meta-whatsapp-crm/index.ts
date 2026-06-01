@@ -1162,6 +1162,11 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
          error = created.error
        }
 
+       if (settings?.meta_waba_id && settings?.meta_access_token) {
+         await ensureMetaAppWebhookConfigured();
+         await ensureWabaSubscribed(settings.meta_waba_id, settings.meta_access_token);
+       }
+
        return new Response(JSON.stringify({ success: !error, settings, error: error?.message || null }), {
          status: error ? 500 : 200,
          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
