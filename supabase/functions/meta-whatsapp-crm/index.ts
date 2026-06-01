@@ -927,6 +927,58 @@ async function getAppId(accessToken: string) {
   }
 }
 
+function getGlobalWebhookVerifyToken() {
+  return Deno.env.get('META_WEBHOOK_VERIFY_TOKEN') || 'mro-crm-whatsapp-webhook-v1';
+}
+
+async function ensureMetaAppWebhookConfigured() {
+  const APP_ID = Deno.env.get('FACEBOOK_APP_ID');
+  const APP_SECRET = Deno.env.get('FACEBOOK_APP_SECRET');
+  const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
+  if (!APP_ID || !APP_SECRET || !SUPABASE_URL) {
+    console.warn('[META WEBHOOK] Missing app credentials or backend URL');
+    return { success: false, error: 'missing_config' };
+  }
+
+  const callbackUrl = `${SUPABASE_URL.replace(/\/$/, '')}/functions/v1/meta-whatsapp-crm`;
+  const form = new URLSearchParams();
+  form.set('object', 'whatsapp_business_account');
+  form.set('callback_url', callbackUrl);
+  form.set('fields', 'messages');
+  form.set('verify_token', getGlobalWebhookVerifyToken());
+  form.set('access_token', `${APP_ID}|${APP_SECRET}`);
+
+  try {
+    const res = await fetch(`https://graph.facebook.com/v25.0/${APP_ID}/subscriptions`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: form.toString(),
+    });
+    const json = await res.json().catch(() => ({}));
+    console.log('[META WEBHOOK] app subscription response', { ok: res.ok, status: res.status, success: json?.success || null, error: json?.error?.message || null });
+    return { success: res.ok, status: res.status, result: json, callback_url: callbackUrl };
+  } catch (e: any) {
+    console.error('[META WEBHOOK] app subscription failed', { message: e?.message || String(e) });
+    return { success: false, error: e?.message || String(e) };
+  }
+}
+
+async function ensureWabaSubscribed(wabaId?: string | null, accessToken?: string | null) {
+  if (!wabaId || !accessToken) return { success: false, skipped: true };
+  try {
+    const subscribeRes = await fetch(`https://graph.facebook.com/v25.0/${wabaId}/subscribed_apps`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${accessToken}` }
+    });
+    const subscribeJson = await subscribeRes.json().catch(() => ({}));
+    console.log('[META WEBHOOK] WABA subscribed_apps response', { ok: subscribeRes.ok, status: subscribeRes.status, success: subscribeJson?.success || null, error: subscribeJson?.error?.message || null });
+    return { success: subscribeRes.ok, status: subscribeRes.status, result: subscribeJson };
+  } catch (e: any) {
+    console.warn('[META WEBHOOK] WABA subscribed_apps failed', { message: e?.message || String(e) });
+    return { success: false, error: e?.message || String(e) };
+  }
+}
+
 async function getMetaHeaderHandle(accessToken: string, appId: string, mediaUrl: string) {
   try {
     console.log(`Getting Meta header handle for media: ${mediaUrl}`);
