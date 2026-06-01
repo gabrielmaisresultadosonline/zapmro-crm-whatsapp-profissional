@@ -255,7 +255,107 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
   }
 }
 
- async function handleProcessWebhook(supabase: any, entry: any, skipSave = false, userId?: string) {
+// Save a message echo (sent from the WhatsApp Business mobile app/desktop) as
+// an outbound message in the CRM so both sides of the conversation stay in sync.
+async function saveOutboundEcho(supabase: any, userId: string, echo: any, businessPhone: string) {
+  try {
+    const metaMessageId = echo?.id;
+    // The recipient (customer) — Meta puts the customer in `to` for echoes.
+    let waId: string | undefined = echo?.to || echo?.recipient_id || echo?.contacts?.[0]?.wa_id;
+    if (!waId && echo?.from && businessPhone) {
+      // Defensive: if `from` differs from business phone, treat `from` as recipient
+      const from = String(echo.from).replace(/\D/g, '');
+      if (from !== businessPhone) waId = echo.from;
+    }
+    if (!waId) {
+      console.warn('[WEBHOOK-ECHO] Missing recipient for echo, skipping', { metaMessageId });
+      return { success: false, error: 'missing_recipient' };
+    }
+
+    // Deduplicate: avoid double-saving if we already stored this message id
+    // (could be our own send or a previous echo delivery)
+    if (metaMessageId) {
+      const { data: existing } = await supabase
+        .from('crm_messages')
+        .select('id')
+        .eq('meta_message_id', metaMessageId)
+        .eq('user_id', userId)
+        .maybeSingle();
+      if (existing) {
+        console.log('[WEBHOOK-ECHO] Duplicate echo ignored', { metaMessageId, waId });
+        return { success: true, deduped: true };
+      }
+    }
+
+    // Find or create contact
+    let { data: contact } = await supabase
+      .from('crm_contacts')
+      .select('id')
+      .eq('wa_id', waId)
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (!contact) {
+      const { data: created, error: createErr } = await supabase
+        .from('crm_contacts')
+        .insert({
+          wa_id: waId,
+          name: waId,
+          status: 'new',
+          source_type: 'whatsapp_echo',
+          user_id: userId,
+          last_interaction: new Date().toISOString(),
+          metadata: { source: 'meta_webhook_echo' }
+        })
+        .select('id')
+        .maybeSingle();
+      if (createErr) {
+        console.error('[WEBHOOK-ECHO] Failed to create contact', { waId, error: createErr.message });
+        return { success: false, error: createErr.message };
+      }
+      contact = created;
+    }
+
+    // Build content/type
+    const type = echo?.type || 'text';
+    let content = '';
+    if (type === 'text') {
+      content = echo?.text?.body || '';
+    } else if (type === 'interactive') {
+      content = echo?.interactive?.button_reply?.title || echo?.interactive?.list_reply?.title || `[${type}]`;
+    } else {
+      content = `[${type}]`;
+    }
+
+    const { error: insertErr } = await supabase.from('crm_messages').insert({
+      contact_id: contact!.id,
+      direction: 'outbound',
+      message_type: type,
+      content: content || `[${type}]`,
+      status: 'sent',
+      meta_message_id: metaMessageId || null,
+      metadata: { raw: echo, source: 'echo_mobile_app' },
+      user_id: userId
+    });
+    if (insertErr) {
+      console.error('[WEBHOOK-ECHO] Failed to insert outbound echo', { waId, error: insertErr.message });
+      return { success: false, error: insertErr.message };
+    }
+
+    await supabase.from('crm_contacts').update({
+      last_interaction: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }).eq('id', contact!.id);
+
+    console.log('[WEBHOOK-ECHO] Saved outbound echo from mobile app', { waId, userId, contact_id: contact!.id, metaMessageId, type });
+    return { success: true };
+  } catch (err: any) {
+    console.error('[WEBHOOK-ECHO] Unexpected error', err);
+    return { success: false, error: err?.message || String(err) };
+  }
+}
+
+async function handleProcessWebhook(supabase: any, entry: any, skipSave = false, userId?: string) {
   const value = entry?.[0]?.changes?.[0]?.value || {};
 
   if (!userId) {
@@ -271,12 +371,42 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
     return jsonResponse({ success: true, type: 'statuses', results });
   }
 
+  // Handle "message_echoes" — messages sent from the WhatsApp Business mobile app
+  // (or other clients) on the same number. Meta delivers them so we can keep CRM
+  // history in sync with what the user types on their phone.
+  const echoes: any[] = Array.isArray(value.message_echoes) ? value.message_echoes : [];
+  // Some payloads put echoes inside `messages` with `from` equal to the business phone.
+  const businessPhone = (value?.metadata?.display_phone_number || '').replace(/\D/g, '');
+  const messageEchoesInMessages: any[] = Array.isArray(value.messages)
+    ? value.messages.filter((m: any) => {
+        const from = String(m?.from || '').replace(/\D/g, '');
+        return businessPhone && from === businessPhone;
+      })
+    : [];
+  const allEchoes = [...echoes, ...messageEchoesInMessages];
+
+  if (allEchoes.length > 0) {
+    const results = [];
+    for (const echo of allEchoes) {
+      results.push(await saveOutboundEcho(supabase, userId, echo, businessPhone));
+    }
+    if (allEchoes.length === (value.messages?.length || 0) || echoes.length > 0) {
+      return jsonResponse({ success: true, type: 'echoes', results });
+    }
+  }
+
   if (!value?.messages?.[0]) {
     return jsonResponse({ success: true, ignored: 'empty_event' });
   }
 
   const message = value.messages[0];
   const waId = message.from;
+
+  // Skip if this single message is actually an echo we already handled above.
+  if (businessPhone && String(waId || '').replace(/\D/g, '') === businessPhone) {
+    return jsonResponse({ success: true, ignored: 'echo_already_handled' });
+  }
+
   let text = '';
   let buttonId = '';
 
@@ -1018,7 +1148,7 @@ async function ensureMetaAppWebhookConfigured() {
   const form = new URLSearchParams();
   form.set('object', 'whatsapp_business_account');
   form.set('callback_url', callbackUrl);
-  form.set('fields', 'messages');
+  form.set('fields', 'messages,message_echoes');
   form.set('verify_token', getGlobalWebhookVerifyToken());
   form.set('access_token', `${APP_ID}|${APP_SECRET}`);
 
