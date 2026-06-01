@@ -72,7 +72,8 @@ import {
    RotateCw,
    ShieldCheck
    ,
-   UserCog
+   UserCog,
+   ExternalLink
   } from "lucide-react";
 import * as LucideIcons from 'lucide-react';
 const Instagram = (LucideIcons as any).Instagram || Camera;
