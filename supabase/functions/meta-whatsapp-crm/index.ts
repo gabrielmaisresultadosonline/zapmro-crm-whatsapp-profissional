@@ -1192,14 +1192,24 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
         if (resolvedPhoneNumberId) patch.meta_phone_number_id = resolvedPhoneNumberId
         // business_id é informativo (não há coluna dedicada)
 
-        const { error: updErr } = userId
-          ? await supabase
-              .from('crm_settings')
-              .upsert({ ...patch, user_id: userId, webhook_identifier: crypto.randomUUID(), updated_at: new Date().toISOString() }, { onConflict: 'user_id' })
-          : await supabase
-              .from('crm_settings')
-              .update(patch)
-              .eq('id', '00000000-0000-0000-0000-000000000001')
+        let updErr: any = null
+        if (userId) {
+          const { data: existingSettings } = await supabase
+            .from('crm_settings')
+            .select('webhook_identifier')
+            .eq('user_id', userId)
+            .maybeSingle()
+          const result = await supabase
+            .from('crm_settings')
+            .upsert({ ...patch, user_id: userId, webhook_identifier: existingSettings?.webhook_identifier || crypto.randomUUID(), updated_at: new Date().toISOString() }, { onConflict: 'user_id' })
+          updErr = result.error
+        } else {
+          const result = await supabase
+            .from('crm_settings')
+            .update(patch)
+            .eq('id', '00000000-0000-0000-0000-000000000001')
+          updErr = result.error
+        }
 
         return new Response(JSON.stringify({ success: !updErr, error: updErr?.message, access_token_preview: access_token.slice(0, 12) + '...', waba_id, phone_number_id: resolvedPhoneNumberId, business_id }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
