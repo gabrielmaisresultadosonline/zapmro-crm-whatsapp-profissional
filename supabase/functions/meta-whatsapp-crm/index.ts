@@ -271,12 +271,42 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
     return jsonResponse({ success: true, type: 'statuses', results });
   }
 
+  // Handle "message_echoes" — messages sent from the WhatsApp Business mobile app
+  // (or other clients) on the same number. Meta delivers them so we can keep CRM
+  // history in sync with what the user types on their phone.
+  const echoes: any[] = Array.isArray(value.message_echoes) ? value.message_echoes : [];
+  // Some payloads put echoes inside `messages` with `from` equal to the business phone.
+  const businessPhone = (value?.metadata?.display_phone_number || '').replace(/\D/g, '');
+  const messageEchoesInMessages: any[] = Array.isArray(value.messages)
+    ? value.messages.filter((m: any) => {
+        const from = String(m?.from || '').replace(/\D/g, '');
+        return businessPhone && from === businessPhone;
+      })
+    : [];
+  const allEchoes = [...echoes, ...messageEchoesInMessages];
+
+  if (allEchoes.length > 0) {
+    const results = [];
+    for (const echo of allEchoes) {
+      results.push(await saveOutboundEcho(supabase, userId, echo, businessPhone));
+    }
+    if (allEchoes.length === (value.messages?.length || 0) || echoes.length > 0) {
+      return jsonResponse({ success: true, type: 'echoes', results });
+    }
+  }
+
   if (!value?.messages?.[0]) {
     return jsonResponse({ success: true, ignored: 'empty_event' });
   }
 
   const message = value.messages[0];
   const waId = message.from;
+
+  // Skip if this single message is actually an echo we already handled above.
+  if (businessPhone && String(waId || '').replace(/\D/g, '') === businessPhone) {
+    return jsonResponse({ success: true, ignored: 'echo_already_handled' });
+  }
+
   let text = '';
   let buttonId = '';
 
