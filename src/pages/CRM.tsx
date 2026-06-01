@@ -895,10 +895,18 @@ const CRM = () => {
       }
     }, 5000);
 
+    const activeChatSyncInterval = setInterval(() => {
+      const activeContactId = selectedContactRef.current?.id;
+      if (activeContactId && document.visibilityState === 'visible') {
+        fetchMessages(activeContactId, true);
+      }
+    }, 4000);
+
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       supabase.removeChannel(messageChannel);
       clearInterval(scheduledInterval);
+      clearInterval(activeChatSyncInterval);
     };
   }, [navigate]);
 
