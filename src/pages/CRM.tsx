@@ -316,6 +316,7 @@ const CRM = () => {
   // Meta Embedded Signup (WhatsApp Tech Provider) ---------------------------
   const META_APP_ID = '1296667748608099';
   const META_CONFIG_ID = '1691744568626778';
+  const META_EMBEDDED_SIGNUP_VERSION = 'v4';
 
   useEffect(() => {
     if ((window as any).FB) return;
@@ -408,7 +409,7 @@ const CRM = () => {
         override_default_response_type: true,
         extras: {
           setup: {},
-          featureType: 'whatsapp_business_app_onboarding',
+          version: META_EMBEDDED_SIGNUP_VERSION,
           sessionInfoVersion: '3',
         },
       }
