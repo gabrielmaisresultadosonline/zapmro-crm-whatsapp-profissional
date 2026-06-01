@@ -1261,11 +1261,7 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
     }
 
     // Get Meta Settings
-    const { data: settings } = await supabase
-      .from('crm_settings')
-      .select('*')
-      .eq('id', '00000000-0000-0000-0000-000000000001')
-      .single()
+      const settings = await getCrmSettings(supabase, userId)
 
     const { meta_access_token, meta_phone_number_id } = settings || {}
 
