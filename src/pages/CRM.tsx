@@ -313,6 +313,93 @@ const CRM = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Meta Embedded Signup (WhatsApp Tech Provider) ---------------------------
+  const META_APP_ID = '1296667748608099';
+  const META_CONFIG_ID = '1691744568626778';
+
+  useEffect(() => {
+    if ((window as any).FB) return;
+    (window as any).fbAsyncInit = function () {
+      (window as any).FB.init({
+        appId: META_APP_ID,
+        cookie: true,
+        xfbml: false,
+        version: 'v21.0',
+      });
+    };
+    const id = 'facebook-jssdk';
+    if (document.getElementById(id)) return;
+    const js = document.createElement('script');
+    js.id = id;
+    js.async = true;
+    js.defer = true;
+    js.crossOrigin = 'anonymous';
+    js.src = 'https://connect.facebook.net/en_US/sdk.js';
+    document.body.appendChild(js);
+
+    const handleMsg = async (event: MessageEvent) => {
+      if (!event.origin || !/facebook\.com$/.test(new URL(event.origin).hostname)) return;
+      try {
+        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+        if (data?.type !== 'WA_EMBEDDED_SIGNUP') return;
+        console.log('[Embedded Signup] event:', data);
+        if (data.event === 'FINISH' || data.event === 'FINISH_ONLY_WABA') {
+          (window as any).__waEmbeddedSignupData = data.data;
+        } else if (data.event === 'CANCEL') {
+          toast({ title: 'Conexão cancelada', description: `Etapa: ${data.data?.current_step || 'N/A'}`, variant: 'destructive' });
+        } else if (data.event === 'ERROR') {
+          toast({ title: 'Erro no Embedded Signup', description: data.data?.error_message || 'Erro desconhecido', variant: 'destructive' });
+        }
+      } catch {}
+    };
+    window.addEventListener('message', handleMsg);
+    return () => window.removeEventListener('message', handleMsg);
+  }, []);
+
+  const startEmbeddedSignup = () => {
+    const FB = (window as any).FB;
+    if (!FB) {
+      toast({ title: 'SDK do Facebook ainda carregando…', description: 'Aguarde alguns segundos e tente novamente.', variant: 'destructive' });
+      return;
+    }
+    (window as any).__waEmbeddedSignupData = null;
+    FB.login(
+      async (response: any) => {
+        if (!response?.authResponse?.code) {
+          toast({ title: 'Login cancelado', variant: 'destructive' });
+          return;
+        }
+        const code = response.authResponse.code;
+        const sessionInfo = (window as any).__waEmbeddedSignupData || {};
+        toast({ title: 'Conectando à Meta…', description: 'Trocando código por token e salvando credenciais.' });
+        try {
+          const { data, error } = await supabase.functions.invoke('meta-whatsapp-crm', {
+            body: {
+              action: 'exchangeEmbeddedSignupCode',
+              code,
+              waba_id: sessionInfo.waba_id,
+              phone_number_id: sessionInfo.phone_number_id,
+              business_id: sessionInfo.business_id,
+            },
+          });
+          if (error || !data?.success) {
+            throw new Error(data?.error || error?.message || 'Falha ao conectar');
+          }
+          toast({ title: 'WhatsApp conectado!', description: `WABA: ${data.waba_id || '—'} · Phone: ${data.phone_number_id || '—'}` });
+          await fetchData();
+        } catch (e: any) {
+          toast({ title: 'Erro ao conectar', description: e?.message || String(e), variant: 'destructive' });
+        }
+      },
+      {
+        config_id: META_CONFIG_ID,
+        response_type: 'code',
+        override_default_response_type: true,
+        extras: { setup: {}, featureType: '', sessionInfoVersion: '3' },
+      }
+    );
+  };
+
   const computeConversationStats = async () => {
     try {
       const now = new Date();
@@ -5698,6 +5785,23 @@ const CRM = () => {
                              <div className={cn("w-2 h-2 rounded-full", (metaSettings.meta_access_token && metaSettings.meta_phone_number_id && metaSettings.meta_waba_id) ? "bg-white" : "bg-muted-foreground")} />
                              {(metaSettings.meta_access_token && metaSettings.meta_phone_number_id && metaSettings.meta_waba_id) ? "ATIVADO LIGADO" : "AGUARDANDO CONFIGURAÇÃO"}
                            </div>
+                         </div>
+
+                         <div className="pt-3 border-t border-border/60 space-y-2">
+                           <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                             <Facebook className="w-3 h-3" /> Embedded Signup (Meta Tech Provider)
+                           </Label>
+                           <p className="text-[11px] text-muted-foreground">
+                             Conecte uma conta WhatsApp Business diretamente pelo Facebook — preenche WABA, Phone Number ID e Access Token automaticamente.
+                           </p>
+                           <Button
+                             type="button"
+                             className="w-full h-11 rounded-xl bg-[#1877F2] hover:bg-[#1668d8] text-white font-semibold"
+                             onClick={() => startEmbeddedSignup()}
+                           >
+                             <Facebook className="w-4 h-4 mr-2" />
+                             Conectar com Facebook
+                           </Button>
                          </div>
                       </CardContent>
                     </Card>
