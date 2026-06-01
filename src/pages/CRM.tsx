@@ -1700,7 +1700,8 @@ const CRM = () => {
       });
 
       recorder.ondataavailable = (typedArray: Uint8Array) => {
-        const audioBlob = new Blob([typedArray], { type: 'audio/ogg; codecs=opus' });
+        const buf = typedArray.buffer.slice(typedArray.byteOffset, typedArray.byteOffset + typedArray.byteLength) as ArrayBuffer;
+        const audioBlob = new Blob([buf], { type: 'audio/ogg; codecs=opus' });
         console.log(`Audio recording stopped. Size: ${audioBlob.size} bytes, Type: audio/ogg; codecs=opus`);
         const audioUrl = URL.createObjectURL(audioBlob);
         setRecordedAudioBlob(audioBlob);
