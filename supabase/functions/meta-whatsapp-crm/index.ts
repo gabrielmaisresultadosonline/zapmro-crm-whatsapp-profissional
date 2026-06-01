@@ -1018,7 +1018,7 @@ async function ensureMetaAppWebhookConfigured() {
   const form = new URLSearchParams();
   form.set('object', 'whatsapp_business_account');
   form.set('callback_url', callbackUrl);
-  form.set('fields', 'messages');
+  form.set('fields', 'messages,message_echoes');
   form.set('verify_token', getGlobalWebhookVerifyToken());
   form.set('access_token', `${APP_ID}|${APP_SECRET}`);
 
