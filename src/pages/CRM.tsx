@@ -71,7 +71,9 @@ import {
    MessageCircle, 
    RotateCw,
    ShieldCheck
- } from "lucide-react";
+   ,
+   UserCog
+  } from "lucide-react";
 import * as LucideIcons from 'lucide-react';
 const Instagram = (LucideIcons as any).Instagram || Camera;
 import TemplatePreview from "@/components/whatsapp/TemplatePreview";
