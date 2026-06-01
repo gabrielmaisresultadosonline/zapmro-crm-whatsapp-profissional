@@ -1974,8 +1974,8 @@ const CRM = () => {
 
         if (vpsResult) {
           const metaMsgId = vpsResult?.messageId || vpsResult?.messages?.[0]?.id || null;
-          await updatePersistedAudio('sent', 'vps_bridge', metaMsgId);
-          toast({ title: "Áudio Profissional enviado!" });
+          await updatePersistedAudio('accepted', 'vps_bridge', metaMsgId);
+          toast({ title: "Áudio enviado para a Meta", description: "Aguardando confirmação de entrega." });
           setMediaUploadProgress(prev => {
             const next = { ...prev };
             delete next[targetContactId];
@@ -2014,10 +2014,10 @@ const CRM = () => {
       }
       if (type === 'audio') {
         const metaMsgId = data?.messageId || data?.messages?.[0]?.id || data?.result?.messages?.[0]?.id || null;
-        await updatePersistedAudio('sent', 'standard_send', metaMsgId);
+        await updatePersistedAudio('accepted', 'standard_send', metaMsgId);
       }
       await fetchMessages(targetContactId);
-      toast({ title: "Mídia enviada!" });
+      toast({ title: "Mídia enviada para a Meta", description: "Aguardando confirmação de entrega." });
     } catch (err: any) {
       console.error('[CRM][sendMedia] EXCEPTION', err);
       if (selectedContactRef.current?.id === targetContactId) {
