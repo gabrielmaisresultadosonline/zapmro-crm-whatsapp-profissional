@@ -255,8 +255,107 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
   }
 }
 
- async function handleProcessWebhook(supabase: any, entry: any, skipSave = false, userId?: string) {
-  // (helper inserted above)
+// Save a message echo (sent from the WhatsApp Business mobile app/desktop) as
+// an outbound message in the CRM so both sides of the conversation stay in sync.
+async function saveOutboundEcho(supabase: any, userId: string, echo: any, businessPhone: string) {
+  try {
+    const metaMessageId = echo?.id;
+    // The recipient (customer) — Meta puts the customer in `to` for echoes.
+    let waId: string | undefined = echo?.to || echo?.recipient_id || echo?.contacts?.[0]?.wa_id;
+    if (!waId && echo?.from && businessPhone) {
+      // Defensive: if `from` differs from business phone, treat `from` as recipient
+      const from = String(echo.from).replace(/\D/g, '');
+      if (from !== businessPhone) waId = echo.from;
+    }
+    if (!waId) {
+      console.warn('[WEBHOOK-ECHO] Missing recipient for echo, skipping', { metaMessageId });
+      return { success: false, error: 'missing_recipient' };
+    }
+
+    // Deduplicate: avoid double-saving if we already stored this message id
+    // (could be our own send or a previous echo delivery)
+    if (metaMessageId) {
+      const { data: existing } = await supabase
+        .from('crm_messages')
+        .select('id')
+        .eq('meta_message_id', metaMessageId)
+        .eq('user_id', userId)
+        .maybeSingle();
+      if (existing) {
+        console.log('[WEBHOOK-ECHO] Duplicate echo ignored', { metaMessageId, waId });
+        return { success: true, deduped: true };
+      }
+    }
+
+    // Find or create contact
+    let { data: contact } = await supabase
+      .from('crm_contacts')
+      .select('id')
+      .eq('wa_id', waId)
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (!contact) {
+      const { data: created, error: createErr } = await supabase
+        .from('crm_contacts')
+        .insert({
+          wa_id: waId,
+          name: waId,
+          status: 'new',
+          source_type: 'whatsapp_echo',
+          user_id: userId,
+          last_interaction: new Date().toISOString(),
+          metadata: { source: 'meta_webhook_echo' }
+        })
+        .select('id')
+        .maybeSingle();
+      if (createErr) {
+        console.error('[WEBHOOK-ECHO] Failed to create contact', { waId, error: createErr.message });
+        return { success: false, error: createErr.message };
+      }
+      contact = created;
+    }
+
+    // Build content/type
+    const type = echo?.type || 'text';
+    let content = '';
+    if (type === 'text') {
+      content = echo?.text?.body || '';
+    } else if (type === 'interactive') {
+      content = echo?.interactive?.button_reply?.title || echo?.interactive?.list_reply?.title || `[${type}]`;
+    } else {
+      content = `[${type}]`;
+    }
+
+    const { error: insertErr } = await supabase.from('crm_messages').insert({
+      contact_id: contact!.id,
+      direction: 'outbound',
+      message_type: type,
+      content: content || `[${type}]`,
+      status: 'sent',
+      meta_message_id: metaMessageId || null,
+      metadata: { raw: echo, source: 'echo_mobile_app' },
+      user_id: userId
+    });
+    if (insertErr) {
+      console.error('[WEBHOOK-ECHO] Failed to insert outbound echo', { waId, error: insertErr.message });
+      return { success: false, error: insertErr.message };
+    }
+
+    await supabase.from('crm_contacts').update({
+      last_interaction: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }).eq('id', contact!.id);
+
+    console.log('[WEBHOOK-ECHO] Saved outbound echo from mobile app', { waId, userId, contact_id: contact!.id, metaMessageId, type });
+    return { success: true };
+  } catch (err: any) {
+    console.error('[WEBHOOK-ECHO] Unexpected error', err);
+    return { success: false, error: err?.message || String(err) };
+  }
+}
+
+async function handleProcessWebhook(supabase: any, entry: any, skipSave = false, userId?: string) {
   const value = entry?.[0]?.changes?.[0]?.value || {};
 
   if (!userId) {
