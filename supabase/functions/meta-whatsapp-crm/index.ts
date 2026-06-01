@@ -1079,6 +1079,28 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
    try {
      const body = await req.json().catch(() => ({}));
      const { action, ...params } = body;
+
+      if (!action && body.object === 'whatsapp_business_account' && !userSettings) {
+        const value = body?.entry?.[0]?.changes?.[0]?.value || {};
+        const webhookPhoneNumberId = value?.metadata?.phone_number_id;
+        const webhookWabaId = body?.entry?.[0]?.id;
+        if (webhookPhoneNumberId || webhookWabaId) {
+          const settingsQuery = supabase
+            .from('crm_settings')
+            .select('*')
+            .limit(1);
+          const { data: settingsRows, error: resolveError } = webhookPhoneNumberId
+            ? await settingsQuery.eq('meta_phone_number_id', webhookPhoneNumberId)
+            : await settingsQuery.eq('meta_waba_id', webhookWabaId);
+          if (resolveError) console.warn('[WEBHOOK] Could not resolve settings from Meta payload', resolveError);
+          const resolvedSettings = Array.isArray(settingsRows) ? settingsRows[0] : null;
+          if (resolvedSettings) {
+            userId = resolvedSettings.user_id;
+            userSettings = resolvedSettings;
+            console.log('[WEBHOOK] Resolved CRM settings from Meta payload', { user_id: userId, phone_number_id: webhookPhoneNumberId || null, waba_id: webhookWabaId || null });
+          }
+        }
+      }
  
      // Handle Meta POST (Webhook Events)
      if (!action && body.object === 'whatsapp_business_account' && userSettings) {
