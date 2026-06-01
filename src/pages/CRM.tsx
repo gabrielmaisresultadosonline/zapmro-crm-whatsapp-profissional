@@ -72,7 +72,8 @@ import {
    RotateCw,
    ShieldCheck
    ,
-   UserCog
+   UserCog,
+   ExternalLink
   } from "lucide-react";
 import * as LucideIcons from 'lucide-react';
 const Instagram = (LucideIcons as any).Instagram || Camera;
@@ -168,13 +169,18 @@ const createMobilePlayableAudioBlob = async (audioBlob: Blob) => {
 
 const getMetaDeliveryErrorMessage = (message: any) => {
   const raw = String(message?.error_message || message?.metadata?.last_meta_status?.errors?.[0]?.message || '').trim();
-  if (/business account locked/i.test(raw)) {
-    return 'A conta comercial do WhatsApp/Meta está bloqueada. A Meta aceitou o envio, mas bloqueou a entrega.';
+  if (/business account locked|not been verified|business.*verification|verifica(c|ç)/i.test(raw)) {
+    return 'A Meta bloqueou o envio porque o seu Negócio (Business Manager) ainda não foi verificado. Você consegue receber mensagens, mas não enviar até concluir a verificação.';
   }
   if (/media upload error/i.test(raw)) {
     return 'A Meta recusou o arquivo de áudio/mídia após o upload. Grave novamente ou envie outro formato.';
   }
   return raw || 'A Meta informou falha na entrega desta mensagem.';
+};
+
+const isBusinessVerificationError = (message: any) => {
+  const raw = String(message?.error_message || message?.metadata?.last_meta_status?.errors?.[0]?.message || '').trim();
+  return /business account locked|not been verified|business.*verification|verifica(c|ç)/i.test(raw);
 };
 
 type ConnectionLogEntry = {
@@ -3916,6 +3922,32 @@ const CRM = () => {
 
                           <ScrollArea className="flex-1 bg-[#efeae2] dark:bg-[#0b141a] relative min-h-0 min-w-0 w-full overflow-x-hidden">
                             <div className="absolute inset-0 opacity-[0.06] dark:opacity-[0.05] pointer-events-none bg-[url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')] bg-repeat"></div>
+                            {chatMessages.some((m: any) => m.direction === 'outbound' && m.status === 'failed' && isBusinessVerificationError(m)) && (
+                              <div className="sticky top-0 z-40 m-2 rounded-lg border border-amber-500/40 bg-amber-50 dark:bg-amber-950/40 p-3 shadow-md">
+                                <div className="flex items-start gap-2">
+                                  <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-semibold text-amber-900 dark:text-amber-200">
+                                      Não estamos conseguindo enviar mensagens — apenas receber
+                                    </p>
+                                    <p className="text-xs text-amber-800 dark:text-amber-300/90 mt-1 leading-snug">
+                                      A Meta bloqueou o envio deste número. Geralmente isso acontece quando o seu Negócio (Business Manager) ainda não foi verificado, está bloqueado ou tem pendências. Verifique no Meta Business Suite o que aconteceu com seu número, corrija e volte aqui para tentar novamente. Algo precisa estar OK no lado da Meta.
+                                    </p>
+                                    <div className="mt-2">
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        className="border-amber-500/50 bg-white hover:bg-amber-100 text-amber-900 dark:bg-amber-900/30 dark:text-amber-100 dark:hover:bg-amber-900/60"
+                                        onClick={() => window.open('https://business.facebook.com/', '_blank', 'noopener,noreferrer')}
+                                      >
+                                        <ExternalLink className="w-3.5 h-3.5 mr-1.5" />
+                                        Abrir Meta Business
+                                      </Button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
                             
                             {loadingChat && (
                               <div className="absolute inset-0 z-50 flex items-center justify-center bg-[#efeae2]/80 dark:bg-[#0b141a]/80 backdrop-blur-sm animate-in fade-in duration-300">
@@ -4288,7 +4320,19 @@ const CRM = () => {
                                       {m.direction === 'outbound' && m.status === 'failed' && (
                                         <div className="mt-2 flex items-start gap-1.5 rounded-md border border-destructive/30 bg-destructive/10 p-2 text-[10px] leading-snug text-destructive clear-both">
                                           <AlertCircle className="w-3 h-3 mt-0.5 shrink-0" />
-                                          <span>{getMetaDeliveryErrorMessage(m)}</span>
+                                          <div className="flex-1">
+                                            <span>{getMetaDeliveryErrorMessage(m)}</span>
+                                            {isBusinessVerificationError(m) && (
+                                              <button
+                                                type="button"
+                                                onClick={() => window.open('https://business.facebook.com/', '_blank', 'noopener,noreferrer')}
+                                                className="mt-1.5 inline-flex items-center gap-1 rounded border border-destructive/40 bg-white/60 dark:bg-black/20 px-1.5 py-0.5 text-[10px] font-semibold text-destructive hover:bg-white"
+                                              >
+                                                <ExternalLink className="w-3 h-3" />
+                                                Meta Business
+                                              </button>
+                                            )}
+                                          </div>
                                         </div>
                                       )}
                                       <div className={cn(
