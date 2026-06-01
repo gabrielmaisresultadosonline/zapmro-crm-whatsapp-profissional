@@ -1180,20 +1180,26 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
         }
         const access_token = tokenJson.access_token as string
         let resolvedPhoneNumberId = phone_number_id
+        let resolvedDisplayPhone: string | null = null
+        let resolvedVerifiedName: string | null = null
 
         // Alguns fluxos v4 retornam apenas o WABA no postMessage. Quando isso acontecer,
         // buscamos o primeiro número conectado para liberar o CRM sem preenchimento manual.
-        if (waba_id && !resolvedPhoneNumberId) {
+        if (waba_id) {
           try {
             const phonesRes = await fetch(`https://graph.facebook.com/v25.0/${waba_id}/phone_numbers?fields=id,display_phone_number,verified_name`, {
               headers: { 'Authorization': `Bearer ${access_token}` }
             })
             const phonesJson = await phonesRes.json().catch(() => ({}))
             console.log('[Embedded Signup] phone lookup response', { ok: phonesRes.ok, status: phonesRes.status, count: Array.isArray(phonesJson?.data) ? phonesJson.data.length : 0, error: phonesJson?.error?.message || null })
-            if (phonesRes.ok && Array.isArray(phonesJson?.data) && phonesJson.data[0]?.id) {
-              resolvedPhoneNumberId = phonesJson.data[0].id
+            if (phonesRes.ok && Array.isArray(phonesJson?.data) && phonesJson.data.length > 0) {
+              const match = phonesJson.data.find((p: any) => p.id === resolvedPhoneNumberId) || phonesJson.data[0]
+              if (!resolvedPhoneNumberId) resolvedPhoneNumberId = match.id
+              resolvedDisplayPhone = match.display_phone_number || null
+              resolvedVerifiedName = match.verified_name || null
+              console.log('[Embedded Signup] resolved phone', { id: resolvedPhoneNumberId, display: resolvedDisplayPhone, verified_name: resolvedVerifiedName })
             } else {
-              console.warn('Could not resolve phone_number_id from WABA:', phonesJson)
+              console.warn('Could not resolve phone from WABA:', phonesJson)
             }
           } catch (e) { console.warn('phone_numbers lookup failed', e) }
         }
@@ -1228,6 +1234,8 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
         const patch: any = { meta_access_token: access_token }
         if (waba_id) patch.meta_waba_id = waba_id
         if (resolvedPhoneNumberId) patch.meta_phone_number_id = resolvedPhoneNumberId
+        if (resolvedDisplayPhone) patch.meta_display_phone_number = resolvedDisplayPhone
+        if (resolvedVerifiedName) patch.meta_verified_name = resolvedVerifiedName
         // business_id é informativo (não há coluna dedicada)
 
         let updErr: any = null
