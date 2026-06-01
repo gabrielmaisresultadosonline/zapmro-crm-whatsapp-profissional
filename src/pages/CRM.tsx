@@ -817,6 +817,13 @@ const CRM = () => {
           const updatedMessage = payload.new;
           if (selectedContactRef.current && updatedMessage.contact_id === selectedContactRef.current.id) {
             setChatMessages(prev => prev.map(m => m.id === updatedMessage.id ? updatedMessage : m));
+            if (updatedMessage.direction === 'outbound' && updatedMessage.status === 'failed') {
+              toast({
+                title: 'Mensagem não entregue',
+                description: getMetaDeliveryErrorMessage(updatedMessage),
+                variant: 'destructive',
+              });
+            }
           }
         }
         fetchContacts();
