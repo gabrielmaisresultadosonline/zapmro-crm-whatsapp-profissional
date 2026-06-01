@@ -5699,6 +5699,23 @@ const CRM = () => {
                              {(metaSettings.meta_access_token && metaSettings.meta_phone_number_id && metaSettings.meta_waba_id) ? "ATIVADO LIGADO" : "AGUARDANDO CONFIGURAÇÃO"}
                            </div>
                          </div>
+
+                         <div className="pt-3 border-t border-border/60 space-y-2">
+                           <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                             <Facebook className="w-3 h-3" /> Embedded Signup (Meta Tech Provider)
+                           </Label>
+                           <p className="text-[11px] text-muted-foreground">
+                             Conecte uma conta WhatsApp Business diretamente pelo Facebook — preenche WABA, Phone Number ID e Access Token automaticamente.
+                           </p>
+                           <Button
+                             type="button"
+                             className="w-full h-11 rounded-xl bg-[#1877F2] hover:bg-[#1668d8] text-white font-semibold"
+                             onClick={() => startEmbeddedSignup()}
+                           >
+                             <Facebook className="w-4 h-4 mr-2" />
+                             Conectar com Facebook
+                           </Button>
+                         </div>
                       </CardContent>
                     </Card>
                     
