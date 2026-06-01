@@ -1172,7 +1172,7 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
         const patch: any = { meta_access_token: access_token }
         if (waba_id) patch.meta_waba_id = waba_id
         if (phone_number_id) patch.meta_phone_number_id = phone_number_id
-        if (business_id) patch.meta_business_id = business_id
+        // business_id é informativo (não há coluna dedicada)
 
         const { error: updErr } = await supabase
           .from('crm_settings')
