@@ -794,6 +794,9 @@ const CRM = () => {
         console.log('App visível, atualizando dados...');
         fetchData();
         fetchContacts();
+        if (selectedContactRef.current?.id) {
+          fetchMessages(selectedContactRef.current.id, true);
+        }
       }
     };
     document.addEventListener('visibilitychange', handleVisibilityChange);
