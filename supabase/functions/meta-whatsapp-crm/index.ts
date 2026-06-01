@@ -622,7 +622,12 @@ async function handleInternalSendMessage(supabase: any, phoneNumberId: string, a
   })
   console.log(`[META-SEND] Payload enviado para Meta:`, JSON.stringify(payload));
   const result = await response.json().catch(() => ({}))
-  if (!response.ok) throw new Error(result?.error?.message || 'Erro ao enviar mensagem pela Meta')
+  console.log(`[META-SEND] Resposta Meta status=${response.status} body=${JSON.stringify(result)}`);
+  if (!response.ok) {
+    console.error(`[META-SEND] ERRO Meta status=${response.status} phoneId=${phoneNumberId} to=${to} payloadType=${payload.type} error=${JSON.stringify(result?.error)}`);
+    throw new Error(result?.error?.message || result?.error?.error_user_msg || `Erro ${response.status} ao enviar mensagem pela Meta`)
+  }
+  console.log(`[META-SEND] OK messageId=${result?.messages?.[0]?.id} to=${to} type=${payload.type}`);
 
   if (contact && !params.skipLocalSave) {
     await supabase.from('crm_messages').insert({
