@@ -256,16 +256,26 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
 }
 
  async function handleProcessWebhook(supabase: any, entry: any, skipSave = false, userId?: string) {
-  if (!entry?.[0]?.changes?.[0]?.value?.messages?.[0]) {
-    return jsonResponse({ success: true });
-  }
+  const value = entry?.[0]?.changes?.[0]?.value || {};
 
   if (!userId) {
-    console.warn('[WEBHOOK] Message received but no CRM user was resolved for this webhook payload');
+    console.warn('[WEBHOOK] Event received but no CRM user was resolved for this webhook payload', { hasMessages: !!value?.messages?.length, hasStatuses: !!value?.statuses?.length });
     return jsonResponse({ success: true, ignored: 'missing_user' });
   }
 
-  const message = entry[0].changes[0].value.messages[0];
+  if (Array.isArray(value.statuses) && value.statuses.length > 0) {
+    const results = [];
+    for (const statusEvent of value.statuses) {
+      results.push(await syncOutboundStatusFromMeta(supabase, userId, statusEvent));
+    }
+    return jsonResponse({ success: true, type: 'statuses', results });
+  }
+
+  if (!value?.messages?.[0]) {
+    return jsonResponse({ success: true, ignored: 'empty_event' });
+  }
+
+  const message = value.messages[0];
   const waId = message.from;
   let text = '';
   let buttonId = '';
