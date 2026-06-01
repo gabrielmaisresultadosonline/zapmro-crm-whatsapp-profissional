@@ -366,6 +366,7 @@ const CRM = () => {
         xfbml: true,
         version: 'v25.0',
       });
+      addConnectionLog('success', 'SDK do Facebook carregado', { app_id: META_APP_ID, config_id: META_CONFIG_ID, version: 'v25.0' });
     };
     const id = 'facebook-jssdk';
     if (document.getElementById(id)) return;
@@ -383,6 +384,7 @@ const CRM = () => {
         const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
         if (data?.type !== 'WA_EMBEDDED_SIGNUP') return;
         console.log('[Embedded Signup] event:', data);
+        addConnectionLog(data.event === 'ERROR' ? 'error' : data.event === 'CANCEL' ? 'warn' : 'info', `Evento Meta recebido: ${data.event}`, data.data);
         if (['FINISH', 'FINISH_ONLY_WABA', 'FINISH_WHATSAPP_BUSINESS_APP_ONBOARDING', 'FINISH_GRANT_ONLY_API_ACCESS'].includes(data.event)) {
           (window as any).__waEmbeddedSignupData = { ...(data.data || {}), event: data.event };
         } else if (data.event === 'CANCEL') {
@@ -394,7 +396,7 @@ const CRM = () => {
     };
     window.addEventListener('message', handleMsg);
     return () => window.removeEventListener('message', handleMsg);
-  }, []);
+  }, [addConnectionLog]);
 
   const startEmbeddedSignup = () => {
     const FB = (window as any).FB;
@@ -408,6 +410,7 @@ const CRM = () => {
     }
     (window as any).__waEmbeddedSignupData = null;
     const handleSignupResponse = async (response: any) => {
+      addConnectionLog(response?.authResponse?.code ? 'success' : 'warn', 'Resposta final do popup Meta recebida', response);
       if (!response?.authResponse?.code) {
         console.warn('[Embedded Signup] no auth code in response', response);
         toast({ title: 'Login cancelado ou bloqueado', description: 'Verifique se o popup foi bloqueado pelo navegador.', variant: 'destructive' });
@@ -415,6 +418,13 @@ const CRM = () => {
       }
       const code = response.authResponse.code;
       const sessionInfo = (window as any).__waEmbeddedSignupData || {};
+      addConnectionLog('info', 'Enviando código para salvar a conexão no CRM', {
+        signup_event: sessionInfo.event,
+        waba_id: sessionInfo.waba_id,
+        phone_number_id: sessionInfo.phone_number_id,
+        business_id: sessionInfo.business_id,
+        has_code: true,
+      });
       toast({ title: 'Conectando à Meta…', description: 'Trocando código por token e salvando credenciais.' });
       try {
         const { data, error } = await supabase.functions.invoke('meta-whatsapp-crm', {
@@ -428,15 +438,24 @@ const CRM = () => {
           },
         });
         if (error || !data?.success) {
+          addConnectionLog('error', 'Falha ao salvar conexão retornada pelo servidor', data || error);
           throw new Error(data?.error || error?.message || 'Falha ao conectar');
         }
+        addConnectionLog('success', 'Conexão salva no CRM com sucesso', data);
         toast({ title: 'WhatsApp conectado!', description: `WABA: ${data.waba_id || '—'} · Phone: ${data.phone_number_id || '—'}` });
         await fetchData();
       } catch (e: any) {
+        addConnectionLog('error', 'Erro ao finalizar conexão no CRM', { message: e?.message || String(e) });
         toast({ title: 'Erro ao conectar', description: e?.message || String(e), variant: 'destructive' });
       }
     };
     try {
+      addConnectionLog('info', 'Abrindo popup de conexão Meta', {
+        app_id: META_APP_ID,
+        config_id: META_CONFIG_ID,
+        domain: window.location.hostname,
+        flow: 'whatsapp_business_app_onboarding',
+      });
       FB.login(
       (response: any) => {
         void handleSignupResponse(response);
@@ -456,6 +475,7 @@ const CRM = () => {
       );
     } catch (err: any) {
       console.error('[Embedded Signup] FB.login threw', err);
+      addConnectionLog('error', 'Erro ao abrir popup do Facebook', { message: err?.message || String(err) });
       toast({ title: 'Erro ao abrir o Facebook', description: err?.message || 'Recarregue a página e tente novamente.', variant: 'destructive' });
     }
   };
