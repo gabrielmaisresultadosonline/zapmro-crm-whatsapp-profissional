@@ -1118,6 +1118,7 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
           const settingsQuery = supabase
             .from('crm_settings')
             .select('*')
+            .order('updated_at', { ascending: false, nullsFirst: false })
             .limit(1);
           const { data: settingsRows, error: resolveError } = webhookPhoneNumberId
             ? await settingsQuery.eq('meta_phone_number_id', webhookPhoneNumberId)
