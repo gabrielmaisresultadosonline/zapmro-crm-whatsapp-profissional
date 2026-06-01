@@ -260,6 +260,11 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
     return jsonResponse({ success: true });
   }
 
+  if (!userId) {
+    console.warn('[WEBHOOK] Message received but no CRM user was resolved for this webhook payload');
+    return jsonResponse({ success: true, ignored: 'missing_user' });
+  }
+
   const message = entry[0].changes[0].value.messages[0];
   const waId = message.from;
   let text = '';
@@ -288,15 +293,41 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
     }
   }
 
-   const { data: contactForSave } = await supabase
+   let { data: contactForSave } = await supabase
      .from('crm_contacts')
-     .select('id')
+      .select('id, total_messages_received')
      .eq('wa_id', waId)
      .eq('user_id', userId)
      .maybeSingle();
 
+  if (!contactForSave && !skipSave) {
+    const profileName = message?.profile?.name || message?.contacts?.[0]?.profile?.name || waId;
+    const { data: newContact, error: createContactError } = await supabase
+      .from('crm_contacts')
+      .insert({
+        wa_id: waId,
+        name: profileName,
+        status: 'new',
+        source_type: 'whatsapp_inbound',
+        user_id: userId,
+        last_interaction: new Date().toISOString(),
+        last_message_received_at: new Date().toISOString(),
+        total_messages_received: 0,
+        metadata: { source: 'meta_webhook', profile: message?.profile || null }
+      })
+      .select('id, total_messages_received')
+      .maybeSingle();
+
+    if (createContactError) {
+      console.error('[WEBHOOK] Failed to create inbound contact', { waId, userId, error: createContactError.message });
+      return jsonResponse({ success: false, error: createContactError.message }, 500);
+    }
+    contactForSave = newContact;
+    console.log('[WEBHOOK] Created inbound contact', { waId, userId, contact_id: contactForSave?.id });
+  }
+
   if (contactForSave && !skipSave) {
-     await supabase.from('crm_messages').insert({
+     const { error: insertMessageError } = await supabase.from('crm_messages').insert({
        contact_id: contactForSave.id,
        direction: 'inbound',
        message_type: message.type,
@@ -306,7 +337,17 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
        metadata: { raw: message },
        user_id: userId
      });
-    await supabase.from('crm_contacts').update({ last_interaction: new Date().toISOString() }).eq('id', contactForSave.id);
+    if (insertMessageError) {
+      console.error('[WEBHOOK] Failed to save inbound message', { waId, userId, error: insertMessageError.message });
+      return jsonResponse({ success: false, error: insertMessageError.message }, 500);
+    }
+    await supabase.from('crm_contacts').update({
+      last_interaction: new Date().toISOString(),
+      last_message_received_at: new Date().toISOString(),
+      total_messages_received: (contactForSave.total_messages_received || 0) + 1,
+      updated_at: new Date().toISOString()
+    }).eq('id', contactForSave.id);
+    console.log('[WEBHOOK] Saved inbound message', { waId, userId, contact_id: contactForSave.id, meta_message_id: message.id });
   }
 
    const { data: contact } = await supabase
