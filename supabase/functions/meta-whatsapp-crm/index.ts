@@ -1080,6 +1080,36 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
      const body = await req.json().catch(() => ({}));
      const { action, ...params } = body;
 
+     if (action === 'getCloudSettings') {
+       if (!userId) {
+         return new Response(JSON.stringify({ success: false, error: 'Usuário não autenticado' }), {
+           status: 401,
+           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+         })
+       }
+
+       let { data: settings, error } = await supabase
+         .from('crm_settings')
+         .select('*')
+         .eq('user_id', userId)
+         .maybeSingle()
+
+       if (!settings && !error) {
+         const created = await supabase
+           .from('crm_settings')
+           .insert({ user_id: userId, webhook_identifier: crypto.randomUUID() })
+           .select('*')
+           .maybeSingle()
+         settings = created.data
+         error = created.error
+       }
+
+       return new Response(JSON.stringify({ success: !error, settings, error: error?.message || null }), {
+         status: error ? 500 : 200,
+         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+       })
+     }
+
       if (!action && body.object === 'whatsapp_business_account' && !userSettings) {
         const value = body?.entry?.[0]?.changes?.[0]?.value || {};
         const webhookPhoneNumberId = value?.metadata?.phone_number_id;
