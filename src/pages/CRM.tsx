@@ -212,6 +212,7 @@ const CRM = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [bizWarnExpanded, setBizWarnExpanded] = useState(false);
    const [activeTab, setActiveTab] = useState('dashboard');
    const [userRole, setUserRole] = useState<string | null>(null);
   const [isMyDataOpen, setIsMyDataOpen] = useState(false);
@@ -3934,29 +3935,51 @@ const CRM = () => {
                           <ScrollArea className="flex-1 bg-[#efeae2] dark:bg-[#0b141a] relative min-h-0 min-w-0 w-full overflow-x-hidden">
                             <div className="absolute inset-0 opacity-[0.06] dark:opacity-[0.05] pointer-events-none bg-[url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')] bg-repeat"></div>
                             {chatMessages.some((m: any) => m.direction === 'outbound' && m.status === 'failed' && isBusinessVerificationError(m)) && (
-                              <div className="sticky top-0 z-40 m-2 rounded-lg border border-amber-500/40 bg-amber-50 dark:bg-amber-950/40 p-3 shadow-md">
-                                <div className="flex items-start gap-2">
-                                  <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-                                  <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-semibold text-amber-900 dark:text-amber-200">
-                                      Não estamos conseguindo enviar mensagens — apenas receber
-                                    </p>
-                                    <p className="text-xs text-amber-800 dark:text-amber-300/90 mt-1 leading-snug">
-                                      A Meta bloqueou o envio deste número. Geralmente isso acontece quando o seu Negócio (Business Manager) ainda não foi verificado, está bloqueado ou tem pendências. Verifique no Meta Business Suite o que aconteceu com seu número, corrija e volte aqui para tentar novamente. Algo precisa estar OK no lado da Meta.
-                                    </p>
-                                    <div className="mt-2">
-                                      <Button
-                                        size="sm"
-                                        variant="outline"
-                                        className="border-amber-500/50 bg-white hover:bg-amber-100 text-amber-900 dark:bg-amber-900/30 dark:text-amber-100 dark:hover:bg-amber-900/60"
-                                        onClick={() => window.open('https://business.facebook.com/', '_blank', 'noopener,noreferrer')}
-                                      >
-                                        <ExternalLink className="w-3.5 h-3.5 mr-1.5" />
-                                        Abrir Meta Business
-                                      </Button>
+                              <div className="sticky top-0 z-40 m-2">
+                                {bizWarnExpanded ? (
+                                  <div className="rounded-lg border border-amber-500/40 bg-amber-50 dark:bg-amber-950/40 p-3 shadow-md animate-in fade-in slide-in-from-top-2 duration-200">
+                                    <div className="flex items-start gap-2">
+                                      <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                                      <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-semibold text-amber-900 dark:text-amber-200">
+                                          Não estamos conseguindo enviar mensagens — apenas receber
+                                        </p>
+                                        <p className="text-xs text-amber-800 dark:text-amber-300/90 mt-1 leading-snug">
+                                          A Meta bloqueou o envio deste número. Geralmente isso acontece quando o seu Negócio (Business Manager) ainda não foi verificado, está bloqueado ou tem pendências. Verifique no Meta Business Suite o que aconteceu com seu número, corrija e volte aqui para tentar novamente. Algo precisa estar OK no lado da Meta.
+                                        </p>
+                                        <div className="mt-2 flex gap-2">
+                                          <Button
+                                            size="sm"
+                                            variant="outline"
+                                            className="border-amber-500/50 bg-white hover:bg-amber-100 text-amber-900 dark:bg-amber-900/30 dark:text-amber-100 dark:hover:bg-amber-900/60"
+                                            onClick={() => window.open('https://business.facebook.com/', '_blank', 'noopener,noreferrer')}
+                                          >
+                                            <ExternalLink className="w-3.5 h-3.5 mr-1.5" />
+                                            Abrir Meta Business
+                                          </Button>
+                                          <Button
+                                            size="sm"
+                                            variant="ghost"
+                                            className="text-amber-900 dark:text-amber-200 hover:bg-amber-100 dark:hover:bg-amber-900/60"
+                                            onClick={() => setBizWarnExpanded(false)}
+                                          >
+                                            Minimizar
+                                          </Button>
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={() => setBizWarnExpanded(true)}
+                                    title="Não estamos conseguindo enviar mensagens — clique para ver detalhes"
+                                    aria-label="Aviso: não estamos conseguindo enviar mensagens"
+                                    className="flex items-center justify-center w-8 h-8 rounded-full border border-amber-500/50 bg-amber-50 dark:bg-amber-950/60 shadow-md hover:bg-amber-100 dark:hover:bg-amber-900/70 transition-colors animate-pulse"
+                                  >
+                                    <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+                                  </button>
+                                )}
                               </div>
                             )}
                             
