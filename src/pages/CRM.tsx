@@ -5908,6 +5908,18 @@ const CRM = () => {
                            </div>
                          </div>
 
+                          {(metaSettings.meta_display_phone_number || metaSettings.meta_verified_name) && (
+                            <div className="mt-2 p-3 rounded-xl bg-green-500/10 border border-green-500/30">
+                              <p className="text-[10px] font-bold uppercase tracking-widest text-green-600 dark:text-green-400 mb-1">Número conectado</p>
+                              {metaSettings.meta_display_phone_number && (
+                                <p className="text-sm font-semibold text-foreground">{metaSettings.meta_display_phone_number}</p>
+                              )}
+                              {metaSettings.meta_verified_name && (
+                                <p className="text-xs text-muted-foreground">{metaSettings.meta_verified_name}</p>
+                              )}
+                            </div>
+                          )}
+
                          <div className="pt-3 border-t border-border/60 space-y-2">
                            <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
                              <Facebook className="w-3 h-3" /> Embedded Signup (Meta Tech Provider)
