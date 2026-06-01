@@ -331,6 +331,21 @@ const CRM = () => {
   const [metricsChartData, setMetricsChartData] = useState<any[]>([]);
   const [selectedAnalysis, setSelectedAnalysis] = useState<any>(null);
   const [activeFlowsView, setActiveFlowsView] = useState(false);
+  const [connectionLogs, setConnectionLogs] = useState<ConnectionLogEntry[]>([]);
+
+  const addConnectionLog = useCallback((level: ConnectionLogEntry['level'], message: string, details?: unknown) => {
+    const entry: ConnectionLogEntry = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      at: new Date().toLocaleString('pt-BR'),
+      level,
+      message,
+      details: sanitizeConnectionDetails(details),
+    };
+    setConnectionLogs(prev => [entry, ...prev].slice(0, 25));
+
+    const logger = level === 'error' ? console.error : level === 'warn' ? console.warn : console.log;
+    logger('[WhatsApp Connection]', message, details || '');
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => setNow(Date.now()), 1000);
