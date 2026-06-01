@@ -322,8 +322,9 @@ const CRM = () => {
     (window as any).fbAsyncInit = function () {
       (window as any).FB.init({
         appId: META_APP_ID,
+        autoLogAppEvents: true,
         cookie: true,
-        xfbml: false,
+        xfbml: true,
         version: 'v25.0',
       });
     };
@@ -343,7 +344,7 @@ const CRM = () => {
         const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
         if (data?.type !== 'WA_EMBEDDED_SIGNUP') return;
         console.log('[Embedded Signup] event:', data);
-        if (data.event === 'FINISH' || data.event === 'FINISH_ONLY_WABA') {
+        if (['FINISH', 'FINISH_ONLY_WABA', 'FINISH_WHATSAPP_BUSINESS_APP_ONBOARDING', 'FINISH_GRANT_ONLY_API_ACCESS'].includes(data.event)) {
           (window as any).__waEmbeddedSignupData = data.data;
         } else if (data.event === 'CANCEL') {
           toast({ title: 'Conexão cancelada', description: `Etapa: ${data.data?.current_step || 'N/A'}`, variant: 'destructive' });
@@ -404,7 +405,11 @@ const CRM = () => {
         config_id: META_CONFIG_ID,
         response_type: 'code',
         override_default_response_type: true,
-        extras: { setup: {}, featureType: '', sessionInfoVersion: '3' },
+        extras: {
+          setup: {},
+          featureType: 'whatsapp_business_app_onboarding',
+          sessionInfoVersion: '3',
+        },
       }
       );
     } catch (err: any) {
