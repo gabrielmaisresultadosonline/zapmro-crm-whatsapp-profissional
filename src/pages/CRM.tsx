@@ -331,7 +331,14 @@ const CRM = () => {
   const [metricsChartData, setMetricsChartData] = useState<any[]>([]);
   const [selectedAnalysis, setSelectedAnalysis] = useState<any>(null);
   const [activeFlowsView, setActiveFlowsView] = useState(false);
-  const [connectionLogs, setConnectionLogs] = useState<ConnectionLogEntry[]>([]);
+  const [connectionLogs, setConnectionLogs] = useState<ConnectionLogEntry[]>(() => {
+    if (typeof window === 'undefined') return [];
+    try {
+      return JSON.parse(localStorage.getItem('crm_connection_logs') || '[]');
+    } catch {
+      return [];
+    }
+  });
 
   const addConnectionLog = useCallback((level: ConnectionLogEntry['level'], message: string, details?: unknown) => {
     const entry: ConnectionLogEntry = {
@@ -341,7 +348,11 @@ const CRM = () => {
       message,
       details: sanitizeConnectionDetails(details),
     };
-    setConnectionLogs(prev => [entry, ...prev].slice(0, 25));
+    setConnectionLogs(prev => {
+      const next = [entry, ...prev].slice(0, 25);
+      localStorage.setItem('crm_connection_logs', JSON.stringify(next));
+      return next;
+    });
 
     const logger = level === 'error' ? console.error : level === 'warn' ? console.warn : console.log;
     logger('[WhatsApp Connection]', message, details || '');
