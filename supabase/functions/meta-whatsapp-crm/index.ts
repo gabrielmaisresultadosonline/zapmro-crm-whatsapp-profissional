@@ -1276,6 +1276,67 @@ async function resolveTemplateMediaUrl(supabase: any, accessToken: string, media
   return mediaUrl;
 }
 
+// Baixa mídia recebida via webhook (image/video/audio/sticker/document) usando media_id
+// e salva em storage público para que apareça na conversa do CRM.
+async function fetchAndStoreIncomingMedia(
+  supabase: any,
+  accessToken: string,
+  mediaId: string,
+  type: string,
+  name: string,
+  mimeHint?: string
+): Promise<string | null> {
+  try {
+    if (!mediaId || !accessToken) return null;
+    // 1) Pega URL temporária via Graph API
+    const metaRes = await fetch(`https://graph.facebook.com/v20.0/${mediaId}`, {
+      headers: { 'Authorization': `Bearer ${accessToken}` }
+    });
+    if (!metaRes.ok) {
+      console.error('[INCOMING-MEDIA] Failed to resolve media id', mediaId, metaRes.status);
+      return null;
+    }
+    const metaJson = await metaRes.json();
+    const url = metaJson?.url;
+    const mimeType = metaJson?.mime_type || mimeHint || 'application/octet-stream';
+    if (!url) return null;
+
+    // 2) Baixa o binário (precisa do Bearer token)
+    const binRes = await fetch(url, { headers: { 'Authorization': `Bearer ${accessToken}` } });
+    if (!binRes.ok) {
+      console.error('[INCOMING-MEDIA] Failed to download media', mediaId, binRes.status);
+      return null;
+    }
+    const blob = await binRes.blob();
+
+    // 3) Determina extensão
+    let ext = 'bin';
+    if (type === 'image') ext = mimeType.includes('png') ? 'png' : (mimeType.includes('webp') ? 'webp' : 'jpg');
+    else if (type === 'sticker') ext = mimeType.includes('webp') ? 'webp' : 'png';
+    else if (type === 'video') ext = mimeType.includes('quicktime') ? 'mov' : 'mp4';
+    else if (type === 'audio') ext = mimeType.includes('mpeg') ? 'mp3' : (mimeType.includes('mp4') ? 'm4a' : 'ogg');
+    else if (type === 'document') {
+      const m = /\/([a-zA-Z0-9]+)/.exec(mimeType);
+      ext = m?.[1] || 'pdf';
+    }
+
+    const filePath = `incoming/${name}_${Date.now()}.${ext}`;
+    const { error: upErr } = await supabase.storage
+      .from('crm-media')
+      .upload(filePath, blob, { contentType: mimeType, upsert: true });
+    if (upErr) {
+      console.error('[INCOMING-MEDIA] Upload failed', upErr);
+      return null;
+    }
+    const { data: { publicUrl } } = supabase.storage.from('crm-media').getPublicUrl(filePath);
+    console.log('[INCOMING-MEDIA] Stored', { mediaId, type, publicUrl });
+    return publicUrl;
+  } catch (err) {
+    console.error('[INCOMING-MEDIA] Unexpected error', err);
+    return null;
+  }
+}
+
 
  serve(async (req) => {
    if (req.method === 'OPTIONS') {
