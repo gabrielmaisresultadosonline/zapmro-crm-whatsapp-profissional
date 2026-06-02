@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
  import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import CRM from "./pages/CRM";
 import CRMLogin from "./pages/CRMLogin";
+import AdminCentral from "./pages/AdminCentral";
  import GoogleContactsCallback from "./pages/GoogleContactsCallback";
  import Sales from "./pages/Sales";
  import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -22,6 +23,7 @@ const App = () => (
            <Route path="/" element={<Navigate to="/vendas" replace />} />
            <Route path="/crm" element={<CRM />} />
            <Route path="/crm/login" element={<CRMLogin />} />
+           <Route path="/admincentral" element={<AdminCentral />} />
            <Route path="/vendas" element={<Sales />} />
            <Route path="/google-callback" element={<GoogleContactsCallback />} />
             <Route path="/google-callback2" element={<GoogleContactsCallback />} />
