@@ -1,1 +1,4 @@
 project_id = "aossudsganqiapcoqthe"
+
+[functions.crm-central-admin]
+verify_jwt = false
