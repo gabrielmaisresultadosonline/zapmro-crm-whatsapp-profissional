@@ -179,14 +179,45 @@ serve(async (req) => {
       const { userId } = body as any;
       if (!userId) return json({ success: false, error: "userId obrigatório" }, 400);
 
-      // Clean dependent data first (FK to auth.users would block)
-      await supabase.from("crm_messages").delete().eq("user_id", userId);
-      await supabase.from("crm_contacts").delete().eq("user_id", userId);
-      await supabase.from("crm_settings").delete().eq("user_id", userId);
-      await supabase.from("crm_profiles").delete().eq("user_id", userId);
+      // Clean ALL dependent data first (FK to auth.users would block delete)
+      const tables = [
+        "crm_webhook_delivery_logs",
+        "crm_webhooks",
+        "crm_scheduled_messages",
+        "crm_flow_executions",
+        "crm_flow_steps",
+        "crm_flows",
+        "crm_broadcasts",
+        "crm_activities",
+        "crm_messages",
+        "crm_metrics",
+        "crm_statuses",
+        "crm_templates",
+        "crm_google_tokens",
+        "crm_google_accounts",
+        "crm_access_logs",
+        "crm_contacts",
+        "crm_settings",
+        "crm_profiles",
+        "mro_images",
+        "mro_schedules",
+        "mro_strategies",
+        "mro_profiles",
+        "user_roles",
+      ];
+      for (const t of tables) {
+        const { error: delErr } = await supabase.from(t).delete().eq("user_id", userId);
+        if (delErr) console.warn(`[delete_user] cleanup ${t}:`, delErr.message);
+      }
 
       const { error } = await supabase.auth.admin.deleteUser(userId);
-      if (error) throw error;
+      if (error) {
+        console.error("[delete_user] auth.admin.deleteUser failed:", error);
+        return json({
+          success: false,
+          error: `Falha ao excluir usuário: ${error.message}`,
+        }, 500);
+      }
       return json({ success: true });
     }
 
