@@ -47,6 +47,32 @@ type Insights = {
 
 const STORAGE_KEY = "admincentral_creds_v1";
 
+function ReportStat({
+  icon,
+  label,
+  value,
+  hint,
+  gradient,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: number;
+  hint?: string;
+  gradient: string;
+}) {
+  return (
+    <div className="group relative overflow-hidden rounded-xl border border-[#E8F5F1] bg-white p-4 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5">
+      <div className={`absolute -right-4 -top-4 h-16 w-16 rounded-full bg-gradient-to-br ${gradient} opacity-10 group-hover:opacity-20 transition-opacity`} />
+      <div className={`inline-flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br ${gradient} text-white shadow-sm mb-2`}>
+        {icon}
+      </div>
+      <div className="text-2xl font-bold text-[#075E54] tabular-nums">{value.toLocaleString("pt-BR")}</div>
+      <div className="text-xs text-[#128C7E]/80 font-medium">{label}</div>
+      {hint && <div className="text-[10px] text-[#25D366] mt-0.5 font-semibold">{hint}</div>}
+    </div>
+  );
+}
+
 export default function AdminCentral() {
   const [creds, setCreds] = useState<{ email: string; password: string } | null>(null);
   const [loginEmail, setLoginEmail] = useState("");
