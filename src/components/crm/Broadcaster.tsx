@@ -59,9 +59,60 @@ const Broadcaster = ({ templates, flows, contacts, statuses }: BroadcasterProps)
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [parsingType, setParsingType] = useState<'vcard' | 'csv' | null>(null);
 
+  // 24h Countdown trigger state
+  const [countdownEnabled, setCountdownEnabled] = useState(false);
+  const [countdownThreshold, setCountdownThreshold] = useState(60);
+  const [countdownType, setCountdownType] = useState<'message' | 'template' | 'flow'>('message');
+  const [countdownContent, setCountdownContent] = useState('');
+  const [countdownTemplate, setCountdownTemplate] = useState('');
+  const [countdownFlow, setCountdownFlow] = useState('');
+  const [savingCountdown, setSavingCountdown] = useState(false);
+
   useEffect(() => {
     fetchBroadcasts();
+    fetchCountdownSettings();
   }, []);
+
+  const fetchCountdownSettings = async () => {
+    const { data: settings } = await supabase
+      .from('crm_settings')
+      .select('countdown_trigger_enabled, countdown_trigger_threshold_minutes, countdown_trigger_message_type, countdown_trigger_content, countdown_trigger_flow_id, countdown_trigger_template_id')
+      .maybeSingle();
+
+    if (settings) {
+      setCountdownEnabled(settings.countdown_trigger_enabled || false);
+      setCountdownThreshold(settings.countdown_trigger_threshold_minutes || 60);
+      setCountdownType(settings.countdown_trigger_message_type || 'message');
+      setCountdownContent(settings.countdown_trigger_content || '');
+      setCountdownTemplate(settings.countdown_trigger_template_id || '');
+      setCountdownFlow(settings.countdown_trigger_flow_id || '');
+    }
+  };
+
+  const handleSaveCountdown = async () => {
+    setSavingCountdown(true);
+    try {
+      const { error } = await supabase
+        .from('crm_settings')
+        .update({
+          countdown_trigger_enabled: countdownEnabled,
+          countdown_trigger_threshold_minutes: countdownThreshold,
+          countdown_trigger_message_type: countdownType,
+          countdown_trigger_content: countdownContent,
+          countdown_trigger_template_id: countdownTemplate,
+          countdown_trigger_flow_id: countdownFlow || null
+        })
+        .eq('user_id', (await supabase.auth.getUser()).data.user?.id);
+
+      if (error) throw error;
+      toast({ title: "Configuração de 24h salva!" });
+    } catch (err: any) {
+      toast({ title: "Erro ao salvar", description: err.message, variant: "destructive" });
+    } finally {
+      setSavingCountdown(false);
+    }
+  };
+
 
   const fetchBroadcasts = async () => {
     const { data } = await supabase
