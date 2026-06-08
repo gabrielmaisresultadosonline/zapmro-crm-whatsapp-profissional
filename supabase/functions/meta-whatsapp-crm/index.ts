@@ -2283,8 +2283,8 @@ async function fetchAndStoreIncomingMedia(
           // Find next node based on buttonId or standard connection
           let nextEdge = null;
           if (buttonId) {
-            // Priority 1: Match specific button ID
-            nextEdge = flow.edges.find((e: any) => e.source === currentNode.id && e.sourceHandle === buttonId)
+            // Priority 1: Match specific button ID (exato ou prefixado)
+            nextEdge = flow.edges.find((e: any) => e.source === currentNode.id && (e.sourceHandle === buttonId || e.sourceHandle === `btn_${buttonId}` || e.sourceHandle?.includes(buttonId)));
           }
           
           // Priority 1.5: Match text against button labels if no buttonId matched
