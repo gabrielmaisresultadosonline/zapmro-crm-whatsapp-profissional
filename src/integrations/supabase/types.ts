@@ -768,6 +768,7 @@ export type Database = {
           ai_analysis_history: Json | null
           ai_strategy_active: boolean | null
           ai_strategy_history: Json | null
+          countdown_trigger_sent_at: string | null
           created_at: string | null
           current_flow_id: string | null
           current_node_id: string | null
@@ -802,6 +803,7 @@ export type Database = {
           ai_analysis_history?: Json | null
           ai_strategy_active?: boolean | null
           ai_strategy_history?: Json | null
+          countdown_trigger_sent_at?: string | null
           created_at?: string | null
           current_flow_id?: string | null
           current_node_id?: string | null
@@ -836,6 +838,7 @@ export type Database = {
           ai_analysis_history?: Json | null
           ai_strategy_active?: boolean | null
           ai_strategy_history?: Json | null
+          countdown_trigger_sent_at?: string | null
           created_at?: string | null
           current_flow_id?: string | null
           current_node_id?: string | null
@@ -1275,6 +1278,12 @@ export type Database = {
           business_hours_end: string | null
           business_hours_start: string | null
           business_hours_tz: string | null
+          countdown_trigger_content: string | null
+          countdown_trigger_enabled: boolean | null
+          countdown_trigger_flow_id: string | null
+          countdown_trigger_message_type: string | null
+          countdown_trigger_template_id: string | null
+          countdown_trigger_threshold_minutes: number | null
           created_at: string | null
           google_auto_sync: boolean | null
           google_client_id: string | null
@@ -1313,6 +1322,12 @@ export type Database = {
           business_hours_end?: string | null
           business_hours_start?: string | null
           business_hours_tz?: string | null
+          countdown_trigger_content?: string | null
+          countdown_trigger_enabled?: boolean | null
+          countdown_trigger_flow_id?: string | null
+          countdown_trigger_message_type?: string | null
+          countdown_trigger_template_id?: string | null
+          countdown_trigger_threshold_minutes?: number | null
           created_at?: string | null
           google_auto_sync?: boolean | null
           google_client_id?: string | null
@@ -1351,6 +1366,12 @@ export type Database = {
           business_hours_end?: string | null
           business_hours_start?: string | null
           business_hours_tz?: string | null
+          countdown_trigger_content?: string | null
+          countdown_trigger_enabled?: boolean | null
+          countdown_trigger_flow_id?: string | null
+          countdown_trigger_message_type?: string | null
+          countdown_trigger_template_id?: string | null
+          countdown_trigger_threshold_minutes?: number | null
           created_at?: string | null
           google_auto_sync?: boolean | null
           google_client_id?: string | null
