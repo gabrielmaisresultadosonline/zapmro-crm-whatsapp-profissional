@@ -2293,20 +2293,27 @@ async function fetchAndStoreIncomingMedia(
           
           // Priority 1.5: Match text against button labels if no buttonId matched
           if (!nextEdge && text && currentNode.data?.buttons) {
+            console.log(`[FLOW-DEBUG] Attempting text match for: "${text}"`);
             const matchedButtonIdx = currentNode.data.buttons.findIndex((b: any) => {
               const bText = (b.label || b.text || "").toLowerCase().trim();
               const receivedText = text.toLowerCase().trim();
-              // Match exato ou se o botão foi truncado com "..." (regra dos 20 chars)
-              return bText === receivedText || 
+              
+              const match = bText === receivedText || 
                      (bText.length > 20 && receivedText === (bText.substring(0, 17) + "...").toLowerCase()) ||
                      (receivedText.length > 3 && bText.includes(receivedText)) ||
                      (receivedText.includes('[button reply]') && receivedText.includes(bText));
+              
+              if (match) console.log(`[FLOW-DEBUG] Text match found: "${bText}"`);
+              return match;
             });
             
             if (matchedButtonIdx !== -1) {
-              const handleId = currentNode.data.buttons[matchedButtonIdx].id || `btn-${matchedButtonIdx}`;
-              nextEdge = flow.edges.find((e: any) => e.source === currentNode.id && e.sourceHandle === handleId);
-              console.log(`Matched text "${text}" to button index ${matchedButtonIdx} (handle: ${handleId})`);
+              const b = currentNode.data.buttons[matchedButtonIdx];
+              // Tenta encontrar a aresta pelo ID do botão ou pelo handle sequencial
+              const possibleHandles = [b.id, `btn_${matchedButtonIdx}`, `btn-${matchedButtonIdx}`, matchedButtonIdx.toString()];
+              nextEdge = flow.edges.find((e: any) => e.source === currentNode.id && possibleHandles.includes(e.sourceHandle));
+              
+              console.log(`[FLOW-DEBUG] Matched text "${text}" to button index ${matchedButtonIdx}. Found edge: ${!!nextEdge}`);
             }
           }
           if (!nextEdge) {
