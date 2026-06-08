@@ -1530,7 +1530,12 @@ async function fetchAndStoreIncomingMedia(
       }
       
       const { action, ...params } = body;
+      
+      // LOG CRUCIAL PARA DEBUG DE FLUXOS
       console.log(`[REQUEST-DEBUG] Method: ${req.method}, Action: ${action || 'Webhook'}, AuthUID: ${userId}`);
+      if (action === 'sendMessage') {
+        console.log(`[SEND-MESSAGE-DEBUG] To: ${params.to}, Text: ${params.text?.slice(0, 30)}..., HasIDs: ${!!params.meta_phone_number_id}`);
+      }
 
       if (action === 'getCloudSettings') {
        if (!userId) {
