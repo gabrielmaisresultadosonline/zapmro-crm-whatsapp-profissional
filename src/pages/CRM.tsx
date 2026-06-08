@@ -1789,6 +1789,7 @@ const CRM = () => {
       setRecordedAudioBlob(null);
       setRecordedAudioUrl(null);
       setIsPreviewingAudio(false);
+      // Forçamos isVoice como true para garantir o formato de "gravado na hora"
       await handleSendMedia(blob, 'audio', true, previewUrl);
     }
   };
