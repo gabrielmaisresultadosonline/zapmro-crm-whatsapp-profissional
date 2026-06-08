@@ -2216,7 +2216,7 @@ async function fetchAndStoreIncomingMedia(
       
       const { data: currentContact } = await supabase
         .from('crm_contacts')
-        .select('flow_state, current_flow_id')
+        .select('flow_state, current_flow_id, status, user_id')
         .eq('id', contactId)
         .single();
         
@@ -2246,7 +2246,8 @@ async function fetchAndStoreIncomingMedia(
           flow_state: 'running',
           last_flow_interaction: new Date().toISOString(),
           next_execution_time: null,
-          status: (flow.trigger_tag && flow.trigger_tag !== 'none') ? flow.trigger_tag : (currentContact?.status || 'new')
+          status: (flow.trigger_tag && flow.trigger_tag !== 'none') ? flow.trigger_tag : (currentContact?.status || 'new'),
+          ai_active: startNode.type === 'aiAgent'
         }).eq('id', contactId);
         
         if (updateError) {
@@ -2260,10 +2261,10 @@ async function fetchAndStoreIncomingMedia(
         
         // IMPORTANTE: Se o fluxo começou em um nó de Agente IA ou foi para ai_handling, processamos a resposta imediatamente
         const { data: contactAfterExec } = await supabase.from('crm_contacts').select('*').eq('id', contactId).single();
-        if (contactAfterExec?.flow_state === 'ai_handling' || res?.message?.includes('AI handling state')) {
+        if (contactAfterExec?.flow_state === 'ai_handling' || contactAfterExec?.ai_active || res?.message?.includes('AI handling state')) {
           console.log(`[START-FLOW] Started or moved to AI handling state. Triggering AI response for ${waId}`);
           // Dispara a IA mesmo sem texto do cliente para que ela se apresente
-          await processAiAgentResponse(supabase, contactAfterExec, waId, params.text || "Inicie o atendimento se apresentando.", params.sourceMessageId, contactAfterExec.user_id);
+          await processAiAgentResponse(supabase, contactAfterExec, waId, params.text || "Inicie o atendimento se apresentando.", params.sourceMessageId, contactAfterExec.user_id || currentContact?.user_id);
         }
         
         return jsonResponse(res)
