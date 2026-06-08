@@ -1603,14 +1603,24 @@ async function fetchAndStoreIncomingMedia(
       if (userId) {
         settings = await getCrmSettings(supabase, userId);
       } else if (!action) {
-        // Para webhooks, o userId é resolvido antes
+        // Para webhooks, o userId é resolvido antes (userSettings)
         settings = userSettings;
       }
       
+      // Se ainda não temos settings mas temos um contactId, tentamos buscar pelo user_id do contato
+      if (!settings && params.contactId) {
+        const { data: contactForId } = await supabase.from('crm_contacts').select('user_id').eq('id', params.contactId).maybeSingle();
+        if (contactForId?.user_id) {
+           userId = contactForId.user_id;
+           settings = await getCrmSettings(supabase, userId);
+           console.log('[AUTH-DEBUG] Settings resolved via contact user_id:', userId);
+        }
+      }
+      
       // LOG CRUCIAL PARA DEBUG DE FLUXOS
-      console.log(`[REQUEST-DEBUG] Method: ${req.method}, Action: ${action || 'Webhook'}, AuthUID: ${userId}`);
+      console.log(`[REQUEST-DEBUG] Method: ${req.method}, Action: ${action || 'Webhook'}, AuthUID: ${userId}, HasSettings: ${!!settings}`);
       if (action === 'sendMessage') {
-        console.log(`[SEND-MESSAGE-DEBUG] To: ${params.to}, Text: ${params.text?.slice(0, 30)}..., HasIDs: ${!!params.meta_phone_number_id}`);
+        console.log(`[SEND-MESSAGE-DEBUG] To: ${params.to}, Text: ${params.text?.slice(0, 30)}..., HasIDs: ${!!settings?.meta_phone_number_id}`);
       }
 
       if (action === 'getCloudSettings') {
