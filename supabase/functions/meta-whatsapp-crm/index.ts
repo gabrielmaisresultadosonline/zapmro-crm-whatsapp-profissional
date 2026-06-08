@@ -1589,6 +1589,24 @@ async function fetchAndStoreIncomingMedia(
       
       const { action, ...params } = body;
       
+      // Se userId ainda for nulo mas tivermos um contactId, tentamos resolver o userId a partir do contato
+      if (!userId && params.contactId) {
+        const { data: contact } = await supabase.from('crm_contacts').select('user_id').eq('id', params.contactId).maybeSingle();
+        if (contact?.user_id) {
+          userId = contact.user_id;
+          console.log('[AUTH-DEBUG] Resolvido userId a partir do contactId:', userId);
+        }
+      }
+      
+      // Carregar configurações se o userId estiver disponível
+      let settings: any = null;
+      if (userId) {
+        settings = await getCrmSettings(supabase, userId);
+      } else if (!action) {
+        // Para webhooks, o userId é resolvido antes
+        settings = userSettings;
+      }
+      
       // LOG CRUCIAL PARA DEBUG DE FLUXOS
       console.log(`[REQUEST-DEBUG] Method: ${req.method}, Action: ${action || 'Webhook'}, AuthUID: ${userId}`);
       if (action === 'sendMessage') {
