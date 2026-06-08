@@ -375,7 +375,7 @@ const AIAgentNode = ({ data }: any) => (
         />
       </div>
     </CardContent>
-    <Handle type="source" position={Position.Bottom} className="!w-3 !h-3 !bg-violet-600 !border-2 !border-white" />
+    <Handle type="source" position={Position.Bottom} id="output" className="!w-3 !h-3 !bg-violet-600 !border-2 !border-white" />
   </Card>
 );
 
