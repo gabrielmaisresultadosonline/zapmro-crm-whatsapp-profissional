@@ -809,6 +809,8 @@ async function handleInternalSendMessage(supabase: any, phoneNumberId: string, a
   const to = normalizePhone(params.to)
   if (!to) throw new Error('Telefone inválido')
 
+  console.log(`[SEND-MESSAGE] Iniciando para ${to}. Params:`, JSON.stringify(params));
+
   const media = guessMedia(params)
   const isVoice = params.isVoice === true || media?.type === 'audio';
   const payload: any = { messaging_product: 'whatsapp', recipient_type: 'individual', to }
@@ -817,6 +819,7 @@ async function handleInternalSendMessage(supabase: any, phoneNumberId: string, a
     payload.type = 'interactive';
     payload.interactive = params.interactive;
   } else if (media) {
+    console.log(`[MEDIA-DETECT] Tipo: ${media.type}, isVoice: ${isVoice}, VPS: ${vpsTranscoderUrl ? 'SIM' : 'NÃO'}`);
     if (media.type === 'audio' && vpsTranscoderUrl) {
       console.log(`[AUDIO-VPS] Usando Transcoder para enviar como gravado: ${vpsTranscoderUrl}`);
       try {
@@ -871,11 +874,15 @@ async function handleInternalSendMessage(supabase: any, phoneNumberId: string, a
     }
     
     // CRUCIAL: Para aparecer como "Gravado na hora" (PTT), a Meta exige que o tipo seja 'audio'
-    // mas com o arquivo sendo um OGG/OPUS e nós NÃO enviamos legenda.
+    // e o objeto audio contenha "ptt: true". O arquivo deve ser OGG/OPUS.
     payload.type = media.type;
     if (media.type === 'audio') {
-      payload.audio = { id: mediaId };
-      console.log(`[MEDIA] Enviando ID ${mediaId} como áudio (PTT).`);
+      const isPTT = params.isVoice === true || !!params.audioUrl;
+      payload.audio = { 
+        id: mediaId,
+        ptt: isPTT 
+      };
+      console.log(`[MEDIA] Enviando ID ${mediaId} como áudio. PTT=${isPTT}.`);
     } else if (media.type === 'document') {
       payload.document = { id: mediaId, filename: media.fileName };
     } else {
