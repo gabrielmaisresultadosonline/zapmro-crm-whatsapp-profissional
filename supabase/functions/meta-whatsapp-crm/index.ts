@@ -86,7 +86,21 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
   }
 
   if (sourceMessageId) {
-    await wait(5000);
+    // Check if we already have a response in progress or sent for THIS specific incoming message
+    const { data: existingResponse } = await supabase
+      .from('crm_messages')
+      .select('id')
+      .eq('contact_id', contact.id)
+      .eq('direction', 'outbound')
+      .eq('metadata->source_message_id', sourceMessageId)
+      .maybeSingle();
+
+    if (existingResponse) {
+      console.log(`[AI-AGENT] Already replied to message ${sourceMessageId}. Skipping.`);
+      return { success: true, skipped: 'already_replied' };
+    }
+
+    await wait(3000); // Reduced wait time for faster response
     const { data: latestInboundAfterWait } = await supabase
       .from('crm_messages')
       .select('meta_message_id, content')
@@ -103,6 +117,7 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
 
     messageText = latestInboundAfterWait?.content || messageText;
   }
+
   
   // 1. Obter texto se não fornecido (pegar última mensagem do cliente)
   if (!messageText) {
