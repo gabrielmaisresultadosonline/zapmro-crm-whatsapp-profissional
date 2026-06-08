@@ -52,7 +52,8 @@ import {
   RefreshCcw,
   GitBranch,
   BrainCircuit,
-  UserCog
+  UserCog,
+  Link as LinkIcon
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
@@ -201,13 +202,18 @@ const QuestionNode = ({ data }: any) => (
       <div className="flex flex-col gap-2">
         {(data.buttons || []).map((btn: any, idx: number) => (
           <div key={idx} className="relative flex items-center justify-between bg-emerald-50 text-emerald-700 px-3 py-2 rounded border border-emerald-200 text-[10px] font-medium group">
-            <span className="truncate pr-4">{btn.text}</span>
-            <Handle 
-              type="source" 
-              position={Position.Right} 
-              id={btn.id || `btn-${idx}`} 
-              className="!w-3 !h-3 !bg-emerald-500 !border-2 !border-white !-right-4"
-            />
+            <span className="truncate pr-4 flex items-center gap-1">
+              {btn.text}
+              {btn.url && <LinkIcon className="w-2.5 h-2.5 opacity-50" />}
+            </span>
+            {!btn.url && (
+              <Handle 
+                type="source" 
+                position={Position.Right} 
+                id={btn.id || `btn-${idx}`} 
+                className="!w-3 !h-3 !bg-emerald-500 !border-2 !border-white !-right-4"
+              />
+            )}
           </div>
         ))}
         {data.anyResponse && (
@@ -754,18 +760,38 @@ const FlowEditorInner: React.FC<FlowEditorProps> = ({ flow, onSave, onClose }) =
                               <X className="w-3 h-3" />
                             </Button>
                           </div>
-                          <div className="flex items-center gap-2 px-1">
-                            <Label className="text-[10px] text-muted-foreground whitespace-nowrap">Link (Opcional):</Label>
-                            <Input 
-                              value={btn.url || ''} 
-                              onChange={(e) => {
-                                const newButtons = [...(selectedNode.data.buttons as any[])];
-                                newButtons[idx].url = e.target.value;
-                                updateNodeData(selectedNode.id, { buttons: newButtons });
-                              }}
-                              placeholder="https://..."
-                              className="text-[10px] h-6"
-                            />
+                          <div className="flex flex-col gap-1.5 px-1 bg-white/50 p-2 rounded-md border border-slate-100">
+                            <div className="flex items-center justify-between">
+                              <Label className="text-[10px] font-bold text-slate-600">Botão de Link?</Label>
+                              <Switch 
+                                checked={!!btn.url}
+                                onCheckedChange={(checked) => {
+                                  const newButtons = [...(selectedNode.data.buttons as any[])];
+                                  newButtons[idx].url = checked ? 'https://' : '';
+                                  updateNodeData(selectedNode.id, { buttons: newButtons });
+                                  
+                                  // Se ativar link, remove conexões saindo desse botão
+                                  if (checked) {
+                                    setEdges((eds) => eds.filter(e => e.source !== selectedNode.id || e.sourceHandle !== (btn.id || `btn-${idx}`)));
+                                  }
+                                }}
+                              />
+                            </div>
+                            {btn.url !== undefined && btn.url !== null && btn.url !== '' && (
+                              <Input 
+                                value={btn.url} 
+                                onChange={(e) => {
+                                  const newButtons = [...(selectedNode.data.buttons as any[])];
+                                  newButtons[idx].url = e.target.value;
+                                  updateNodeData(selectedNode.id, { buttons: newButtons });
+                                }}
+                                placeholder="https://..."
+                                className="text-[10px] h-7 bg-white"
+                              />
+                            )}
+                            <p className="text-[8px] text-muted-foreground leading-tight italic">
+                              {btn.url ? "Botões com link abrem o site e finalizam o fluxo." : "Botões sem link permitem ligar linhas para continuar o fluxo."}
+                            </p>
                           </div>
                         </div>
                       ))}
