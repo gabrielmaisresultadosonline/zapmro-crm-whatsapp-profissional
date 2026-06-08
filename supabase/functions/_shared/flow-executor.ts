@@ -26,13 +26,18 @@ export async function executeVisualNode(supabase: any, flow: any, node: any, con
               type: 'button',
               body: { text: text || "Escolha uma opção:" },
               action: {
-                buttons: buttons.slice(0, 3).map((btn: any, index: number) => ({
-                  type: 'reply',
-                  reply: {
-                    id: btn.id || `btn_${index}`,
-                    title: btn.label || btn.text || `Opção ${index + 1}`
-                  }
-                }))
+                buttons: buttons.slice(0, 3).map((btn: any, index: number) => {
+                  const rawTitle = btn.label || btn.text || `Opção ${index + 1}`;
+                  // Meta exige limite de 20 caracteres no título do botão
+                  const title = rawTitle.length > 20 ? rawTitle.substring(0, 17) + "..." : rawTitle;
+                  return {
+                    type: 'reply',
+                    reply: {
+                      id: btn.id || `btn_${index}`,
+                      title: title
+                    }
+                  };
+                })
               }
             }
           }
