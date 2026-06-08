@@ -1225,6 +1225,7 @@ const CRM = () => {
       toast({ title: "Status atualizado!" });
       fetchData(false);
 
+
     } catch (err) {
       toast({ title: "Erro ao atualizar", variant: "destructive" });
     }
@@ -2367,6 +2368,7 @@ const CRM = () => {
       toast({ title: "Templates Sincronizados" });
       fetchData(false);
 
+
     } catch (err) {
       toast({ title: "Erro ao sincronizar", variant: "destructive" });
     } finally {
@@ -2758,6 +2760,7 @@ const CRM = () => {
       setEditingFlow(null);
       fetchData(false);
 
+
     } catch (err: any) {
       toast({ 
         title: "Erro ao salvar fluxo", 
@@ -2808,6 +2811,8 @@ const CRM = () => {
       }
       
       toast({ title: "Fluxo duplicado com sucesso!" });
+      fetchData(false);
+
       fetchData(false);
 
     } catch (err: any) {
