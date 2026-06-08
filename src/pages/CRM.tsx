@@ -635,7 +635,9 @@ const CRM = () => {
               if (mDate === dateStr) contactActiveForDay = true;
             } else if (m.direction === 'outbound') {
               const src = (m as any)?.metadata?.source;
-              if (src === 'echo_mobile_app' || src === 'meta_webhook_echo') return;
+              const isEcho = src === 'echo_mobile_app' || src === 'meta_webhook_echo';
+              const isManual = (m as any)?.metadata?.source === 'manual_send';
+              if (isEcho || isManual) return;
               const inFreeWindow = mt - lastInbound < DAY;
               const inPaidWindow = mt - lastPaidStart < DAY;
               if (!inFreeWindow && !inPaidWindow) {
