@@ -1727,33 +1727,26 @@ const CRM = () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       
-      // WhatsApp Cloud API exige especificamente audio/ogg; codecs=opus para PTT (gravado na hora).
-      // Se tentarmos enviar .webm como audio/ogg, a Meta rejeita após o upload.
-      // Tentamos detectar o melhor formato suportado pelo navegador que a Meta aceita.
-      let mimeType = 'audio/ogg; codecs=opus'; // Padrão WhatsApp PTT
-      if (!MediaRecorder.isTypeSupported(mimeType)) {
-        mimeType = 'audio/webm; codecs=opus'; // Padrão Chrome/Android
-      }
-      if (!MediaRecorder.isTypeSupported(mimeType)) {
-        mimeType = 'audio/mp4'; // Padrão iOS/Safari
-      }
-
-      console.log(`[RECORDER] Iniciando gravação. MimeType solicitado: ${mimeType || 'padrão'}`);
-      
-      const recorder = new MediaRecorder(stream, {
-        mimeType: MediaRecorder.isTypeSupported(mimeType) ? mimeType : undefined
+      // Para garantir que o áudio seja aceito pela Meta como PTT (gravado na hora),
+      // precisamos que ele seja audio/ogg; codecs=opus.
+      // O MediaRecorder nativo no Chrome gera .webm, que a Meta frequentemente recusa.
+      // Usaremos o opus-recorder que já temos no projeto para garantir o formato correto.
+      const { default: Recorder } = await import('opus-recorder');
+      const recorder: any = new Recorder({
+        encoderPath: '/opus/encoderWorker.min.js',
+        encoderApplication: 2048, // VOIP/PTT
+        encoderSampleRate: 16000,
+        numberOfChannels: 1,
+        streamPages: false,
+        encoderBitRate: 24000,
       });
-      
-      const chunks: Blob[] = [];
-      recorder.ondataavailable = (e) => {
-        if (e.data.size > 0) chunks.push(e.data);
-      };
 
-      recorder.onstop = () => {
-        // Importante: Manter o type correto para que a Edge Function saiba como tratar
-        const finalType = chunks[0]?.type || mimeType || 'audio/webm';
-        const audioBlob = new Blob(chunks, { type: finalType });
-        console.log(`[RECORDER] Gravação finalizada. Tamanho: ${audioBlob.size} bytes, Tipo real: ${finalType}`);
+      console.log(`[RECORDER] Iniciando gravação PTT com Opus-Recorder.`);
+      
+      recorder.ondataavailable = (typedArray: Uint8Array) => {
+        const buf = typedArray.buffer.slice(typedArray.byteOffset, typedArray.byteOffset + typedArray.byteLength) as ArrayBuffer;
+        const audioBlob = new Blob([buf], { type: 'audio/ogg; codecs=opus' });
+        console.log(`[RECORDER] Gravação finalizada. Tamanho: ${audioBlob.size} bytes, Tipo: audio/ogg; codecs=opus`);
         
         const audioUrl = URL.createObjectURL(audioBlob);
         setRecordedAudioBlob(audioBlob);
@@ -1762,6 +1755,15 @@ const CRM = () => {
         
         stream.getTracks().forEach(track => track.stop());
       };
+
+      await recorder.start();
+      setMediaRecorder(recorder);
+      
+      const chunks: Blob[] = [];
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) chunks.push(e.data);
+      };
+
 
       recorder.start();
       setMediaRecorder(recorder);
@@ -1833,11 +1835,14 @@ const CRM = () => {
   };
 
   const handleSendMedia = async (file: File | Blob, type: 'audio' | 'video' | 'image' | 'document', isVoice = false, previewUrl?: string) => {
+    // IMPORTANTE: Se for áudio gravado aqui, isVoice deve ser true para que a Edge Function use o payload de voz da Meta
+    const actuallyIsVoice = isVoice || type === 'audio';
+    
     if (!selectedContact || isSending(selectedContact.id)) {
       console.warn('[CRM][sendMedia] abort: no contact or already sending', { hasContact: !!selectedContact, sending: selectedContact ? isSending(selectedContact.id) : false });
       return;
     }
-    console.log('[CRM][sendMedia] start', { type, isVoice, size: (file as any).size, mime: (file as any).type, to: selectedContact.wa_id });
+    console.log('[CRM][sendMedia] start', { type, isVoice: actuallyIsVoice, size: (file as any).size, mime: (file as any).type, to: selectedContact.wa_id });
 
     const isColdList = isConversationExpired(selectedContact);
 
