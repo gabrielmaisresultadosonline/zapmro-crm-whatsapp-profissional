@@ -2283,7 +2283,7 @@ async function fetchAndStoreIncomingMedia(
         const startNode = flow.nodes.find((n: any) => !nodeIdsWithTarget.has(n.id)) || flow.nodes[0]
         
         console.log(`[START-FLOW] Setting contact ${contactId} to running state for flow ${flowId}, start node ${startNode.id}`);
-        const { error: updateError } = await supabase.from('crm_contacts').update({
+        const updateData: any = {
           current_flow_id: flowId,
           current_node_id: startNode.id,
           flow_state: 'running',
@@ -2291,7 +2291,14 @@ async function fetchAndStoreIncomingMedia(
           next_execution_time: null,
           status: (flow.trigger_tag && flow.trigger_tag !== 'none') ? flow.trigger_tag : (currentContact?.status || 'new'),
           ai_active: startNode.type === 'aiAgent'
-        }).eq('id', contactId);
+        };
+
+        // Se o nó inicial for Agente IA, já salvamos o prompt no contato
+        if (startNode.type === 'aiAgent' && startNode.data?.prompt) {
+          updateData.ai_agent_prompt = startNode.data.prompt;
+        }
+
+        const { error: updateError } = await supabase.from('crm_contacts').update(updateData).eq('id', contactId);
         
         if (updateError) {
           console.error(`[START-FLOW] Error updating contact ${contactId}:`, updateError);
