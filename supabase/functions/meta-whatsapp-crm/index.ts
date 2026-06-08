@@ -2561,13 +2561,19 @@ async function fetchAndStoreIncomingMedia(
           
           const res: any = await executeVisualNode(supabase, flow, nextNode, contactId, waId);
           
-          // Se o próximo nó é um Agente IA, processamos a resposta imediatamente
+          // Se o próximo nó é um Agente IA, processamos a resposta com um pequeno delay 
+          // para garantir que a mensagem do nó anterior chegue primeiro no WhatsApp do cliente.
           if (res?.message?.includes('AI handling state') && text) {
-            console.log(`[CONTINUE-FLOW] Moved to AI handling state. Triggering AI response for ${waId}`);
-            const { data: updatedContact } = await supabase.from('crm_contacts').select('*').eq('id', contactId).single();
-             if (updatedContact) {
-               await processAiAgentResponse(supabase, updatedContact, waId, text, sourceMessageId, updatedContact.user_id);
-             }
+            console.log(`[CONTINUE-FLOW] Moved to AI handling state. Scheduling AI response with delay for ${waId}`);
+            // Usamos setTimeout para não bloquear a resposta do webhook, mas processar logo em seguida
+            setTimeout(async () => {
+              const { data: updatedContact } = await supabase.from('crm_contacts').select('*').eq('id', contactId).single();
+              if (updatedContact) {
+                // Delay de 3 segundos para parecer mais natural e não atropelar a mensagem inicial
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                await processAiAgentResponse(supabase, updatedContact, waId, text, sourceMessageId, updatedContact.user_id);
+              }
+            }, 500);
           }
           
           return jsonResponse(res)
