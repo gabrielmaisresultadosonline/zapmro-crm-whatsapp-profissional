@@ -60,18 +60,29 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
   const OPENAI_API_KEY = aiSettings?.openai_api_key || Deno.env.get('OPENAI_API_KEY');
 
   if (!OPENAI_API_KEY) {
-    console.error(`[AI-AGENT] OpenAI API Key não configurada para o usuário ${userId}. Buscando fallback...`);
-    // Tenta buscar a configuração global se não encontrar a do usuário
-    const { data: globalSettings } = await supabase.from('crm_settings').select('openai_api_key').eq('id', '00000000-0000-0000-0000-000000000001').maybeSingle();
-    const FALLBACK_KEY = globalSettings?.openai_api_key;
+    console.error(`[AI-AGENT] OpenAI API Key não configurada para o usuário ${userId}.`);
     
-    if (!FALLBACK_KEY) {
-      console.error("[AI-AGENT] Nenhuma OpenAI API Key encontrada (nem do usuário, nem global)");
-      return { success: false, error: "AI logic missing key" };
+    // Tenta avisar o usuário que o token está faltando
+    const settings = aiSettings || await getCrmSettings(supabase, userId);
+    if (settings?.meta_phone_number_id && settings?.meta_access_token) {
+      const missingTokenMsg = "⚠️ Atenção: O Agente I.A. foi iniciado, mas a sua chave da OpenAI ainda não foi configurada. Por favor, acesse o menu Configurações -> Agente IA no CRM, insira sua chave (sk-...) e clique em Salvar para ativar o atendimento automático.";
+      
+      // Envia aviso apenas se ainda não avisou recentemente (evitar loop)
+      const { data: lastMsg } = await supabase.from('crm_messages').select('content').eq('contact_id', contact.id).eq('direction', 'outbound').order('created_at', { ascending: false }).limit(1).maybeSingle();
+      
+      if (lastMsg?.content !== missingTokenMsg) {
+        await handleInternalSendMessage(
+          supabase, 
+          settings.meta_phone_number_id, 
+          settings.meta_access_token, 
+          { to: waId, text: missingTokenMsg }, 
+          contact,
+          settings.vps_transcoder_url
+        );
+      }
     }
     
-    // Se encontrou a global, usa ela
-    return processAiAgentResponse(supabase, contact, waId, text, sourceMessageId, '00000000-0000-0000-0000-000000000001');
+    return { success: false, error: "OpenAI Token missing" };
   }
 
   if (sourceMessageId) {
