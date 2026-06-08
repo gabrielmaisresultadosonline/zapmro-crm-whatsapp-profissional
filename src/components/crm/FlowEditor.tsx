@@ -689,8 +689,8 @@ const FlowEditorInner: React.FC<FlowEditorProps> = ({ flow, onSave, onClose }) =
               >
                 <BrainCircuit className="w-5 h-5 text-violet-600 group-hover:rotate-12 transition-transform" /> 
                 <div className="flex flex-col items-start text-left">
-                  <span className="text-violet-800 font-bold text-xs">Agente I.A</span>
-                  <span className="text-[9px] text-violet-600 font-medium uppercase tracking-wider">Qualificador Inteligente</span>
+                  <span className="text-violet-800 font-bold text-xs">Atendente e Vendedor I.A</span>
+                  <span className="text-[9px] text-violet-600 font-medium uppercase tracking-wider">Atendimento e Vendas 24h</span>
                 </div>
               </Button>
             </div>
