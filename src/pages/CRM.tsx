@@ -4539,6 +4539,29 @@ const CRM = () => {
                                         />
                                       </div>
                                     </div>
+                                    <Button 
+                                      variant="ghost" 
+                                      size="icon" 
+                                      className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50 shrink-0 border border-red-100 rounded-lg sm:w-auto sm:h-7 sm:px-3 sm:text-[10px] sm:font-black sm:uppercase sm:tracking-wider"
+                                      onClick={async () => {
+                                        if (confirm('Tem certeza que deseja apagar todo o histórico desta conversa?')) {
+                                          try {
+                                            const { data, error } = await supabase.functions.invoke('meta-whatsapp-crm', {
+                                              body: { action: 'clearHistory', contactId: selectedContact.id }
+                                            });
+                                            if (error) throw error;
+                                            toast({ title: 'Histórico apagado com sucesso!' });
+                                            // Limpa o chat localmente
+                                            setChatMessages([]);
+                                          } catch (err: any) {
+                                            toast({ title: 'Erro ao apagar histórico', variant: 'destructive' });
+                                          }
+                                        }
+                                      }}
+                                    >
+                                      <Trash2 className="w-4 h-4 sm:mr-2" /> <span className="hidden sm:inline">Limpar Conversa</span>
+                                    </Button>
+
                                     <Dialog>
                                       <DialogTrigger asChild>
                                         <Button 
