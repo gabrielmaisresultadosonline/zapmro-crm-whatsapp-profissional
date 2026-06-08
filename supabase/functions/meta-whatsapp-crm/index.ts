@@ -1833,9 +1833,11 @@ async function fetchAndStoreIncomingMedia(
     }
 
     // Get Meta Settings
-      const settings = await getCrmSettings(supabase, userId)
+    const settings = await getCrmSettings(supabase, userId);
+    console.log(`[SETTINGS-DEBUG] userId: ${userId}, hasSettings: ${!!settings}, meta_phone_number_id: ${settings?.meta_phone_number_id}`);
 
-    const { meta_access_token, meta_phone_number_id } = settings || {}
+    const meta_access_token = settings?.meta_access_token;
+    const meta_phone_number_id = settings?.meta_phone_number_id;
 
     if (action === 'getTemplates') {
       if (!meta_access_token) throw new Error('Meta API credentials not configured');
@@ -2132,8 +2134,8 @@ async function fetchAndStoreIncomingMedia(
         
       const response = await handleInternalSendMessage(
         supabase, 
-        meta_phone_number_id || settings?.meta_phone_number_id, 
-        meta_access_token || settings?.meta_access_token, 
+        meta_phone_number_id, 
+        meta_access_token, 
         params, 
         contact, 
         settings?.vps_transcoder_url
