@@ -164,6 +164,8 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
         ]
       : `Histórico da conversa:\n${history}\n\nNova mensagem do cliente: ${messageText || "(Nenhuma mensagem recente - inicie o atendimento)"}`;
 
+    console.log(`[AI-AGENT] Calling OpenAI for ${waId}. Model: gpt-4o-mini. System prompt length: ${systemPrompt.length}`);
+    
     const aiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -179,9 +181,16 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
         temperature: 0.7
       }),
     });
-    
+
     const aiData = await aiResponse.json();
+    
+    if (!aiResponse.ok) {
+      console.error(`[AI-AGENT] OpenAI Error for ${waId}:`, JSON.stringify(aiData));
+      return { success: false, error: "OpenAI API returned error" };
+    }
+    
     const reply = aiData.choices?.[0]?.message?.content || "";
+    console.log(`[AI-AGENT] OpenAI reply for ${waId}: ${reply.slice(0, 100)}...`);
     
     if (reply.includes('[[TRANSFER_TO_HUMAN]]') && history.split('\n').filter(line => line.startsWith('Assistente:')).length >= 2) {
       console.log(`[AI-AGENT] AI decided to transfer contact ${waId} to human.`);
