@@ -440,6 +440,9 @@ async function handleProcessWebhook(supabase: any, entry: any, skipSave = false,
   let mediaUrlForSave: string | null = null;
   let mediaCaption = '';
 
+  console.log(`[WEBHOOK] Handling message from ${waId}. Type: ${message.type}. ID: ${message.id}`);
+
+
   if (!skipSave && message.id) {
      const { data: existingInbound } = await supabase
        .from('crm_messages')
@@ -545,10 +548,12 @@ async function handleProcessWebhook(supabase: any, entry: any, skipSave = false,
       last_interaction: new Date().toISOString(),
       last_message_received_at: new Date().toISOString(),
       total_messages_received: (contactForSave.total_messages_received || 0) + 1,
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
+      last_read_at: null // Reset last_read_at when new message arrives so it shows as unread
     }).eq('id', contactForSave.id);
-    console.log('[WEBHOOK] Saved inbound message', { waId, userId, contact_id: contactForSave.id, meta_message_id: message.id });
+    console.log('[WEBHOOK] Saved inbound message and reset last_read_at', { waId, userId, contact_id: contactForSave.id, meta_message_id: message.id });
   }
+
 
    const { data: contact } = await supabase
      .from('crm_contacts')
@@ -1429,14 +1434,22 @@ async function fetchAndStoreIncomingMedia(
      if (hubMode === 'subscribe' && hubVerifyToken && webhookIdentifier) {
        const { data: settings } = await supabase
          .from('crm_settings')
-         .select('webhook_verify_token')
+         .select('user_id, meta_waba_id, meta_access_token, webhook_verify_token')
          .eq('webhook_identifier', webhookIdentifier)
-         .single();
+         .maybeSingle();
        
        if (settings && (settings.webhook_verify_token === hubVerifyToken || !settings.webhook_verify_token)) {
+         console.log('[WEBHOOK-SETUP] Hub verification success for identifier', webhookIdentifier);
+         if (settings.meta_waba_id && settings.meta_access_token) {
+            // Auto-subscribe the WABA to our app to ensure we receive notifications
+            await ensureWabaSubscribed(settings.meta_waba_id, settings.meta_access_token);
+         }
          return new Response(hubChallenge, { status: 200 });
+       } else {
+         console.warn('[WEBHOOK-SETUP] Hub verification failed or token mismatch', { webhookIdentifier, hubVerifyToken });
        }
      }
+
      return new Response('Forbidden', { status: 403 });
    }
  
