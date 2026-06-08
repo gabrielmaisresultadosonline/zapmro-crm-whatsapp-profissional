@@ -2251,11 +2251,12 @@ async function fetchAndStoreIncomingMedia(
         const res: any = await executeVisualNode(supabase, flow, startNode, contactId, waId);
         
         // Se o fluxo começou em um nó de Agente IA, processamos a resposta imediatamente
-        if (res?.message?.includes('AI handling state') && params.text) {
+        if (res?.message?.includes('AI handling state')) {
           console.log(`[START-FLOW] Started in AI handling state. Triggering AI response for ${waId}`);
           const { data: updatedContact } = await supabase.from('crm_contacts').select('*').eq('id', contactId).single();
            if (updatedContact) {
-             await processAiAgentResponse(supabase, updatedContact, waId, params.text, params.sourceMessageId, updatedContact.user_id);
+             // IMPORTANTE: Dispara a IA mesmo sem texto do cliente para que ela se apresente
+             await processAiAgentResponse(supabase, updatedContact, waId, params.text || "Inicie o atendimento se apresentando.", params.sourceMessageId, updatedContact.user_id);
            }
         }
         
