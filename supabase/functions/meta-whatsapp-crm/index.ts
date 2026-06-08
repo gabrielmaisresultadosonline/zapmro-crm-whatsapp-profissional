@@ -1676,8 +1676,8 @@ async function fetchAndStoreIncomingMedia(
      if (!action && body.object === 'whatsapp_business_account' && userSettings) {
        return await handleProcessWebhook(supabase, body.entry, false, userId);
      }
-    if (action === 'processScheduled' || action === 'processAiAgent' || action === 'sendMessage' || action === 'sendTemplate' || action === 'continueFlow' || action === 'startFlow') {
-      console.log(`[ACTION-LOG] Processing action: ${action}`);
+    if (action === 'processScheduled') {
+      console.log(`[BACKGROUND-LOG] Background processing for action: ${action}`);
       const now = new Date().toISOString();
       
       // Select only what's needed and use a more strict query
@@ -2214,24 +2214,23 @@ async function fetchAndStoreIncomingMedia(
     if (action === 'startFlow') {
       const { flowId, contactId, waId } = params
       
-      const { data: currentContact } = await supabase
+      const { data: currentContact, error: contactError } = await supabase
         .from('crm_contacts')
-        .select('flow_state, current_flow_id, status, user_id')
+        .select('flow_state, current_flow_id, status, user_id, wa_id')
         .eq('id', contactId)
         .single();
         
-      if (currentContact?.flow_state === 'running' || currentContact?.flow_state === 'waiting_response' || currentContact?.flow_state === 'ai_handling') {
-        console.log(`[START-FLOW] Flow already active for ${waId} (state: ${currentContact.flow_state}). Force restarting...`);
-        // Opcional: permitir reiniciar mesmo se já estiver rodando
-      }
+      if (contactError) throw contactError;
 
-      const { data: flow } = await supabase
+      const { data: flow, error: flowError } = await supabase
         .from('crm_flows')
         .select('*')
         .eq('id', flowId)
         .single()
       
+      if (flowError) throw flowError;
       if (!flow) throw new Error('Flow not found')
+      
       await supabase.from('crm_scheduled_messages').delete().eq('contact_id', contactId);
 
       if (flow.nodes && flow.nodes.length > 0) {
