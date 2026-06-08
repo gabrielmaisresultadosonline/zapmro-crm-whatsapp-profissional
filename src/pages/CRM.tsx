@@ -1002,11 +1002,12 @@ const CRM = () => {
     setFilteredContacts(filtered);
   }, [statusFilter, contacts, activeTab]);
 
-   const fetchData = async () => {
-     setLoading(true);
+   const fetchData = async (isInitialLoad = false) => {
+     if (isInitialLoad) setLoading(true);
      try {
        const { data: { user } } = await supabase.auth.getUser();
        if (!user) return;
+
  
         let settingsData = null;
         const { data: cloudSettings, error: cloudSettingsError } = await supabase.functions.invoke('meta-whatsapp-crm', {
@@ -1077,6 +1078,7 @@ const CRM = () => {
     }
   };
 
+
    const handleSaveSettings = async () => {
      setSaving(true);
      try {
@@ -1095,8 +1097,9 @@ const CRM = () => {
        // Sync with Admin Central if needed (mocked for now)
        console.log('Syncing settings with Admin Central for token activation...');
 
-       toast({ title: "Configurações salvas!" });
-       fetchData();
+        toast({ title: "Configurações salvas!" });
+        fetchData(false);
+
      } catch (error) {
        console.error("Erro ao salvar:", error);
        toast({ title: "Erro ao salvar", variant: "destructive" });
@@ -1216,7 +1219,8 @@ const CRM = () => {
         throw error;
       }
       toast({ title: "Status atualizado!" });
-      fetchData();
+      fetchData(false);
+
     } catch (err) {
       toast({ title: "Erro ao atualizar", variant: "destructive" });
     }
@@ -1590,6 +1594,7 @@ const CRM = () => {
 
       toast({ title: "Webhook criado!" });
       fetchWebhooks();
+
       setIsNewWebhookDialogOpen(false);
       setNewWebhook({ name: '', response_type: 'text', template_id: '', secret_token: '', is_active: true, default_status: 'new' });
     } catch (err: any) {
@@ -2456,7 +2461,8 @@ const CRM = () => {
       if (error) throw error;
       if (!data.success) throw new Error(data.error || "Erro ao criar template na Meta");
       toast({ title: "Template enviado para aprovação!" });
-      fetchData();
+      fetchData(false);
+
     } catch (err: any) {
       toast({ title: "Erro ao criar template", description: err.message, variant: "destructive" });
     } finally {
@@ -2471,7 +2477,8 @@ const CRM = () => {
       });
       if (error) throw error;
       toast({ title: "Template excluído" });
-      fetchData();
+      fetchData(false);
+
     } catch (err) {
       toast({ title: "Erro ao excluir", variant: "destructive" });
     }
@@ -2744,7 +2751,8 @@ const CRM = () => {
       toast({ title: "Fluxo salvo com sucesso!" });
       setIsFlowEditorOpen(false);
       setEditingFlow(null);
-      fetchData();
+      fetchData(false);
+
     } catch (err: any) {
       toast({ 
         title: "Erro ao salvar fluxo", 
@@ -2795,7 +2803,8 @@ const CRM = () => {
       }
       
       toast({ title: "Fluxo duplicado com sucesso!" });
-      fetchData();
+      fetchData(false);
+
     } catch (err: any) {
       console.error("Erro ao duplicar fluxo:", err);
       toast({ 
