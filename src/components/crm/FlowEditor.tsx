@@ -520,6 +520,7 @@ const FlowEditorInner: React.FC<FlowEditorProps> = ({ flow, onSave, onClose }) =
       case 'template': data = { templateName: '', language: 'pt_BR', anyResponse: false }; break;
       case 'jump': data = { targetFlowId: '', targetFlowName: '' }; break;
       case 'aiAgent': data = { prompt: '', labelOnHumanTransfer: 'Atenção: Humano Necessário' }; break;
+      case 'pix': data = { pixKey: '', amount: '47.00', description: 'Pagamento via PIX' }; break;
     }
 
     const newNode: Node = {
