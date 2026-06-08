@@ -873,12 +873,10 @@ async function handleInternalSendMessage(supabase: any, phoneNumberId: string, a
     payload.type = media.type;
     if (media.type === 'audio') {
       // Para enviar como mensagem de voz (gravado na hora), usamos o objeto "audio"
-      // e definimos is_voice: true para que apareça como gravado e não encaminhado.
+      // Se params.isVoice for true, a Meta tenta exibir como PTT.
+      // Além disso, algumas versões da API usam o campo "voice" ou o tipo "audio" com mime opus.
       payload.audio = { id: mediaId };
-      // Importante: Algumas versões da API Meta usam "voice" em vez de "audio" para PTT,
-      // mas no Cloud API v16+ o padrão é enviar como audio com mime audio/ogg; codecs=opus.
-      // A Meta detecta o formato opus e exibe como mensagem de voz se o upload foi correto.
-      console.log(`[MEDIA] Enviando ID ${mediaId} como áudio.`);
+      console.log(`[MEDIA] Enviando ID ${mediaId} como áudio (isVoice: ${!!params.isVoice}).`);
     } else if (media.type === 'document') {
       payload.document = { id: mediaId, filename: media.fileName };
     } else {
