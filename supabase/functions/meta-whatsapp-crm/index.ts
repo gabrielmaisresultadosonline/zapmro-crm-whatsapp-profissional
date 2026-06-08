@@ -1501,13 +1501,20 @@ async function fetchAndStoreIncomingMedia(
        userId = settings.user_id;
        userSettings = settings;
      }
-   } else {
-     const authHeader = req.headers.get('Authorization');
-     if (authHeader) {
-       const { data: { user } } = await supabase.auth.getUser(authHeader.replace('Bearer ', ''));
-       if (user) userId = user.id;
-     }
-   }
+    } else {
+      const authHeader = req.headers.get('Authorization');
+      if (authHeader) {
+        const token = authHeader.replace('Bearer ', '');
+        const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+        if (user) {
+          userId = user.id;
+        } else if (authError) {
+          console.warn('[AUTH-DEBUG] getUser failed with token:', token.slice(0, 10) + '...', authError);
+        }
+      } else {
+        console.log('[AUTH-DEBUG] No Authorization header present');
+      }
+    }
  
     try {
       const rawBody = await req.text();
