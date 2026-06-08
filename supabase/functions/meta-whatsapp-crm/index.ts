@@ -809,6 +809,8 @@ async function handleInternalSendMessage(supabase: any, phoneNumberId: string, a
   const to = normalizePhone(params.to)
   if (!to) throw new Error('Telefone inválido')
 
+  console.log(`[SEND-MESSAGE] Iniciando para ${to}. Params:`, JSON.stringify(params));
+
   const media = guessMedia(params)
   const isVoice = params.isVoice === true || media?.type === 'audio';
   const payload: any = { messaging_product: 'whatsapp', recipient_type: 'individual', to }
@@ -817,6 +819,7 @@ async function handleInternalSendMessage(supabase: any, phoneNumberId: string, a
     payload.type = 'interactive';
     payload.interactive = params.interactive;
   } else if (media) {
+    console.log(`[MEDIA-DETECT] Tipo: ${media.type}, isVoice: ${isVoice}, VPS: ${vpsTranscoderUrl ? 'SIM' : 'NÃO'}`);
     if (media.type === 'audio' && vpsTranscoderUrl) {
       console.log(`[AUDIO-VPS] Usando Transcoder para enviar como gravado: ${vpsTranscoderUrl}`);
       try {
