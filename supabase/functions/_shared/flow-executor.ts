@@ -141,7 +141,8 @@ export async function executeVisualNode(supabase: any, flow: any, node: any, con
           body: { 
             action: 'sendMessage', 
             to: waId, 
-...
+            [node.type + 'Url']: mediaUrl,
+            contactId,
             isVoice: node.type === 'audio'
           }
         });
