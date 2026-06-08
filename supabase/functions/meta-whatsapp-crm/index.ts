@@ -758,8 +758,8 @@ async function uploadMediaToMeta(accessToken: string, phoneNumberId: string, med
       console.log(`[UPLOAD-AUDIO] Webm detectado. Convertendo MIME para audio/ogg.`);
     }
     
-    // Forçamos o tipo para audio/ogg para garantir que a Meta aceite como PTT
-    contentType = 'audio/ogg';
+    // Forçamos o tipo para audio/ogg com codec opus para garantir que a Meta aceite como PTT
+    contentType = 'audio/ogg; codecs=opus';
     fileName = 'voice.ogg';
     
     console.log(`[UPLOAD-AUDIO] Enviando para Meta: type=audio, contentType=${contentType}, fileName=${fileName}`);
@@ -879,7 +879,10 @@ async function handleInternalSendMessage(supabase: any, phoneNumberId: string, a
     payload.type = media.type;
     if (media.type === 'audio') {
       payload.audio = { 
-        id: mediaId
+        id: mediaId,
+        // CRUCIAL: ptt: true sinaliza para a Meta que este áudio deve ser exibido como 
+        // "gravado na hora" (microfone azul) em vez de um arquivo de áudio comum (laranja).
+        ptt: true
       };
       console.log(`[MEDIA] Enviando ID ${mediaId} como áudio.`);
     } else if (media.type === 'document') {
