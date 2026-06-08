@@ -750,24 +750,24 @@ async function uploadMediaToMeta(accessToken: string, phoneNumberId: string, med
   let fileName = media.fileName;
 
   if (media.type === 'audio') {
-    // Meta REJEITA expressamente 'audio/webm'.
-    // Devemos mentir o MIME para 'audio/ogg' se for webm, pois o stream opus é compatível.
+    // IMPORTANTE: Para a Meta tratar como PTT (gravado na hora), o upload DEVE ter mime type 'audio/ogg' 
+    // e o arquivo DEVE ter extensão '.ogg', contendo codec opus.
     const isWebm = contentType.includes('webm') || media.url.endsWith('.webm');
     
     if (isWebm) {
-      console.log(`[UPLOAD-AUDIO] Webm detectado. Forçando MIME audio/ogg para compatibilidade Meta.`);
-      contentType = 'audio/ogg';
-      fileName = 'voice.ogg';
-    } else {
-      console.log(`[UPLOAD-PTT] Preparando áudio PTT: originalMime=${responseContentType}, contentType=${contentType}`);
-      fileName = 'voice.ogg';
+      console.log(`[UPLOAD-AUDIO] Webm detectado. Convertendo MIME para audio/ogg.`);
     }
+    
+    // Forçamos o tipo para audio/ogg para garantir que a Meta aceite como PTT
+    contentType = 'audio/ogg';
+    fileName = 'voice.ogg';
+    
+    console.log(`[UPLOAD-AUDIO] Enviando para Meta: type=audio, contentType=${contentType}, fileName=${fileName}`);
     
     const blob = new Blob([arrayBuffer], { type: contentType });
     const form = new FormData();
     form.append('messaging_product', 'whatsapp');
     form.append('file', blob, fileName);
-    form.append('type', 'audio');
     
     const response = await fetch(`https://graph.facebook.com/v20.0/${phoneNumberId}/media`, {
       method: 'POST',
@@ -777,7 +777,7 @@ async function uploadMediaToMeta(accessToken: string, phoneNumberId: string, med
     
     const result = await response.json().catch(() => ({}));
     if (!response.ok) {
-      console.error(`[UPLOAD-AUDIO] Erro Meta detalhado:`, JSON.stringify(result));
+      console.error(`[UPLOAD-AUDIO] Erro Meta status=${response.status}:`, JSON.stringify(result));
       throw new Error(result?.error?.message || 'Erro ao subir áudio na Meta');
     }
     return result.id;
