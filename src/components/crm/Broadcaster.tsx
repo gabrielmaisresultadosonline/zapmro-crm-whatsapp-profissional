@@ -27,10 +27,13 @@ import {
   RefreshCcw,
   Plus,
   Upload,
-  ArrowRight
+  ArrowRight,
+  Save
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { Switch } from "@/components/ui/switch";
+
 
 interface BroadcasterProps {
   templates: any[];
