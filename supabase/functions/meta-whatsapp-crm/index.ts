@@ -51,12 +51,27 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
   console.log(`[AI-AGENT] Processing response for contact ${waId}. Flow AI Agent.`);
   let messageText = text;
 
-    const { data: aiSettings } = await supabase.from('crm_settings').select('openai_api_key, meta_phone_number_id, meta_access_token, vps_transcoder_url').eq('user_id', userId).maybeSingle();
+    const { data: aiSettings, error: settingsError } = await supabase.from('crm_settings').select('openai_api_key, meta_phone_number_id, meta_access_token, vps_transcoder_url').eq('user_id', userId).maybeSingle();
+  
+  if (settingsError) {
+    console.error(`[AI-AGENT] Error fetching settings for user ${userId}:`, settingsError);
+  }
+
   const OPENAI_API_KEY = aiSettings?.openai_api_key || Deno.env.get('OPENAI_API_KEY');
 
   if (!OPENAI_API_KEY) {
-    console.error("OpenAI API Key não configurada");
-    return { success: false, error: "AI logic missing key" };
+    console.error(`[AI-AGENT] OpenAI API Key não configurada para o usuário ${userId}. Buscando fallback...`);
+    // Tenta buscar a configuração global se não encontrar a do usuário
+    const { data: globalSettings } = await supabase.from('crm_settings').select('openai_api_key').eq('id', '00000000-0000-0000-0000-000000000001').maybeSingle();
+    const FALLBACK_KEY = globalSettings?.openai_api_key;
+    
+    if (!FALLBACK_KEY) {
+      console.error("[AI-AGENT] Nenhuma OpenAI API Key encontrada (nem do usuário, nem global)");
+      return { success: false, error: "AI logic missing key" };
+    }
+    
+    // Se encontrou a global, usa ela
+    return processAiAgentResponse(supabase, contact, waId, text, sourceMessageId, '00000000-0000-0000-0000-000000000001');
   }
 
   if (sourceMessageId) {
