@@ -1515,7 +1515,6 @@ async function fetchAndStoreIncomingMedia(
       try {
         body = JSON.parse(rawBody);
       } catch (e) {
-        // Se for um evento de webhook da Meta, pode não ser JSON puro em alguns casos raros ou falhar o parse
         console.error('[REQUEST-DEBUG] Failed to parse body as JSON:', rawBody.slice(0, 200));
         return new Response(JSON.stringify({ success: false, error: 'Invalid JSON' }), {
           status: 400,
@@ -1524,7 +1523,7 @@ async function fetchAndStoreIncomingMedia(
       }
       
       const { action, ...params } = body;
-      console.log(`[REQUEST-DEBUG] Method: ${req.method}, Action: ${action || 'Webhook'}, Body keys: ${Object.keys(body).join(', ')}`);
+      console.log(`[REQUEST-DEBUG] Method: ${req.method}, Action: ${action || 'Webhook'}`);
 
       if (action === 'getCloudSettings') {
        if (!userId) {
