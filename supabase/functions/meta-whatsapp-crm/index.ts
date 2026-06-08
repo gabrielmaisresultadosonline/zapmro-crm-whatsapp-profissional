@@ -252,7 +252,11 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
               supabase, 
               settings.meta_phone_number_id, 
               settings.meta_access_token, 
-              { to: waId, text: part.trim() }, 
+              { 
+                to: waId, 
+                text: part.trim(),
+                metadata: { source_message_id: sourceMessageId }
+              }, 
               contact,
               settings.vps_transcoder_url
             );
