@@ -1976,7 +1976,7 @@ const CRM = () => {
       setMediaUploadProgress(prev => ({ ...prev, [targetContactId]: 80 }));
 
       if (type === 'audio' && metaSettings.vps_transcoder_url && metaSettings.vps_status !== 'offline') {
-        console.log('[CRM][sendMedia][VPS] tentando bridge', { url: metaSettings.vps_transcoder_url, status: metaSettings.vps_status });
+        console.log('[CRM][sendMedia][VPS] Tentando envio via VPS Transcoder', { url: metaSettings.vps_transcoder_url, to: targetWaId });
         let vpsResult: any = null;
         try {
           const vpsUrl = metaSettings.vps_transcoder_url.replace(/\/$/, '');
@@ -1993,8 +1993,9 @@ const CRM = () => {
           });
           
           vpsResult = await response.json().catch(() => ({}));
-          console.log('[CRM][sendMedia][VPS] resp', { status: response.status, vpsResult });
+          console.log('[CRM][sendMedia][VPS] Resposta do VPS:', { status: response.status, vpsResult });
           if (!response.ok) {
+            console.error('[CRM][sendMedia][VPS] VPS retornou erro:', vpsResult);
             throw new Error(vpsResult.error || vpsResult.details || 'Erro no processamento do VPS');
           }
         } catch (vpsErr: any) {
