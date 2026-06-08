@@ -8,7 +8,7 @@ import { toast } from '@/hooks/use-toast';
 import {
   Users, Search, Flame, Tag, Filter, Loader2, ChevronDown,
   Phone, MessageSquare, Star, UserCheck, UserPlus, BarChart3,
-  X, Save, Edit2, RefreshCw, Share2, Settings2, CheckCircle2, Plus
+  X, Save, Edit2, RefreshCw, Share2, Settings2, CheckCircle2, Plus, Trash2
 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
@@ -254,6 +254,24 @@ export default function CRMPanel({ callProxy, onSelectContact }: CRMPanelProps) 
                   className={`flex items-center gap-1 text-xs ${editingContact.is_hot_lead ? 'text-orange-400' : 'text-white/30'}`}
                 >
                   <Flame className="w-3 h-3" /> {editingContact.is_hot_lead ? 'Lead Quente' : 'Marcar Quente'}
+                </button>
+                <button
+                  onClick={async () => {
+                    if (confirm('Tem certeza que deseja apagar todo o histórico desta conversa?')) {
+                      try {
+                        const res = await callProxy('clearHistory', { contactId: editingContact.id });
+                        if (res.success) {
+                          toast({ title: 'Histórico apagado com sucesso!' });
+                          onSelectContact?.(editingContact.phone);
+                        }
+                      } catch (e) {
+                        toast({ title: 'Erro ao apagar histórico', variant: 'destructive' });
+                      }
+                    }
+                  }}
+                  className="flex items-center gap-1 text-red-400 text-xs hover:underline"
+                >
+                  <Trash2 className="w-3 h-3" /> Limpar Conversa
                 </button>
               </div>
             </div>

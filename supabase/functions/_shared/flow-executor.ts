@@ -241,16 +241,20 @@ export async function executeVisualNode(supabase: any, flow: any, node: any, con
       
       console.log(`[EXECUTOR] Contact ${contactId} state updated to ai_handling. Triggering initial processAiAgentResponse.`);
       // IMPORTANTE: Dispara o processamento inicial da IA para que ela responda sem esperar nova mensagem do cliente
-      // Usamos um bypass interno ou passamos o userId se disponível no flow
-      await supabase.functions.invoke('meta-whatsapp-crm', {
-        headers: { 'Authorization': `Bearer INTERNAL_BYPASS` },
-        body: { 
-          action: 'processAiAgent', 
-          contactId: contactId, 
-          waId: waId,
-          text: initialMessageText || "Inicie o atendimento se apresentando."
-        }
-      });
+      // Exceto se configurado para aguardar a primeira resposta
+      if (node.data?.wait_response_before_start !== true) {
+        await supabase.functions.invoke('meta-whatsapp-crm', {
+          headers: { 'Authorization': `Bearer INTERNAL_BYPASS` },
+          body: { 
+            action: 'processAiAgent', 
+            contactId: contactId, 
+            waId: waId,
+            text: initialMessageText || "Inicie o atendimento se apresentando."
+          }
+        });
+      } else {
+        console.log(`[EXECUTOR] AI Agent configured to wait for first response. Skipping initial trigger.`);
+      }
       
       return { success: true, message: 'Contact moved to AI handling state' };
     } else if (node.type === 'crmAction') {

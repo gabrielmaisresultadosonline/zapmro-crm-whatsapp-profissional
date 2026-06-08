@@ -1025,6 +1025,17 @@ const FlowEditorInner: React.FC<FlowEditorProps> = ({ flow, onSave, onClose }) =
                       />
                     </div>
 
+                    <div className="flex items-center justify-between p-2 bg-slate-50 rounded-lg border border-slate-200">
+                      <div className="space-y-0.5">
+                        <Label className="text-xs font-bold">Aguardar resposta inicial</Label>
+                        <p className="text-[9px] text-muted-foreground">A IA só inicia após o cliente responder a mensagem de abertura.</p>
+                      </div>
+                      <Switch 
+                        checked={(selectedNode.data.wait_response_before_start as boolean) || false}
+                        onCheckedChange={(checked) => updateNodeData(selectedNode.id, { wait_response_before_start: checked })}
+                      />
+                    </div>
+
                     <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-100 space-y-2 shadow-sm">
                       <div className="flex items-center gap-2 text-emerald-700">
                         <UserCog className="w-4 h-4" />
