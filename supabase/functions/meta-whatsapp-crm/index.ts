@@ -805,11 +805,17 @@ async function uploadMediaToMeta(accessToken: string, phoneNumberId: string, med
 }
 
 async function handleInternalSendMessage(supabase: any, phoneNumberId: string, accessToken: string, params: any, contact: any, vpsTranscoderUrl?: string) {
-  if (!phoneNumberId || !accessToken) throw new Error('Credenciais Meta não configuradas')
-  const to = normalizePhone(params.to)
-  if (!to) throw new Error('Telefone inválido')
+  if (!phoneNumberId || !accessToken) {
+    console.error('[SEND-MESSAGE] Falha: Credenciais ausentes', { phoneNumberId: !!phoneNumberId, accessToken: !!accessToken });
+    throw new Error('Credenciais Meta não configuradas');
+  }
+  const to = normalizePhone(params.to);
+  if (!to) {
+    console.error('[SEND-MESSAGE] Falha: Telefone inválido', { to: params.to });
+    throw new Error('Telefone inválido');
+  }
 
-  console.log(`[SEND-MESSAGE] Iniciando para ${to}. Params:`, JSON.stringify(params));
+  console.log(`[SEND-MESSAGE] Iniciando para ${to}. Action: ${params.action || 'default'}`);
 
   const media = guessMedia(params)
   const isVoice = params.isVoice === true || media?.type === 'audio';
@@ -1503,9 +1509,20 @@ async function fetchAndStoreIncomingMedia(
      }
    }
  
-   try {
-     const body = await req.json().catch(() => ({}));
-     const { action, ...params } = body;
+    try {
+      const rawBody = await req.text();
+      let body;
+      try {
+        body = JSON.parse(rawBody);
+      } catch (e) {
+        console.error('[WEBHOOK] Failed to parse JSON body:', rawBody);
+        return new Response(JSON.stringify({ success: false, error: 'Invalid JSON' }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
+      const { action, ...params } = body;
 
      if (action === 'getCloudSettings') {
        if (!userId) {
