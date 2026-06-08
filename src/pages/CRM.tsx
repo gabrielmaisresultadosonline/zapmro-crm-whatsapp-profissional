@@ -1900,7 +1900,7 @@ const CRM = () => {
           media_url: publicUrl,
           status,
           meta_message_id: metaMsgId,
-          metadata: { source, original_mime: contentType || null, is_voice: isVoice }
+          metadata: { source: 'manual_send', original_mime: contentType || null, is_voice: isVoice }
         })
         .select()
         .single();
