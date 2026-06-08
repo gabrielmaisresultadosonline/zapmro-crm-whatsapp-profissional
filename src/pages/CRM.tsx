@@ -3955,20 +3955,46 @@ const CRM = () => {
                               </div>
                             </div>
 
-                            {selectedContact.flow_state && selectedContact.flow_state !== 'idle' && (!selectedContact.last_message_received_at || (Date.now() - new Date(selectedContact.last_message_received_at).getTime()) < (24 * 60 * 60 * 1000)) && (
-                              <div className="flex items-center justify-between gap-2 bg-red-50 dark:bg-red-950/20 px-2 py-1 rounded-lg border border-red-100 dark:border-red-900/30">
+                            {((selectedContact.flow_state && selectedContact.flow_state !== 'idle') || (selectedContact.ai_active && metaSettings.ai_agent_enabled)) && (!selectedContact.last_message_received_at || (Date.now() - new Date(selectedContact.last_message_received_at).getTime()) < (24 * 60 * 60 * 1000)) && (
+                              <div className={cn(
+                                "flex items-center justify-between gap-2 px-2 py-1 rounded-lg border",
+                                selectedContact.ai_active ? "bg-blue-50 dark:bg-blue-900/10 border-blue-100 dark:border-blue-900/30" : "bg-red-50 dark:bg-red-950/20 border-red-100 dark:border-red-900/30"
+                              )}>
                                 <div className="flex items-center gap-2 min-w-0">
-                                  <div className={cn("w-1.5 h-1.5 rounded-full shrink-0 bg-red-500", selectedContact.flow_state === 'error' ? "animate-pulse" : "animate-ping")} />
-                                  <span className="text-[10px] font-bold text-red-600 dark:text-red-400 truncate">
-                                    {selectedContact.flow_state === 'error' ? 'Erro no Fluxo' : 'Fluxo Ativo'}
+                                  <div className={cn(
+                                    "w-1.5 h-1.5 rounded-full shrink-0", 
+                                    selectedContact.ai_active ? "bg-blue-500" : "bg-red-500",
+                                    selectedContact.flow_state === 'error' ? "animate-pulse" : "animate-ping"
+                                  )} />
+                                  <span className={cn(
+                                    "text-[10px] font-bold truncate",
+                                    selectedContact.ai_active ? "text-blue-600 dark:text-blue-400" : "text-red-600 dark:text-red-400"
+                                  )}>
+                                    {selectedContact.ai_active ? 'Agente IA Ativado' : (selectedContact.flow_state === 'error' ? 'Erro no Fluxo' : 'Fluxo Ativo')}
                                     {selectedContact.current_step_name && <span className="ml-1 opacity-70">({selectedContact.current_step_name})</span>}
                                   </span>
                                 </div>
                                 <div className="flex items-center gap-1 shrink-0">
-                                  {(selectedContact.flow_state === 'error' || selectedContact.flow_state === 'waiting_response') && (
-                                    <Button variant="ghost" size="icon" className="h-6 w-6 text-green-600 hover:bg-green-100 dark:hover:bg-green-900/30" onClick={(e) => { e.stopPropagation(); handleResumeFlow(selectedContact.id); }}><PlayCircle className="h-4 w-4" /></Button>
+                                  {selectedContact.ai_active ? (
+                                    <Button 
+                                      variant="ghost" 
+                                      size="icon" 
+                                      className="h-6 w-6 text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/30" 
+                                      onClick={async (e) => { 
+                                        e.stopPropagation(); 
+                                        await updateContactStatus(selectedContact.id, { ai_active: false }); 
+                                      }}
+                                    >
+                                      <XCircle className="h-4 w-4" />
+                                    </Button>
+                                  ) : (
+                                    <>
+                                      {(selectedContact.flow_state === 'error' || selectedContact.flow_state === 'waiting_response') && (
+                                        <Button variant="ghost" size="icon" className="h-6 w-6 text-green-600 hover:bg-green-100 dark:hover:bg-green-900/30" onClick={(e) => { e.stopPropagation(); handleResumeFlow(selectedContact.id); }}><PlayCircle className="h-4 w-4" /></Button>
+                                      )}
+                                      <Button variant="ghost" size="icon" className="h-6 w-6 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30" onClick={(e) => { e.stopPropagation(); handleCancelFlow(selectedContact.id); }}><XCircle className="h-4 w-4" /></Button>
+                                    </>
                                   )}
-                                  <Button variant="ghost" size="icon" className="h-6 w-6 text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30" onClick={(e) => { e.stopPropagation(); handleCancelFlow(selectedContact.id); }}><XCircle className="h-4 w-4" /></Button>
                                 </div>
                               </div>
                             )}
