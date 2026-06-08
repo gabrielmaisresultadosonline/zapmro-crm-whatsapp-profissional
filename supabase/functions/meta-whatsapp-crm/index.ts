@@ -2213,7 +2213,6 @@ async function fetchAndStoreIncomingMedia(
 
     if (action === 'startFlow') {
       const { flowId, contactId, waId } = params
-      console.log(`[START-FLOW-DEBUG] Starting flow. params:`, JSON.stringify(params));
       
       const { data: currentContact, error: contactError } = await supabase
         .from('crm_contacts')
@@ -2221,11 +2220,7 @@ async function fetchAndStoreIncomingMedia(
         .eq('id', contactId)
         .single();
         
-      if (contactError) {
-        console.error(`[START-FLOW-DEBUG] Contact lookup error:`, contactError);
-        throw contactError;
-      }
-      console.log(`[START-FLOW-DEBUG] Current contact found:`, currentContact.wa_id, "State:", currentContact.flow_state);
+      if (contactError) throw contactError;
 
       const { data: flow, error: flowError } = await supabase
         .from('crm_flows')
@@ -2233,13 +2228,9 @@ async function fetchAndStoreIncomingMedia(
         .eq('id', flowId)
         .single()
       
-      if (flowError) {
-        console.error(`[START-FLOW-DEBUG] Flow lookup error:`, flowError);
-        throw flowError;
-      }
+      if (flowError) throw flowError;
       if (!flow) throw new Error('Flow not found')
       
-      console.log(`[START-FLOW-DEBUG] Flow found:`, flow.name, "Nodes:", flow.nodes?.length);
       await supabase.from('crm_scheduled_messages').delete().eq('contact_id', contactId);
 
       if (flow.nodes && flow.nodes.length > 0) {
