@@ -440,6 +440,9 @@ async function handleProcessWebhook(supabase: any, entry: any, skipSave = false,
   let mediaUrlForSave: string | null = null;
   let mediaCaption = '';
 
+  console.log(`[WEBHOOK] Handling message from ${waId}. Type: ${message.type}. ID: ${message.id}`);
+
+
   if (!skipSave && message.id) {
      const { data: existingInbound } = await supabase
        .from('crm_messages')
@@ -545,10 +548,12 @@ async function handleProcessWebhook(supabase: any, entry: any, skipSave = false,
       last_interaction: new Date().toISOString(),
       last_message_received_at: new Date().toISOString(),
       total_messages_received: (contactForSave.total_messages_received || 0) + 1,
-      updated_at: new Date().toISOString()
+      updated_at: new Date().toISOString(),
+      last_read_at: null // Reset last_read_at when new message arrives so it shows as unread
     }).eq('id', contactForSave.id);
-    console.log('[WEBHOOK] Saved inbound message', { waId, userId, contact_id: contactForSave.id, meta_message_id: message.id });
+    console.log('[WEBHOOK] Saved inbound message and reset last_read_at', { waId, userId, contact_id: contactForSave.id, meta_message_id: message.id });
   }
+
 
    const { data: contact } = await supabase
      .from('crm_contacts')
