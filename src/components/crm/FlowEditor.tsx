@@ -347,12 +347,22 @@ const AIAgentNode = ({ data }: any) => (
       </CardTitle>
     </CardHeader>
     <CardContent className="p-3 space-y-3 bg-white">
+      {data.initialMessage && (
+        <div className="bg-slate-50 p-2 rounded-md border border-slate-100 mb-2">
+          <p className="text-[9px] text-slate-500 font-bold uppercase mb-0.5 flex items-center gap-1">
+            <MessageSquare className="w-2.5 h-2.5" /> Mensagem Inicial:
+          </p>
+          <p className="text-[10px] text-slate-600 line-clamp-2 italic">
+            {data.initialMessage}
+          </p>
+        </div>
+      )}
       <div className="bg-violet-50 p-2.5 rounded-md border border-violet-100 shadow-inner">
         <p className="text-[10px] text-violet-800 font-bold uppercase mb-1 flex items-center gap-1">
-          <MessageSquare className="w-3 h-3" /> Prompt do Agente:
+          <BrainCircuit className="w-3 h-3" /> Instruções de Venda:
         </p>
         <p className="text-[11px] text-slate-700 line-clamp-4 italic leading-relaxed">
-          {data.prompt || 'Configure o prompt nas configurações ao lado...'}
+          {data.prompt || 'Configure as instruções nas configurações ao lado...'}
         </p>
       </div>
       <div className="relative flex items-center justify-between bg-emerald-100 text-emerald-800 px-3 py-2.5 rounded-md border border-emerald-200 text-[11px] font-bold shadow-sm group">
