@@ -699,7 +699,9 @@ const CRM = () => {
               lastInbound = t;
             } else if (m.direction === 'outbound') {
               const src = (m as any)?.metadata?.source;
-              if (src === 'echo_mobile_app' || src === 'meta_webhook_echo') continue;
+              const isEcho = src === 'echo_mobile_app' || src === 'meta_webhook_echo';
+              const isManual = (m as any)?.metadata?.source === 'manual_send';
+              if (isEcho || isManual) continue;
               const inFreeWindow = t - lastInbound < DAY;
               const inPaidWindow = t - lastPaidStart < DAY;
               if (!inFreeWindow && !inPaidWindow) {
