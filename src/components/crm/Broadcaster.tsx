@@ -27,10 +27,13 @@ import {
   RefreshCcw,
   Plus,
   Upload,
-  ArrowRight
+  ArrowRight,
+  Save
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { Switch } from "@/components/ui/switch";
+
 
 interface BroadcasterProps {
   templates: any[];
@@ -59,9 +62,60 @@ const Broadcaster = ({ templates, flows, contacts, statuses }: BroadcasterProps)
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [parsingType, setParsingType] = useState<'vcard' | 'csv' | null>(null);
 
+  // 24h Countdown trigger state
+  const [countdownEnabled, setCountdownEnabled] = useState(false);
+  const [countdownThreshold, setCountdownThreshold] = useState(60);
+  const [countdownType, setCountdownType] = useState<'message' | 'template' | 'flow'>('message');
+  const [countdownContent, setCountdownContent] = useState('');
+  const [countdownTemplate, setCountdownTemplate] = useState('');
+  const [countdownFlow, setCountdownFlow] = useState('');
+  const [savingCountdown, setSavingCountdown] = useState(false);
+
   useEffect(() => {
     fetchBroadcasts();
+    fetchCountdownSettings();
   }, []);
+
+  const fetchCountdownSettings = async () => {
+    const { data: settings } = await supabase
+      .from('crm_settings')
+      .select('countdown_trigger_enabled, countdown_trigger_threshold_minutes, countdown_trigger_message_type, countdown_trigger_content, countdown_trigger_flow_id, countdown_trigger_template_id')
+      .maybeSingle();
+
+    if (settings) {
+      setCountdownEnabled(settings.countdown_trigger_enabled || false);
+      setCountdownThreshold(settings.countdown_trigger_threshold_minutes || 60);
+      setCountdownType(settings.countdown_trigger_message_type as 'message' | 'template' | 'flow' || 'message');
+      setCountdownContent(settings.countdown_trigger_content || '');
+      setCountdownTemplate(settings.countdown_trigger_template_id || '');
+      setCountdownFlow(settings.countdown_trigger_flow_id || '');
+    }
+  };
+
+  const handleSaveCountdown = async () => {
+    setSavingCountdown(true);
+    try {
+      const { error } = await supabase
+        .from('crm_settings')
+        .update({
+          countdown_trigger_enabled: countdownEnabled,
+          countdown_trigger_threshold_minutes: countdownThreshold,
+          countdown_trigger_message_type: countdownType,
+          countdown_trigger_content: countdownContent,
+          countdown_trigger_template_id: countdownTemplate,
+          countdown_trigger_flow_id: countdownFlow || null
+        })
+        .eq('user_id', (await supabase.auth.getUser()).data.user?.id);
+
+      if (error) throw error;
+      toast({ title: "Configuração de 24h salva!" });
+    } catch (err: any) {
+      toast({ title: "Erro ao salvar", description: err.message, variant: "destructive" });
+    } finally {
+      setSavingCountdown(false);
+    }
+  };
+
 
   const fetchBroadcasts = async () => {
     const { data } = await supabase
@@ -299,6 +353,106 @@ const Broadcaster = ({ templates, flows, contacts, statuses }: BroadcasterProps)
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-8">
         <div className="lg:col-span-8 space-y-4 md:space-y-6">
+          {/* Automação de 24h Trigger */}
+          <Card className="rounded-2xl shadow-xl border border-white/5 overflow-hidden bg-[#111b21]">
+            <CardHeader className="bg-[#202c33] border-b border-white/5 p-4 flex flex-row items-center justify-between">
+              <div className="space-y-1">
+                <CardTitle className="text-base md:text-lg flex items-center gap-2 text-[#00a884]">
+                  <Clock className="w-5 h-5" /> Automação de Janela (24h)
+                </CardTitle>
+                <CardDescription className="text-[10px] md:text-xs">
+                  Disparar mensagem automática antes de expirar as 24h de conversa grátis.
+                </CardDescription>
+              </div>
+              <Switch 
+                checked={countdownEnabled} 
+                onCheckedChange={setCountdownEnabled}
+                className="data-[state=checked]:bg-[#00a884]"
+              />
+            </CardHeader>
+            <CardContent className="p-4 md:p-6 space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-xs md:text-sm">Tempo Restante (minutos)</Label>
+                  <Input 
+                    type="number" 
+                    value={countdownThreshold}
+                    onChange={e => setCountdownThreshold(parseInt(e.target.value))}
+                    placeholder="Ex: 60 (1 hora antes)"
+                    className="h-10 rounded-xl bg-[#202c33] border-none text-[#e9edef] text-xs md:text-sm"
+                  />
+                  <p className="text-[10px] text-white/40 italic">O sistema verificará conversas que expiram em {countdownThreshold} min.</p>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-xs md:text-sm">Tipo de Conteúdo</Label>
+                  <Select value={countdownType} onValueChange={(val: any) => setCountdownType(val)}>
+                    <SelectTrigger className="h-10 rounded-xl bg-[#202c33] border-none text-[#e9edef] text-xs md:text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="message">Mensagem de Texto</SelectItem>
+                      <SelectItem value="template">Template Aprovado</SelectItem>
+                      <SelectItem value="flow">Fluxo Visual</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {countdownType === 'message' && (
+                <div className="space-y-2 animate-in fade-in">
+                  <Label className="text-xs md:text-sm">Texto do Disparo</Label>
+                  <Textarea 
+                    value={countdownContent}
+                    onChange={e => setCountdownContent(e.target.value)}
+                    placeholder="Olá, ainda está por aí? Gostaríamos de saber se..."
+                    className="min-h-[80px] rounded-xl bg-[#202c33] border-none text-[#e9edef] text-xs md:text-sm"
+                  />
+                </div>
+              )}
+
+              {countdownType === 'template' && (
+                <div className="space-y-2 animate-in fade-in">
+                  <Label className="text-xs md:text-sm">Selecione o Template</Label>
+                  <Select value={countdownTemplate} onValueChange={setCountdownTemplate}>
+                    <SelectTrigger className="h-10 rounded-xl bg-[#202c33] border-none text-[#e9edef] text-xs md:text-sm">
+                      <SelectValue placeholder="Escolha um template" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {templates.filter(t => t.status === 'APPROVED').map(t => (
+                        <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              {countdownType === 'flow' && (
+                <div className="space-y-2 animate-in fade-in">
+                  <Label className="text-xs md:text-sm">Selecione o Fluxo</Label>
+                  <Select value={countdownFlow} onValueChange={setCountdownFlow}>
+                    <SelectTrigger className="h-10 rounded-xl bg-[#202c33] border-none text-[#e9edef] text-xs md:text-sm">
+                      <SelectValue placeholder="Escolha um fluxo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {flows.map(f => (
+                        <SelectItem key={f.id} value={f.id}>{f.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              <Button 
+                onClick={handleSaveCountdown} 
+                disabled={savingCountdown}
+                className="w-full h-10 bg-[#00a884] hover:bg-[#00a884]/90 text-white font-semibold"
+              >
+                {savingCountdown ? <RefreshCcw className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                {countdownEnabled ? "ATIVAR E SALVAR CONFIGURAÇÃO" : "SALVAR CONFIGURAÇÃO"}
+              </Button>
+            </CardContent>
+          </Card>
+
           <Card className="rounded-2xl shadow-xl border border-white/5 overflow-hidden bg-[#111b21]">
             <CardHeader className="bg-[#202c33] border-b border-white/5 p-4">
               <CardTitle className="text-base md:text-lg flex items-center gap-2 text-[#00a884]">
