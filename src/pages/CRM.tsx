@@ -566,7 +566,9 @@ const CRM = () => {
             // Mensagens enviadas pelo app do celular (echoes) NÃO são cobradas
             // pela Meta — não contam como conversa paga.
             const src = (m as any)?.metadata?.source;
-            if (src === 'echo_mobile_app' || src === 'meta_webhook_echo') continue;
+            const isEcho = src === 'echo_mobile_app' || src === 'meta_webhook_echo';
+            const isManual = (m as any)?.metadata?.source === 'manual_send';
+            if (isEcho || isManual) continue;
             // Regra oficial do WhatsApp: A janela de 24h só reseta quando o cliente responde.
             // O envio de mensagens outbound não estende a janela de atendimento livre.
             const inFreeWindow = t - lastInbound < DAY;
