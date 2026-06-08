@@ -10,11 +10,15 @@ export async function executeVisualNode(supabase: any, flow: any, node: any, con
       
       if (buttons && buttons.length > 0) {
         // Enviar como mensagem interativa com botões (Meta Interactive Buttons)
+        const { data: settings } = await supabase.from('crm_settings').select('meta_phone_number_id, meta_access_token').eq('user_id', flow.user_id).maybeSingle();
+        
         await supabase.functions.invoke('meta-whatsapp-crm', {
           body: { 
             action: 'sendMessage', 
             to: waId, 
             contactId,
+            meta_phone_number_id: settings?.meta_phone_number_id,
+            meta_access_token: settings?.meta_access_token,
             interactive: {
               type: 'button',
               body: { text: text || "Escolha uma opção:" },
@@ -32,8 +36,17 @@ export async function executeVisualNode(supabase: any, flow: any, node: any, con
         });
       } else if (text) {
         console.log(`[EXECUTOR] Enviando mensagem de texto simples para ${waId}`);
+        const { data: settings } = await supabase.from('crm_settings').select('meta_phone_number_id, meta_access_token').eq('user_id', flow.user_id).maybeSingle();
+
         const { data: result, error: invokeError } = await supabase.functions.invoke('meta-whatsapp-crm', {
-          body: { action: 'sendMessage', to: waId, text, contactId }
+          body: { 
+            action: 'sendMessage', 
+            to: waId, 
+            text, 
+            contactId,
+            meta_phone_number_id: settings?.meta_phone_number_id,
+            meta_access_token: settings?.meta_access_token
+          }
         });
         
         if (invokeError) {

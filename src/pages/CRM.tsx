@@ -2035,7 +2035,9 @@ const CRM = () => {
           documentUrl: type === 'document' ? publicUrl : undefined,
           fileName: type === 'document' ? (file instanceof File ? file.name : 'document') : undefined,
           isVoice: type === 'audio',
-          skipLocalSave: type === 'audio' ? true : undefined
+          skipLocalSave: type === 'audio' ? true : undefined,
+          meta_phone_number_id: metaSettings.meta_phone_number_id,
+          meta_access_token: metaSettings.meta_access_token
         } 
       });
       console.log('[CRM][sendMedia] resp edge', { error, data });
