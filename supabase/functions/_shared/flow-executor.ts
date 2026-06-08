@@ -9,7 +9,44 @@ export async function executeVisualNode(supabase: any, flow: any, node: any, con
       const buttons = node.data?.buttons || [];
       
       if (buttons && buttons.length > 0) {
-        // Enviar como mensagem interativa com botões (Meta Interactive Buttons)
+        // Verifica se há botões com link (URL)
+        const linkButtons = buttons.filter((btn: any) => btn.url && btn.url.startsWith('http'));
+        
+        if (linkButtons.length > 0) {
+           console.log(`[EXECUTOR] Enviando botões de LINK para ${waId}`);
+           const { data: settings } = await supabase.from('crm_settings').select('meta_phone_number_id, meta_access_token').eq('user_id', flow.user_id).maybeSingle();
+           
+           // A Meta API Cloud para "Link Buttons" exige templates ou Mensagens Interativas de tipo diferente.
+           // Para botões de URL pura no "Interactive", o WhatsApp suporta através de chamadas a templates 
+           // ou usando o tipo "cta_url" no Action.
+           await supabase.functions.invoke('meta-whatsapp-crm', {
+            headers: { 'Authorization': `Bearer INTERNAL_BYPASS` },
+            body: { 
+              action: 'sendMessage', 
+              to: waId, 
+              contactId,
+              meta_phone_number_id: settings?.meta_phone_number_id,
+              meta_access_token: settings?.meta_access_token,
+              interactive: {
+                type: 'cta_url',
+                header: { type: 'text', text: 'Link Externo' },
+                body: { text: text || "Clique abaixo para acessar:" },
+                footer: { text: "ZAP MRO CRM" },
+                action: {
+                  name: "cta_url",
+                  parameters: {
+                    display_text: linkButtons[0].label || linkButtons[0].text || "Acessar Site",
+                    url: linkButtons[0].url
+                  }
+                }
+              }
+            }
+          });
+          
+          // Se houver mais botões normais, enviamos eles depois (Meta limita 1 link button por interactive)
+        } else {
+          // Enviar como mensagem interativa com botões de resposta normais
+
         const { data: settings } = await supabase.from('crm_settings').select('meta_phone_number_id, meta_access_token').eq('user_id', flow.user_id).maybeSingle();
         
         await supabase.functions.invoke('meta-whatsapp-crm', {
