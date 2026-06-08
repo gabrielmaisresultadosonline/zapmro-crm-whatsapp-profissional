@@ -404,7 +404,7 @@ const nodeTypes = {
   template: TemplateNode,
   jump: JumpNode,
   aiAgent: AIAgentNode,
-  pix: AIAgentNode, // Temporário para teste, criaremos o específico
+  pix: PixNode,
 };
 
 const edgeTypes = {
