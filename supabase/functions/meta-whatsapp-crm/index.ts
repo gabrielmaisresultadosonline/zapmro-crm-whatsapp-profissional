@@ -750,16 +750,14 @@ async function uploadMediaToMeta(accessToken: string, phoneNumberId: string, med
   let fileName = media.fileName;
 
   if (media.type === 'audio') {
-    // IMPORTANTE: A Meta rejeita webm para PTT. 
-    // Se o arquivo for webm, tentamos enviar como audio normal (sem PTT) 
-    // ou o navegador deve garantir o formato correto.
-    // Se for opus/ogg, a Meta aceita como PTT.
+    // Meta REJEITA expressamente 'audio/webm'.
+    // Devemos mentir o MIME para 'audio/ogg' se for webm, pois o stream opus é compatível.
     const isWebm = contentType.includes('webm') || media.url.endsWith('.webm');
     
     if (isWebm) {
-      console.log(`[UPLOAD-AUDIO] Detectado WEBM. Enviando como áudio padrão (não PTT) para evitar erro da Meta.`);
-      contentType = 'audio/webm';
-      fileName = 'audio.webm';
+      console.log(`[UPLOAD-AUDIO] Webm detectado. Forçando MIME audio/ogg para compatibilidade Meta.`);
+      contentType = 'audio/ogg';
+      fileName = 'voice.ogg';
     } else {
       console.log(`[UPLOAD-PTT] Preparando áudio PTT: originalMime=${responseContentType}, contentType=${contentType}`);
       fileName = 'voice.ogg';
