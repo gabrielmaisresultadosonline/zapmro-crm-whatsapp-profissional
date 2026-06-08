@@ -168,14 +168,16 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
   
   const systemPrompt = `${aiPrompt}
   
-  REGRAS ADICIONAIS:
-  1. Responda de forma natural, humana e direta no WhatsApp.
-  2. IMPORTANTE: Você pode enviar até 3 mensagens curtas sequenciais para parecer mais humano (ex: uma saudação, depois a resposta, depois uma pergunta), em vez de um único bloco de texto longo.
-  3. Considere o histórico inteiro e as últimas mensagens do cliente como uma única solicitação.
-  4. IMPORTANTE: Você deve interagir com o cliente primeiro para ajudá-lo. Não use [[TRANSFER_TO_HUMAN]] logo no início, a menos que o cliente explicitamente peça para falar com um humano.
-  5. Se você identificar que REALMENTE deve transferir (conforme regra 4), responda APENAS com a palavra-chave: [[TRANSFER_TO_HUMAN]]. Caso contrário, continue conversando. Responda de forma completa às dúvidas do cliente.
-  6. Nunca diga que não consegue receber imagens/vídeos/áudios. Eles ficam registrados para o atendimento e você deve continuar a conversa normalmente.
-  7. Nunca saia do personagem.`;
+  REGRAS INTERNAS E OBRIGATÓRIAS:
+  1. Envie respostas DIRETAS e HUMANAS. Evite formalidade excessiva.
+  2. IMPORTANTE: Você pode enviar até 3 mensagens curtas sequenciais para parecer mais humano (ex: uma saudação, depois a resposta, depois uma pergunta), em vez de um único bloco de texto longo. Use isso quando houver necessidade de separar assuntos ou dar ênfase.
+  3. NUNCA use as palavras "agente" ou "assistente" para se referir a si mesmo. Você deve falar como uma pessoa real da equipe.
+  4. RESPOSTAS CURTAS: Não dê respostas longas se não houver necessidade. Seja objetivo e direto.
+  5. TRANSFERÊNCIA PARA HUMANO: Quando o cliente pedir explicitamente para falar com um humano, você DEVE responder antes de finalizar a transferência, dizendo algo como: "Com certeza, estou transferindo seu contato para um de nossos atendentes agora mesmo." ou "Entendido, um momento enquanto chamo um humano para te ajudar."
+  6. Para transferir após a mensagem de despedida, você DEVE incluir a palavra-chave [[TRANSFER_TO_HUMAN]] logo após o seu texto de resposta. Exemplo: "Um momento, vou chamar alguém. [[TRANSFER_TO_HUMAN]]"
+  7. Considere o histórico inteiro e as últimas mensagens do cliente como uma única solicitação.
+  8. Nunca diga que não consegue receber imagens/vídeos/áudios. Eles ficam registrados para o atendimento e você deve continuar a conversa normalmente.
+  9. Nunca saia do personagem.`;
   
   try {
     const visualAttachments = (recentMessages || [])
@@ -222,7 +224,29 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
     if (reply.includes('[[TRANSFER_TO_HUMAN]]')) {
       console.log(`[AI-AGENT] AI decided to transfer contact ${waId} to human.`);
       
-             const { data: flow } = await supabase.from('crm_flows').select('*').eq('id', contact.current_flow_id).eq('user_id', contact.user_id).single();
+      // Extract the message text before the transfer tag if it exists
+      const cleanReply = reply.replace('[[TRANSFER_TO_HUMAN]]', '').trim();
+      
+      // If there's a message to send before transferring, send it
+      if (cleanReply) {
+        const settings = aiSettings || await getCrmSettings(supabase, userId);
+        if (settings) {
+          const messageParts = cleanReply.split(/\n\n+/).filter(p => p.trim()).slice(0, 3);
+          for (const part of messageParts) {
+            await handleInternalSendMessage(
+              supabase, 
+              settings.meta_phone_number_id, 
+              settings.meta_access_token, 
+              { to: waId, text: part.trim() }, 
+              contact,
+              settings.vps_transcoder_url
+            );
+            if (messageParts.length > 1) await wait(1500);
+          }
+        }
+      }
+
+      const { data: flow } = await supabase.from('crm_flows').select('*').eq('id', contact.current_flow_id).eq('user_id', contact.user_id).single();
       if (flow) {
         const currentNodeId = contact.current_node_id;
         const transferEdge = flow.edges?.find((e: any) => e.source === currentNodeId && e.sourceHandle === 'human_transfer');
