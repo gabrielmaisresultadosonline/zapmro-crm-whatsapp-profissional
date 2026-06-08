@@ -201,13 +201,18 @@ const QuestionNode = ({ data }: any) => (
       <div className="flex flex-col gap-2">
         {(data.buttons || []).map((btn: any, idx: number) => (
           <div key={idx} className="relative flex items-center justify-between bg-emerald-50 text-emerald-700 px-3 py-2 rounded border border-emerald-200 text-[10px] font-medium group">
-            <span className="truncate pr-4">{btn.text}</span>
-            <Handle 
-              type="source" 
-              position={Position.Right} 
-              id={btn.id || `btn-${idx}`} 
-              className="!w-3 !h-3 !bg-emerald-500 !border-2 !border-white !-right-4"
-            />
+            <span className="truncate pr-4 flex items-center gap-1">
+              {btn.text}
+              {btn.url && <LinkIcon className="w-2.5 h-2.5 opacity-50" />}
+            </span>
+            {!btn.url && (
+              <Handle 
+                type="source" 
+                position={Position.Right} 
+                id={btn.id || `btn-${idx}`} 
+                className="!w-3 !h-3 !bg-emerald-500 !border-2 !border-white !-right-4"
+              />
+            )}
           </div>
         ))}
         {data.anyResponse && (
