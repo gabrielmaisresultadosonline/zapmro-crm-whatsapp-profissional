@@ -805,11 +805,17 @@ async function uploadMediaToMeta(accessToken: string, phoneNumberId: string, med
 }
 
 async function handleInternalSendMessage(supabase: any, phoneNumberId: string, accessToken: string, params: any, contact: any, vpsTranscoderUrl?: string) {
-  if (!phoneNumberId || !accessToken) throw new Error('Credenciais Meta não configuradas')
-  const to = normalizePhone(params.to)
-  if (!to) throw new Error('Telefone inválido')
+  if (!phoneNumberId || !accessToken) {
+    console.error('[SEND-MESSAGE] Falha: Credenciais ausentes', { phoneNumberId: !!phoneNumberId, accessToken: !!accessToken });
+    throw new Error('Credenciais Meta não configuradas');
+  }
+  const to = normalizePhone(params.to);
+  if (!to) {
+    console.error('[SEND-MESSAGE] Falha: Telefone inválido', { to: params.to });
+    throw new Error('Telefone inválido');
+  }
 
-  console.log(`[SEND-MESSAGE] Iniciando para ${to}. Params:`, JSON.stringify(params));
+  console.log(`[SEND-MESSAGE] Iniciando para ${to}. Action: ${params.action || 'default'}`);
 
   const media = guessMedia(params)
   const isVoice = params.isVoice === true || media?.type === 'audio';
@@ -1503,11 +1509,23 @@ async function fetchAndStoreIncomingMedia(
      }
    }
  
-   try {
-     const body = await req.json().catch(() => ({}));
-     const { action, ...params } = body;
+    try {
+      const rawBody = await req.text();
+      let body;
+      try {
+        body = JSON.parse(rawBody);
+      } catch (e) {
+        console.error('[REQUEST-DEBUG] Failed to parse body as JSON:', rawBody.slice(0, 200));
+        return new Response(JSON.stringify({ success: false, error: 'Invalid JSON' }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
+      const { action, ...params } = body;
+      console.log(`[REQUEST-DEBUG] Method: ${req.method}, Action: ${action || 'Webhook'}, Full Body: ${JSON.stringify(body)}`);
 
-     if (action === 'getCloudSettings') {
+      if (action === 'getCloudSettings') {
        if (!userId) {
          return new Response(JSON.stringify({ success: false, error: 'Usuário não autenticado' }), {
            status: 401,
@@ -1814,9 +1832,11 @@ async function fetchAndStoreIncomingMedia(
     }
 
     // Get Meta Settings
-      const settings = await getCrmSettings(supabase, userId)
+    const settings = await getCrmSettings(supabase, userId);
+    console.log(`[SETTINGS-DEBUG] userId: ${userId}, hasSettings: ${!!settings}, meta_phone_number_id: ${settings?.meta_phone_number_id}`);
 
-    const { meta_access_token, meta_phone_number_id } = settings || {}
+    const meta_access_token = settings?.meta_access_token;
+    const meta_phone_number_id = settings?.meta_phone_number_id;
 
     if (action === 'getTemplates') {
       if (!meta_access_token) throw new Error('Meta API credentials not configured');
