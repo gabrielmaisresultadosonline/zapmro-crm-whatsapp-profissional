@@ -3822,7 +3822,7 @@ const CRM = () => {
                         <>
                           <div className="p-1 sm:p-2 border-b border-border/40 flex flex-col gap-1 bg-[#f0f2f5] dark:bg-[#202c33] z-10 shrink-0 w-full min-w-0 shadow-sm relative">
                             {selectedContact.ai_active && metaSettings.ai_agent_enabled && (
-                              <div className="absolute -bottom-8 left-0 right-0 bg-violet-600 text-white px-3 py-1.5 flex items-center justify-between shadow-lg z-[20] animate-in slide-in-from-top-2">
+                              <div className="bg-violet-600 text-white px-3 py-1.5 flex items-center justify-between shadow-md z-[20] animate-in slide-in-from-top-2 rounded-lg mb-1 mx-1">
                                 <div className="flex items-center gap-2">
                                   <Bot className="w-3.5 h-3.5 animate-pulse" />
                                   <span className="text-[10px] font-bold uppercase tracking-wider">Atendente I.A no Controle</span>
