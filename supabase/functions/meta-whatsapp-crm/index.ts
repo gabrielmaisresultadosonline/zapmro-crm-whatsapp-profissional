@@ -2424,14 +2424,24 @@ async function fetchAndStoreIncomingMedia(
         }
 
         if (nextNode) {
-          await supabase
-            .from('crm_contacts')
-            .update({ 
+            const updateData: any = { 
               current_node_id: nextNode.id, 
               last_flow_interaction: new Date().toISOString(),
               flow_state: 'running'
-            })
-            .eq('id', contactId)
+            };
+
+            // Se o próximo nó for Agente IA, atualizamos o prompt e o estado ai_active
+            if (nextNode.type === 'aiAgent') {
+              updateData.ai_active = true;
+              if (nextNode.data?.prompt) {
+                updateData.ai_agent_prompt = nextNode.data.prompt;
+              }
+            }
+
+            await supabase
+              .from('crm_contacts')
+              .update(updateData)
+              .eq('id', contactId)
           
           const res: any = await executeVisualNode(supabase, flow, nextNode, contactId, waId);
           
