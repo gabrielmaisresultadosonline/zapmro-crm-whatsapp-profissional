@@ -193,7 +193,8 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
   7. IMPORTANTE: Não force a transferência se o cliente apenas mencionar um nome ou fizer uma pergunta sobre quem está falando. Continue o atendimento com IA até que o pedido de falar com humano seja claro e direto.
   7. Considere o histórico inteiro e as últimas mensagens do cliente como uma única solicitação.
   8. Nunca diga que não consegue receber imagens/vídeos/áudios. Eles ficam registrados para o atendimento e você deve continuar a conversa normalmente.
-  9. Nunca saia do personagem.`;
+  9. LINKS: Ao enviar um link, envie apenas a URL pura (ex: https://site.com). Nunca use markdown para links como [texto](url) e nunca repita o link. Digite o link uma única vez.
+  10. Nunca saia do personagem.`;
   
   try {
     const visualAttachments = (recentMessages || [])
