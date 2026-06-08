@@ -1725,30 +1725,43 @@ const CRM = () => {
 
   const startRecording = async () => {
     try {
-      // Grava direto em OGG/Opus (formato aceito pelo WhatsApp Cloud API como PTT).
-      // O MediaRecorder do Chrome só gera WebM/Opus, que a Meta rejeita com "Media upload error".
-      const { default: Recorder } = await import('opus-recorder');
-      const recorder: any = new Recorder({
-        encoderPath: '/opus/encoderWorker.min.js',
-        encoderApplication: 2048, // VOIP
-        encoderSampleRate: 16000,
-        numberOfChannels: 1,
-        streamPages: false,
-        encoderBitRate: 24000,
-      });
+      // Solicita permissão e inicia captura
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      
+      // Tenta usar Opus se disponível (nativo no Chrome/Edge/Firefox)
+      let mimeType = 'audio/ogg; codecs=opus';
+      if (!MediaRecorder.isTypeSupported(mimeType)) {
+        mimeType = 'audio/webm; codecs=opus';
+      }
+      if (!MediaRecorder.isTypeSupported(mimeType)) {
+        mimeType = 'audio/mp4'; // Fallback para Safari
+      }
 
-      recorder.ondataavailable = (typedArray: Uint8Array) => {
-        const buf = typedArray.buffer.slice(typedArray.byteOffset, typedArray.byteOffset + typedArray.byteLength) as ArrayBuffer;
-        const audioBlob = new Blob([buf], { type: 'audio/ogg; codecs=opus' });
-        console.log(`Audio recording stopped. Size: ${audioBlob.size} bytes, Type: audio/ogg; codecs=opus`);
+      console.log(`[RECORDER] Usando MimeType: ${mimeType}`);
+      
+      const recorder = new MediaRecorder(stream, {
+        mimeType: MediaRecorder.isTypeSupported(mimeType) ? mimeType : undefined
+      });
+      
+      const chunks: Blob[] = [];
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) chunks.push(e.data);
+      };
+
+      recorder.onstop = () => {
+        const audioBlob = new Blob(chunks, { type: mimeType });
+        console.log(`Audio recording stopped. Size: ${audioBlob.size} bytes, Type: ${mimeType}`);
         const audioUrl = URL.createObjectURL(audioBlob);
         setRecordedAudioBlob(audioBlob);
         setRecordedAudioUrl(audioUrl);
         setIsPreviewingAudio(true);
+        
+        // Para o stream para liberar o microfone
+        stream.getTracks().forEach(track => track.stop());
       };
 
-      await recorder.start();
-      setMediaRecorder(recorder as any);
+      recorder.start();
+      setMediaRecorder(recorder);
       setIsRecording(true);
       setRecordingDuration(0);
       recordingTimerRef.current = setInterval(() => {
