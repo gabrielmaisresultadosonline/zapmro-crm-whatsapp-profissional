@@ -758,8 +758,8 @@ async function uploadMediaToMeta(accessToken: string, phoneNumberId: string, med
       console.log(`[UPLOAD-AUDIO] Webm detectado. Convertendo MIME para audio/ogg.`);
     }
     
-    // Forçamos o tipo para audio/ogg para garantir que a Meta aceite como PTT
-    contentType = 'audio/ogg';
+    // Forçamos o tipo para audio/ogg com codec opus para garantir que a Meta aceite como PTT
+    contentType = 'audio/ogg; codecs=opus';
     fileName = 'voice.ogg';
     
     console.log(`[UPLOAD-AUDIO] Enviando para Meta: type=audio, contentType=${contentType}, fileName=${fileName}`);
@@ -873,15 +873,18 @@ async function handleInternalSendMessage(supabase: any, phoneNumberId: string, a
       throw uploadError;
     }
     
-    // CRUCIAL: Para aparecer como "Gravado na hora" (PTT), a Meta exige que o tipo seja 'audio'
-    // mas não aceita "ptt: true" dentro do objeto audio se o upload não foi feito corretamente.
-    // O segredo documentado é NÃO enviar legenda (caption) e o arquivo ser opus/ogg.
     payload.type = media.type;
     if (media.type === 'audio') {
+      // CRUCIAL: Para aparecer como "Gravado na hora" (PTT/Blue mic), a Meta exige:
+      // 1. messaging_product: "whatsapp" (já está no payload)
+      // 2. type: "audio"
+      // 3. O objeto audio deve ter id e ptt: true
+      // 4. NÃO pode haver legenda (caption)
       payload.audio = { 
-        id: mediaId
+        id: mediaId,
+        ptt: true
       };
-      console.log(`[MEDIA] Enviando ID ${mediaId} como áudio.`);
+      console.log(`[MEDIA-SEND] Configurando payload PTT para Meta. ID: ${mediaId}`);
     } else if (media.type === 'document') {
       payload.document = { id: mediaId, filename: media.fileName };
     } else {
