@@ -2213,25 +2213,33 @@ async function fetchAndStoreIncomingMedia(
 
     if (action === 'startFlow') {
       const { flowId, contactId, waId } = params
+      console.log(`[START-FLOW-DEBUG] Starting flow. params:`, JSON.stringify(params));
       
-      const { data: currentContact } = await supabase
+      const { data: currentContact, error: contactError } = await supabase
         .from('crm_contacts')
-        .select('flow_state, current_flow_id, status, user_id')
+        .select('flow_state, current_flow_id, status, user_id, wa_id')
         .eq('id', contactId)
         .single();
         
-      if (currentContact?.flow_state === 'running' || currentContact?.flow_state === 'waiting_response' || currentContact?.flow_state === 'ai_handling') {
-        console.log(`[START-FLOW] Flow already active for ${waId} (state: ${currentContact.flow_state}). Force restarting...`);
-        // Opcional: permitir reiniciar mesmo se já estiver rodando
+      if (contactError) {
+        console.error(`[START-FLOW-DEBUG] Contact lookup error:`, contactError);
+        throw contactError;
       }
+      console.log(`[START-FLOW-DEBUG] Current contact found:`, currentContact.wa_id, "State:", currentContact.flow_state);
 
-      const { data: flow } = await supabase
+      const { data: flow, error: flowError } = await supabase
         .from('crm_flows')
         .select('*')
         .eq('id', flowId)
         .single()
       
+      if (flowError) {
+        console.error(`[START-FLOW-DEBUG] Flow lookup error:`, flowError);
+        throw flowError;
+      }
       if (!flow) throw new Error('Flow not found')
+      
+      console.log(`[START-FLOW-DEBUG] Flow found:`, flow.name, "Nodes:", flow.nodes?.length);
       await supabase.from('crm_scheduled_messages').delete().eq('contact_id', contactId);
 
       if (flow.nodes && flow.nodes.length > 0) {
