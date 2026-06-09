@@ -3774,6 +3774,7 @@ const CRM = () => {
                                 </div>
                                 {showUnnamedContacts ? <LucideIcons.ChevronDown className="w-3 h-3 text-muted-foreground" /> : <LucideIcons.ChevronRight className="w-3 h-3 text-muted-foreground" />}
                               </button>
+
                               
                               {showUnnamedContacts && (
                                 <div className="p-3 space-y-3 bg-muted/10 animate-in slide-in-from-top-1 duration-200">
