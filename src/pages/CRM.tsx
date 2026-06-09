@@ -341,6 +341,11 @@ const CRM = () => {
   const [newWebhook, setNewWebhook] = useState({ name: '', response_type: 'text' as 'text' | 'template', template_id: '', secret_token: '', is_active: true, default_status: 'new' });
   const [googleContactsEnabled, setGoogleContactsEnabled] = useState(localStorage.getItem('google_contacts_connected') === 'true');
   const [googleAccountInfo, setGoogleAccountInfo] = useState<{ email: string } | null>(null);
+  const [showUnnamedContacts, setShowUnnamedContacts] = useState(false);
+  const [selectedContactIds, setSelectedContactIds] = useState<string[]>([]);
+  const [bulkName, setBulkName] = useState('');
+  const [isBulkNaming, setIsBulkNaming] = useState(false);
+
   const [mediaUploadProgress, setMediaUploadProgress] = useState<{ [key: string]: number }>({});
 
   const [scheduledMessages, setScheduledMessages] = useState<any[]>([]);
