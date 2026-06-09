@@ -6188,7 +6188,6 @@ const CRM = () => {
                           </div>
                         )}
                       </CardContent>
-                      </CardContent>
                     </Card>
                     
                     {/* VPS Transcoder section removed as it's now internal */}
