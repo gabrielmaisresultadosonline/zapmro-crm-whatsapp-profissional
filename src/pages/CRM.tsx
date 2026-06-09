@@ -7281,7 +7281,7 @@ const CRM = () => {
                             selectedContactsForScheduling.includes(contact.id) ? "border-primary bg-primary/5" : "border-transparent bg-zinc-100/50 hover:bg-zinc-100"
                           )}
                         >
-                          <div className={cn("w-4 h-4 rounded border flex items-center justify-center shrink-0", selectedContactsForScheduling.includes(contact.id) ? "bg-primary border-primary" : "border-muted-foreground/30")}>
+                          <div className={cn("w-4 h-4 rounded border flex items-center justify-center shrink-0", selectedContactsForScheduling.includes(contact.id) ? "bg-primary border-primary" : "border-zinc-300")}>
                             {selectedContactsForScheduling.includes(contact.id) && <Check className="w-3 h-3 text-white" />}
                           </div>
                           <p className="text-[10px] font-bold truncate flex-1">{contact.name || contact.wa_id}</p>
