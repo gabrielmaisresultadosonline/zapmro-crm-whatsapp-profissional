@@ -503,13 +503,21 @@ const Broadcaster = ({ templates, flows, contacts, statuses }: BroadcasterProps)
                       <SelectValue placeholder="Selecione o público" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="contacts">Todos os Contatos ({contacts.length})</SelectItem>
-                      <SelectItem value="conversation">Contatos em Janela de 24h (Grátis)</SelectItem>
-                      <SelectItem value="tag">Por Etiqueta (Status)</SelectItem>
-                      <SelectItem value="uploaded">Subir Lista (VCard, Excel, Texto)</SelectItem>
+                      {type === 'template' ? (
+                        <>
+                          <SelectItem value="contacts">Todos os Contatos ({contacts.length})</SelectItem>
+                          <SelectItem value="tag">Por Etiqueta (Status)</SelectItem>
+                          <SelectItem value="uploaded">Subir Lista (VCard, Excel, Texto)</SelectItem>
+                        </>
+                      ) : (
+                        <>
+                          <SelectItem value="conversation">Contatos em Janela de 24h (Grátis)</SelectItem>
+                        </>
+                      )}
                     </SelectContent>
                   </Select>
                 </div>
+
               </div>
 
               {targetType === 'tag' && (
@@ -560,12 +568,20 @@ const Broadcaster = ({ templates, flows, contacts, statuses }: BroadcasterProps)
 
               <div className="space-y-4 pt-4 border-t border-white/5">
                 <Label className="text-xs md:text-sm font-bold uppercase tracking-wider text-muted-foreground">Conteúdo do Disparo</Label>
-                <Tabs value={type} onValueChange={(val: any) => setType(val)} className="w-full">
+                <Tabs value={type} onValueChange={(val: any) => {
+                  setType(val);
+                  if (val === 'message' || val === 'flow') {
+                    setTargetType('conversation');
+                  } else {
+                    setTargetType('contacts');
+                  }
+                }} className="w-full">
                   <TabsList className="grid grid-cols-3 h-10 md:h-12 bg-[#202c33] rounded-xl p-1 gap-1">
                     <TabsTrigger value="message" className="rounded-lg text-[9px] sm:text-xs md:text-sm data-[state=active]:bg-[#00a884] data-[state=active]:text-white px-1">Mensagem</TabsTrigger>
                     <TabsTrigger value="template" className="rounded-lg text-[9px] sm:text-xs md:text-sm data-[state=active]:bg-[#00a884] data-[state=active]:text-white px-1">Template</TabsTrigger>
                     <TabsTrigger value="flow" className="rounded-lg text-[9px] sm:text-xs md:text-sm data-[state=active]:bg-[#00a884] data-[state=active]:text-white px-1">Fluxo</TabsTrigger>
                   </TabsList>
+
                   
                   <div className="mt-4 md:mt-6">
                     <TabsContent value="message" className="space-y-2 animate-in fade-in">
@@ -579,7 +595,16 @@ const Broadcaster = ({ templates, flows, contacts, statuses }: BroadcasterProps)
                     </TabsContent>
 
                     <TabsContent value="template" className="space-y-4 animate-in fade-in">
-                      <Label className="text-xs md:text-sm">Selecione o Template Aprovado</Label>
+                      <div className="flex flex-col gap-2 mb-4">
+                        <Label className="text-xs md:text-sm">Selecione o Template Aprovado</Label>
+                        <div className="bg-amber-500/10 border border-amber-500/20 p-3 rounded-xl flex items-start gap-2">
+                          <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                          <p className="text-[10px] md:text-xs text-amber-200/80 leading-relaxed italic">
+                            <strong className="text-amber-500">Atenção:</strong> Ao enviar templates aprovados pela Meta, será cobrado em média <strong className="text-white">R$ 0,33</strong> por envio (Marketing/Contato Frio).
+                          </p>
+                        </div>
+                      </div>
+
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                         {templates.filter(t => t.status === 'APPROVED').map(t => (
                           <div 
@@ -629,12 +654,20 @@ const Broadcaster = ({ templates, flows, contacts, statuses }: BroadcasterProps)
               </div>
 
               <div className="space-y-4 pt-4 border-t border-white/5">
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                   <Label className="text-xs md:text-sm font-bold uppercase tracking-wider text-[#8696a0] flex items-center gap-2">
                     <Clock className="w-4 h-4" /> Tempo Randomizado
                   </Label>
-                  <Badge variant="outline" className="text-[8px] md:text-[10px] text-[#00a884] border-[#00a884]/20 bg-[#00a884]/5">Evita Bloqueios</Badge>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {targetType !== 'conversation' && (
+                      <Badge variant="outline" className="text-[8px] md:text-[10px] text-amber-500 border-amber-500/20 bg-amber-500/5">
+                        Custo Estimado: R$ {(0.33 * (targetType === 'contacts' ? contacts.length : uploadedNumbers.split('\n').filter(n => n.trim().length >= 10).length)).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                      </Badge>
+                    )}
+                    <Badge variant="outline" className="text-[8px] md:text-[10px] text-[#00a884] border-[#00a884]/20 bg-[#00a884]/5">Evita Bloqueios</Badge>
+                  </div>
                 </div>
+
                 <div className="grid grid-cols-2 gap-4 md:gap-6">
                   <div className="space-y-2">
                     <Label className="text-[9px] md:text-[10px]">Mínimo (seg)</Label>
