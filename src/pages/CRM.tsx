@@ -7227,7 +7227,7 @@ const CRM = () => {
                           </div>
                           <div className="min-w-0">
                             <p className="text-xs font-bold truncate">{contact.name || contact.wa_id}</p>
-                            <p className="text-[10px] text-muted-foreground truncate">{contact.wa_id}</p>
+                            <p className="text-[10px] text-zinc-500 truncate">{contact.wa_id}</p>
                           </div>
                           {contact.last_message_received_at && (
                             <div className={cn(
