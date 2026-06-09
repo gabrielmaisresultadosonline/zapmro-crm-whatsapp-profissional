@@ -7223,7 +7223,7 @@ const CRM = () => {
                             "w-8 h-8 rounded-full flex items-center justify-center shrink-0",
                             selectedContactsForScheduling.includes(contact.id) ? "bg-primary/20" : "bg-muted-foreground/10"
                           )}>
-                            <User className={cn("w-4 h-4", selectedContactsForScheduling.includes(contact.id) ? "text-primary" : "text-muted-foreground")} />
+                            <User className={cn("w-4 h-4", selectedContactsForScheduling.includes(contact.id) ? "text-primary" : "text-zinc-400")} />
                           </div>
                           <div className="min-w-0">
                             <p className="text-xs font-bold truncate">{contact.name || contact.wa_id}</p>
