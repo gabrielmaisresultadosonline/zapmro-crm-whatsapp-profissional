@@ -7134,39 +7134,51 @@ const CRM = () => {
       </Dialog>
 
       <Dialog open={isSchedulingOpen} onOpenChange={setIsSchedulingOpen}>
-        <DialogContent className="w-[calc(100vw-1rem)] sm:w-full max-w-2xl rounded-2xl sm:rounded-3xl p-4 sm:p-6 border-none shadow-2xl overflow-hidden flex flex-col max-h-[95vh] sm:max-h-[90vh]">
+        <DialogContent className="w-[calc(100vw-1rem)] sm:w-full max-w-2xl rounded-2xl sm:rounded-3xl p-4 sm:p-6 border-none shadow-2xl overflow-hidden flex flex-col max-h-[95vh] sm:max-h-[90vh] bg-white text-zinc-900">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold flex items-center gap-2 text-primary">
               <CalendarClock className="w-5 h-5" /> Novo Agendamento
             </DialogTitle>
-            <DialogDescription>Agende mensagens, fluxos ou templates para seus contatos.</DialogDescription>
+            <DialogDescription className="text-zinc-500">Agende templates aprovados para seus contatos de forma organizada.</DialogDescription>
           </DialogHeader>
           
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
             <Button 
               variant={selectedCampaignType === 'individual' ? 'default' : 'outline'}
-              className={cn("h-11 rounded-xl text-[10px] font-bold px-1", selectedCampaignType === 'individual' && "bg-primary text-white shadow-lg shadow-primary/20")}
-              onClick={() => { setSelectedCampaignType('individual'); setSelectedContactsForScheduling([]); }}
+              className={cn("h-11 rounded-xl text-[10px] font-bold px-1 transition-all", 
+                selectedCampaignType === 'individual' 
+                  ? "bg-primary text-white shadow-lg shadow-primary/20 border-primary" 
+                  : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50")}
+              onClick={() => { setSelectedCampaignType('individual'); setSelectedContactsForScheduling([]); setScheduleType('template'); }}
             >
               <User className="w-4 h-4 mr-1.5" /> Individual
             </Button>
             <Button 
               variant={selectedCampaignType === 'batch' ? 'default' : 'outline'}
-              className={cn("h-11 rounded-xl text-[10px] font-bold px-1", selectedCampaignType === 'batch' && "bg-primary text-white shadow-lg shadow-primary/20")}
-              onClick={() => { setSelectedCampaignType('batch'); setSelectedContactsForScheduling([]); }}
+              className={cn("h-11 rounded-xl text-[10px] font-bold px-1 transition-all", 
+                selectedCampaignType === 'batch' 
+                  ? "bg-primary text-white shadow-lg shadow-primary/20 border-primary" 
+                  : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50")}
+              onClick={() => { setSelectedCampaignType('batch'); setSelectedContactsForScheduling([]); setScheduleType('template'); }}
             >
               <Users className="w-4 h-4 mr-1.5" /> Massa
             </Button>
             <Button 
               variant={selectedCampaignType === 'list' ? 'default' : 'outline'}
-              className={cn("h-11 rounded-xl text-[10px] font-bold px-1", selectedCampaignType === 'list' && "bg-primary text-white shadow-lg shadow-primary/20")}
-              onClick={() => { setSelectedCampaignType('list'); setSelectedContactsForScheduling([]); }}
+              className={cn("h-11 rounded-xl text-[10px] font-bold px-1 transition-all", 
+                selectedCampaignType === 'list' 
+                  ? "bg-primary text-white shadow-lg shadow-primary/20 border-primary" 
+                  : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50")}
+              onClick={() => { setSelectedCampaignType('list'); setSelectedContactsForScheduling([]); setScheduleType('template'); }}
             >
               <FileText className="w-4 h-4 mr-1.5" /> vCard / TXT
             </Button>
             <Button 
               variant={selectedCampaignType === 'birthday' ? 'default' : 'outline'}
-              className={cn("h-11 rounded-xl text-[10px] font-bold px-1", selectedCampaignType === 'birthday' && "bg-primary text-white shadow-lg shadow-primary/20")}
+              className={cn("h-11 rounded-xl text-[10px] font-bold px-1 transition-all", 
+                selectedCampaignType === 'birthday' 
+                  ? "bg-primary text-white shadow-lg shadow-primary/20 border-primary" 
+                  : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50")}
               onClick={() => { setSelectedCampaignType('birthday'); setSelectedContactsForScheduling([]); setScheduleType('template'); }}
             >
               <Calendar className="w-4 h-4 mr-1.5" /> Aniversário
@@ -7178,12 +7190,12 @@ const CRM = () => {
               {/* Configuração baseada no tipo de campanha */}
               {selectedCampaignType === 'individual' && (
                 <div className="space-y-3">
-                  <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">1. Selecionar Contato</Label>
+                  <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">1. Selecionar Contato</Label>
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input 
                       placeholder="Pesquisar..." 
-                      className="pl-9 h-11 rounded-xl bg-muted/30 border-none"
+                      className="pl-9 h-11 rounded-xl bg-zinc-100 border-none text-zinc-900 placeholder:text-zinc-400"
                       value={scheduleSearch}
                       onChange={e => setScheduleSearch(e.target.value)}
                     />
@@ -7204,23 +7216,23 @@ const CRM = () => {
                             "flex items-center gap-3 p-3 rounded-xl border transition-all cursor-pointer",
                             selectedContactsForScheduling.includes(contact.id)
                               ? "border-primary bg-primary/5 shadow-sm"
-                              : "border-transparent bg-muted/20 hover:bg-muted/40"
+                              : "border-transparent bg-zinc-100/50 hover:bg-zinc-100"
                           )}
                         >
                           <div className={cn(
                             "w-8 h-8 rounded-full flex items-center justify-center shrink-0",
                             selectedContactsForScheduling.includes(contact.id) ? "bg-primary/20" : "bg-muted-foreground/10"
                           )}>
-                            <User className={cn("w-4 h-4", selectedContactsForScheduling.includes(contact.id) ? "text-primary" : "text-muted-foreground")} />
+                            <User className={cn("w-4 h-4", selectedContactsForScheduling.includes(contact.id) ? "text-primary" : "text-zinc-400")} />
                           </div>
                           <div className="min-w-0">
                             <p className="text-xs font-bold truncate">{contact.name || contact.wa_id}</p>
-                            <p className="text-[10px] text-muted-foreground truncate">{contact.wa_id}</p>
+                            <p className="text-[10px] text-zinc-500 truncate">{contact.wa_id}</p>
                           </div>
                           {contact.last_message_received_at && (
                             <div className={cn(
                               "ml-auto w-2 h-2 rounded-full",
-                              (Date.now() - new Date(contact.last_message_received_at).getTime() < 24 * 60 * 60 * 1000) ? "bg-emerald-500" : "bg-muted-foreground/30"
+                              (Date.now() - new Date(contact.last_message_received_at).getTime() < 24 * 60 * 60 * 1000) ? "bg-emerald-500" : "bg-zinc-300"
                             )} title={(Date.now() - new Date(contact.last_message_received_at).getTime() < 24 * 60 * 60 * 1000) ? "Janela Ativa" : "Janela Expirada"} />
                           )}
                         </div>
@@ -7231,7 +7243,7 @@ const CRM = () => {
 
               {selectedCampaignType === 'batch' && (
                 <div className="space-y-3">
-                  <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center justify-between">
+                  <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500 flex items-center justify-between">
                     <span>1. Selecionar Massa de Contatos</span>
                     <span className="text-primary">{selectedContactsForScheduling.length} selecionados</span>
                   </Label>
@@ -7239,14 +7251,14 @@ const CRM = () => {
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input 
                       placeholder="Pesquisar..." 
-                      className="pl-9 h-11 rounded-xl bg-muted/30 border-none"
+                      className="pl-9 h-11 rounded-xl bg-zinc-100 border-none text-zinc-900 placeholder:text-zinc-400"
                       value={scheduleSearch}
                       onChange={e => setScheduleSearch(e.target.value)}
                     />
                   </div>
                   <div className="flex gap-2 mb-2">
-                    <Button variant="outline" size="sm" className="h-7 text-[10px] flex-1 rounded-lg" onClick={() => setSelectedContactsForScheduling(contacts.map(c => c.id))}>Selecionar Todos</Button>
-                    <Button variant="outline" size="sm" className="h-7 text-[10px] flex-1 rounded-lg" onClick={() => setSelectedContactsForScheduling([])}>Limpar</Button>
+                    <Button variant="outline" size="sm" className="h-7 text-[10px] flex-1 rounded-lg border-zinc-200 bg-white hover:bg-zinc-50" onClick={() => setSelectedContactsForScheduling(contacts.map(c => c.id))}>Selecionar Todos</Button>
+                    <Button variant="outline" size="sm" className="h-7 text-[10px] flex-1 rounded-lg border-zinc-200 bg-white hover:bg-zinc-50" onClick={() => setSelectedContactsForScheduling([])}>Limpar</Button>
                   </div>
                   <div className="grid grid-cols-2 gap-2 max-h-[160px] overflow-y-auto p-1">
                     {contacts
@@ -7266,10 +7278,10 @@ const CRM = () => {
                           }}
                           className={cn(
                             "flex items-center gap-2 p-2 rounded-xl border transition-all cursor-pointer",
-                            selectedContactsForScheduling.includes(contact.id) ? "border-primary bg-primary/5" : "border-transparent bg-muted/20"
+                            selectedContactsForScheduling.includes(contact.id) ? "border-primary bg-primary/5" : "border-transparent bg-zinc-100/50 hover:bg-zinc-100"
                           )}
                         >
-                          <div className={cn("w-4 h-4 rounded border flex items-center justify-center shrink-0", selectedContactsForScheduling.includes(contact.id) ? "bg-primary border-primary" : "border-muted-foreground/30")}>
+                          <div className={cn("w-4 h-4 rounded border flex items-center justify-center shrink-0", selectedContactsForScheduling.includes(contact.id) ? "bg-primary border-primary" : "border-zinc-300")}>
                             {selectedContactsForScheduling.includes(contact.id) && <Check className="w-3 h-3 text-white" />}
                           </div>
                           <p className="text-[10px] font-bold truncate flex-1">{contact.name || contact.wa_id}</p>
@@ -7281,19 +7293,19 @@ const CRM = () => {
 
               {selectedCampaignType === 'list' && (
                 <div className="space-y-3 animate-in fade-in duration-300">
-                  <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center justify-between">
+                  <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500 flex items-center justify-between">
                     <span>1. Lista de Contatos (vCard ou TXT)</span>
                     <Badge variant="outline" className="text-[9px] font-bold">Importação Direta</Badge>
                   </Label>
                   <Textarea 
                     placeholder="Cole aqui os números (um por linha) ou o conteúdo de um arquivo vCard..."
-                    className="min-h-[120px] rounded-xl bg-muted/30 border-none resize-none font-mono text-[11px]"
+                    className="min-h-[120px] rounded-xl bg-zinc-100 border-none resize-none font-mono text-[11px] text-zinc-900 placeholder:text-zinc-400"
                     value={contactListText}
                     onChange={e => setContactListText(e.target.value)}
                   />
-                  <div className="flex items-center gap-2 p-3 rounded-xl bg-primary/5 border border-primary/20">
-                    <AlertCircle className="w-4 h-4 text-primary shrink-0" />
-                    <p className="text-[10px] text-muted-foreground">
+                  <div className="flex items-center gap-2 p-3 rounded-xl bg-zinc-100 border border-zinc-200">
+                    <AlertCircle className="w-4 h-4 text-zinc-400 shrink-0" />
+                    <p className="text-[10px] text-zinc-500">
                       Os números serão cadastrados automaticamente se não existirem. Formatos aceitos: <span className="font-bold">5511999999999</span> ou <span className="font-bold">vCard (.vcf)</span>.
                     </p>
                   </div>
@@ -7308,98 +7320,74 @@ const CRM = () => {
                     </Label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div className="space-y-1">
-                        <Label className="text-[10px]">Nome Completo</Label>
-                        <Input placeholder="Nome do aniversariante" value={birthdayName} onChange={e => setBirthdayName(e.target.value)} className="h-10 rounded-xl bg-background" />
+                        <Label className="text-[10px] text-zinc-600">Nome Completo</Label>
+                        <Input placeholder="Nome do aniversariante" value={birthdayName} onChange={e => setBirthdayName(e.target.value)} className="h-10 rounded-xl bg-white border-zinc-200 text-zinc-900 placeholder:text-zinc-400" />
                       </div>
                       <div className="space-y-1">
-                        <Label className="text-[10px]">WhatsApp (com DDI)</Label>
-                        <Input placeholder="Ex: 5511999999999" value={birthdayNumber} onChange={e => setBirthdayNumber(e.target.value)} className="h-10 rounded-xl bg-background" />
+                        <Label className="text-[10px] text-zinc-600">WhatsApp (com DDI)</Label>
+                        <Input placeholder="Ex: 5511999999999" value={birthdayNumber} onChange={e => setBirthdayNumber(e.target.value)} className="h-10 rounded-xl bg-white border-zinc-200 text-zinc-900 placeholder:text-zinc-400" />
                       </div>
                     </div>
-                    <p className="text-[9px] text-muted-foreground italic">* O aniversariante será cadastrado automaticamente como um novo contato.</p>
+                    <p className="text-[9px] text-zinc-500 italic">* O aniversariante será cadastrado automaticamente como um novo contato.</p>
                   </div>
                 </div>
               )}
 
               {/* Tipo de Agendamento */}
               <div className="space-y-3">
-                <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">2. O que deseja agendar?</Label>
+                <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">2. O que deseja agendar?</Label>
                 <Tabs value={scheduleType} onValueChange={(val: any) => setScheduleType(val)} className="w-full">
-                  <TabsList className="grid grid-cols-3 h-12 bg-muted/30 rounded-xl p-1 gap-1">
-                    <TabsTrigger value="message" disabled={selectedCampaignType === 'birthday'} className="rounded-lg text-xs font-bold data-[state=active]:bg-primary data-[state=active]:text-white">Mensagem</TabsTrigger>
-                    <TabsTrigger value="template" className="rounded-lg text-xs font-bold data-[state=active]:bg-primary data-[state=active]:text-white">Template</TabsTrigger>
-                    <TabsTrigger value="flow" disabled={selectedCampaignType === 'birthday'} className="rounded-lg text-xs font-bold data-[state=active]:bg-primary data-[state=active]:text-white">Fluxo</TabsTrigger>
+                  <TabsList className="grid grid-cols-1 h-12 bg-zinc-100 rounded-xl p-1 gap-1">
+                    <TabsTrigger value="template" className="rounded-lg text-xs font-bold data-[state=active]:bg-primary data-[state=active]:text-white">Template Aprovado</TabsTrigger>
                   </TabsList>
                 </Tabs>
               </div>
 
               {/* Conteúdo dinâmico baseado no tipo */}
               <div className="space-y-4 animate-in fade-in duration-300">
-                {scheduleType === 'message' && (
-                  <div className="space-y-2">
-                    <Label className="text-xs font-bold">Texto da Mensagem</Label>
-                    <Textarea 
-                      placeholder="Olá, como posso ajudar?..." 
-                      className="min-h-[100px] rounded-xl bg-muted/30 border-none resize-none"
-                      value={newMessage}
-                      onChange={e => setNewMessage(e.target.value)}
-                    />
-                    <p className="text-[10px] text-muted-foreground italic flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" /> Apenas contatos em janela de 24h receberão mensagens comuns.
-                    </p>
-                  </div>
-                )}
-
                 {scheduleType === 'template' && (
-                  <div className="space-y-2">
-                    <Label className="text-xs font-bold">Selecione o Template Aprovado</Label>
-                    <Select value={selectedScheduleId} onValueChange={setSelectedScheduleId}>
-                      <SelectTrigger className="h-11 rounded-xl bg-muted/30 border-none">
-                        <SelectValue placeholder="Escolha um modelo..." />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-xl">
-                        {templates.filter(t => t.status === 'APPROVED').map(t => (
-                          <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <p className="text-[10px] text-emerald-600 font-medium italic flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3" /> Templates podem ser agendados para qualquer contato (Mesmo janelas expiradas).
-                    </p>
-                  </div>
-                )}
+                  <div className="space-y-3">
+                    <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 space-y-2">
+                      <div className="flex items-center gap-2 text-amber-800">
+                        <AlertCircle className="w-4 h-4" />
+                        <p className="text-xs font-bold uppercase tracking-wider">Aviso de Cobrança</p>
+                      </div>
+                      <p className="text-xs text-amber-700 leading-relaxed">
+                        Agendamentos serão enviados apenas com <span className="font-bold">templates aprovados pela Meta</span>. 
+                        Isso gera um custo médio de <span className="font-bold text-amber-900">R$ 0,33</span> por disparo enviado.
+                      </p>
+                    </div>
 
-                {scheduleType === 'flow' && (
-                  <div className="space-y-2">
-                    <Label className="text-xs font-bold">Selecione o Fluxo Visual</Label>
-                    <Select value={selectedScheduleId} onValueChange={setSelectedScheduleId}>
-                      <SelectTrigger className="h-11 rounded-xl bg-muted/30 border-none">
-                        <SelectValue placeholder="Escolha um fluxo..." />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-xl">
-                        {flows.filter(f => f.is_active).map(f => (
-                          <SelectItem key={f.id} value={f.id}>{f.name}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <p className="text-[10px] text-muted-foreground italic flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" /> Fluxos só podem ser agendados para contatos em janela de 24h.
-                    </p>
+                    <div className="space-y-2">
+                      <Label className="text-xs font-bold text-zinc-700">Selecione o Template Aprovado</Label>
+                      <Select value={selectedScheduleId} onValueChange={setSelectedScheduleId}>
+                        <SelectTrigger className="h-11 rounded-xl bg-zinc-100 border-none text-zinc-900">
+                          <SelectValue placeholder="Escolha um modelo..." />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl">
+                          {templates.filter(t => t.status === 'APPROVED').map(t => (
+                            <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <p className="text-[10px] text-emerald-600 font-medium italic flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" /> Templates podem ser agendados para qualquer contato (Mesmo janelas expiradas).
+                      </p>
+                    </div>
                   </div>
                 )}
               </div>
 
-              {/* Data e Hora */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                 <div className="space-y-2">
-                  <Label className="text-xs font-bold flex items-center gap-2"><Calendar className="w-3 h-3" /> Data</Label>
+                  <Label className="text-xs font-bold flex items-center gap-2 text-zinc-700"><Calendar className="w-3 h-3 text-primary" /> Data</Label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
                         variant={"outline"}
                         className={cn(
-                          "w-full h-11 justify-start text-left font-normal rounded-xl bg-muted/30 border-none",
-                          !scheduleDateObj && "text-muted-foreground"
+                          "w-full h-11 justify-start text-left font-normal rounded-xl bg-zinc-100 border-none text-zinc-900",
+                          !scheduleDateObj && "text-zinc-400"
                         )}
                       >
                         <Calendar className="mr-2 h-4 w-4" />
@@ -7422,15 +7410,15 @@ const CRM = () => {
                   </Popover>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs font-bold flex items-center gap-2"><Clock className="w-3 h-3" /> Hora</Label>
-                  <Input type="time" value={scheduleTime} onChange={e => setScheduleTime(e.target.value)} className="h-11 rounded-xl bg-muted/30 border-none" />
+                  <Label className="text-xs font-bold flex items-center gap-2 text-zinc-700"><Clock className="w-3 h-3 text-primary" /> Hora</Label>
+                  <Input type="time" value={scheduleTime} onChange={e => setScheduleTime(e.target.value)} className="h-11 rounded-xl bg-zinc-100 border-none text-zinc-900" />
                 </div>
               </div>
             </div>
           </ScrollArea>
 
           <DialogFooter className="flex-col-reverse sm:flex-row gap-2">
-            <Button variant="ghost" onClick={() => { setIsSchedulingOpen(false); setSelectedContactsForScheduling([]); }} className="rounded-xl h-11 px-6 w-full sm:w-auto">Cancelar</Button>
+            <Button variant="ghost" onClick={() => { setIsSchedulingOpen(false); setSelectedContactsForScheduling([]); }} className="rounded-xl h-11 px-6 w-full sm:w-auto text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900">Cancelar</Button>
             <Button 
               onClick={selectedCampaignType === 'birthday' ? handleScheduleBirthday : handleScheduleBatch} 
               disabled={isScheduling || (selectedCampaignType === 'individual' && selectedContactsForScheduling.length === 0) || (selectedCampaignType === 'batch' && selectedContactsForScheduling.length === 0) || (selectedCampaignType === 'list' && !contactListText.trim())}
