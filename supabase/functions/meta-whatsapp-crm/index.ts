@@ -166,7 +166,7 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
   }
 
   // 1.1 Se chegamos aqui e ainda não temos messageText mas o sourceMessageId foi passado, tentamos buscar especificamente essa mensagem
-  if (!messageText && sourceMessageId) {
+  if ((!messageText || messageText === "[Mensagem de Áudio]") && sourceMessageId) {
     const { data: sourceMsg } = await supabase
       .from('crm_messages')
       .select('content, message_type, media_url')
@@ -174,14 +174,17 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
       .maybeSingle();
     
     if (sourceMsg?.message_type === 'audio' && sourceMsg.media_url) {
-       console.log(`[AI-AGENT] Transcribing specifically requested source audio message for ${waId}...`);
+       console.log(`[AI-AGENT] Transcribing specifically requested source audio message for ${waId}... URL: ${sourceMsg.media_url}`);
        const transcription = await transcribeAudioForAi(OPENAI_API_KEY, sourceMsg.media_url);
        if (transcription) {
+         console.log(`[AI-AGENT] Transcription success for sourceMessageId ${sourceMessageId}: ${transcription.slice(0, 50)}...`);
          messageText = transcription;
          await supabase.from('crm_messages').update({ content: transcription }).eq('meta_message_id', sourceMessageId);
+       } else {
+         console.warn(`[AI-AGENT] Transcription FAILED for sourceMessageId ${sourceMessageId}`);
        }
-    } else {
-      messageText = sourceMsg?.content || "";
+    } else if (sourceMsg?.content) {
+      messageText = sourceMsg.content;
     }
   }
 
@@ -2691,7 +2694,7 @@ async function fetchAndStoreIncomingMedia(
           if (res?.message?.includes('AI handling state') && text) {
             // Se o nó de IA foi ativado por uma resposta do cliente (o que o 'text' indica),
             // então ele deve processar a resposta agora.
-            console.log(`[CONTINUE-FLOW] Moved to AI handling state. Scheduling AI response with delay for ${waId}`);
+            console.log(`[CONTINUE-FLOW] Moved to AI handling state. Scheduling AI response with delay for ${waId}. Source: ${sourceMessageId}`);
             setTimeout(async () => {
               const { data: updatedContact } = await supabase.from('crm_contacts').select('*').eq('id', contactId).single();
               if (updatedContact) {
@@ -2709,24 +2712,28 @@ async function fetchAndStoreIncomingMedia(
                        has_waited_initial_response: true 
                      }
                    }).eq('id', contactId);
-                    return;
+                   return;
                 }
 
                 // Determinar o texto a processar (transcrição ou texto puro)
                 let finalAiText = text;
-                const { data: currentInbound } = await supabase
-                  .from('crm_messages')
-                  .select('content, message_type, media_url')
-                  .eq('meta_message_id', sourceMessageId)
-                  .maybeSingle();
-                
-                if (currentInbound?.message_type === 'audio' && currentInbound.media_url) {
-                   console.log(`[AI-AGENT-DELAYED] Transcribing audio message ${sourceMessageId} during delayed response...`);
-                   const transcription = await transcribeAudioForAi(OPENAI_API_KEY, currentInbound.media_url);
-                   if (transcription) {
-                     finalAiText = transcription;
-                     await supabase.from('crm_messages').update({ content: transcription }).eq('meta_message_id', sourceMessageId);
-                   }
+                if (sourceMessageId) {
+                  const { data: currentInbound } = await supabase
+                    .from('crm_messages')
+                    .select('content, message_type, media_url')
+                    .eq('meta_message_id', sourceMessageId)
+                    .maybeSingle();
+                  
+                  if (currentInbound?.message_type === 'audio' && currentInbound.media_url) {
+                     console.log(`[AI-AGENT-DELAYED] Transcribing audio message ${sourceMessageId} during delayed response...`);
+                     const transcription = await transcribeAudioForAi(OPENAI_API_KEY, currentInbound.media_url);
+                     if (transcription) {
+                       finalAiText = transcription;
+                       await supabase.from('crm_messages').update({ content: transcription }).eq('meta_message_id', sourceMessageId);
+                     }
+                  } else if (currentInbound?.content) {
+                    finalAiText = currentInbound.content;
+                  }
                 }
 
                 // Delay para parecer mais natural
