@@ -568,12 +568,20 @@ const Broadcaster = ({ templates, flows, contacts, statuses }: BroadcasterProps)
 
               <div className="space-y-4 pt-4 border-t border-white/5">
                 <Label className="text-xs md:text-sm font-bold uppercase tracking-wider text-muted-foreground">Conteúdo do Disparo</Label>
-                <Tabs value={type} onValueChange={(val: any) => setType(val)} className="w-full">
+                <Tabs value={type} onValueChange={(val: any) => {
+                  setType(val);
+                  if (val === 'message' || val === 'flow') {
+                    setTargetType('conversation');
+                  } else {
+                    setTargetType('contacts');
+                  }
+                }} className="w-full">
                   <TabsList className="grid grid-cols-3 h-10 md:h-12 bg-[#202c33] rounded-xl p-1 gap-1">
                     <TabsTrigger value="message" className="rounded-lg text-[9px] sm:text-xs md:text-sm data-[state=active]:bg-[#00a884] data-[state=active]:text-white px-1">Mensagem</TabsTrigger>
                     <TabsTrigger value="template" className="rounded-lg text-[9px] sm:text-xs md:text-sm data-[state=active]:bg-[#00a884] data-[state=active]:text-white px-1">Template</TabsTrigger>
                     <TabsTrigger value="flow" className="rounded-lg text-[9px] sm:text-xs md:text-sm data-[state=active]:bg-[#00a884] data-[state=active]:text-white px-1">Fluxo</TabsTrigger>
                   </TabsList>
+
                   
                   <div className="mt-4 md:mt-6">
                     <TabsContent value="message" className="space-y-2 animate-in fade-in">
