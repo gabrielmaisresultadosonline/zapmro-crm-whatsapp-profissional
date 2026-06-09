@@ -7410,8 +7410,8 @@ const CRM = () => {
                   </Popover>
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs font-bold flex items-center gap-2"><Clock className="w-3 h-3" /> Hora</Label>
-                  <Input type="time" value={scheduleTime} onChange={e => setScheduleTime(e.target.value)} className="h-11 rounded-xl bg-muted/30 border-none" />
+                  <Label className="text-xs font-bold flex items-center gap-2 text-zinc-700"><Clock className="w-3 h-3 text-primary" /> Hora</Label>
+                  <Input type="time" value={scheduleTime} onChange={e => setScheduleTime(e.target.value)} className="h-11 rounded-xl bg-zinc-100 border-none text-zinc-900" />
                 </div>
               </div>
             </div>
