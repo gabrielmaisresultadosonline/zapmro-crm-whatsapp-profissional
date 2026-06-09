@@ -3168,15 +3168,22 @@ async function fetchAndStoreIncomingMedia(
     }
 
 
-    if (action === 'clearHistory') {
-      const { contactId } = params;
-      const { error } = await supabase
-        .from('crm_messages')
-        .delete()
-        .eq('contact_id', contactId);
+    if (action === 'update-contacts-bulk') {
+      const { contactIds, name } = params;
+      if (!contactIds || !Array.isArray(contactIds)) throw new Error('contactIds must be an array');
       
-      if (error) throw error;
-      return jsonResponse({ success: true, message: 'History cleared' });
+      const results = [];
+      for (let i = 0; i < contactIds.length; i++) {
+        const finalName = contactIds.length > 1 ? `${name} ${i + 1}` : name;
+        const { error } = await supabase
+          .from('crm_contacts')
+          .update({ name: finalName, updated_at: new Date().toISOString() })
+          .eq('id', contactIds[i]);
+        
+        results.push({ id: contactIds[i], success: !error });
+      }
+      
+      return jsonResponse({ success: true, results });
     }
 
     throw new Error(`Unhandled action: ${action}`);
