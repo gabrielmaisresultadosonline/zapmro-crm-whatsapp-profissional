@@ -1437,7 +1437,20 @@ async function internalSendTemplate(
 
   if (!response.ok) {
     console.error(`[TEMPLATE] Error sending template:`, JSON.stringify(result));
-    throw new Error(result?.error?.message || 'Erro ao enviar template pela Meta')
+    const errorMsg = result?.error?.message || 'Erro ao enviar template pela Meta';
+    
+    // Se o erro indicar falta de saldo ou problemas de pagamento (códigos comuns da Meta)
+    const paymentErrorCodes = [10, 100, 131031, 131042, 131045, 131047, 135000];
+    const isPaymentIssue = paymentErrorCodes.includes(result?.error?.code) || 
+                          errorMsg.toLowerCase().includes('payment') || 
+                          errorMsg.toLowerCase().includes('balance') ||
+                          errorMsg.toLowerCase().includes('credit');
+
+    if (isPaymentIssue) {
+      throw new Error(`⚠️ SALDO INSUFICIENTE NA META: Não foi possível enviar o template. Por favor, adicione saldo ou um cartão de crédito na sua Central de Pagamentos Meta em Ajustes -> Saldo e Pagamentos.`);
+    }
+
+    throw new Error(errorMsg)
   }
 
   if (contact) {
