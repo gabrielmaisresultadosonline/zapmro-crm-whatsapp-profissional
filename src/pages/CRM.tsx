@@ -3542,7 +3542,7 @@ const CRM = () => {
                     </div>
                     {kanbanStatuses.length === 0 ? (
                       <div className="flex-1 flex flex-col items-center justify-center p-10 text-center opacity-50">
-                        <Tag className="w-12 h-12 mb-4" />
+                        <LucideIcons.Tag className="w-12 h-12 mb-4" />
                         <h3 className="text-lg font-bold">Nenhuma etiqueta configurada</h3>
                         <p className="text-sm">Clique no botão "+" no topo para criar sua primeira etapa do Kanban.</p>
                       </div>
