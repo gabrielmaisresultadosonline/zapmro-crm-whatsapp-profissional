@@ -67,6 +67,11 @@ export default function CRMPanel({ callProxy, onSelectContact }: CRMPanelProps) 
   const [googleAccounts, setGoogleAccounts] = useState<any[]>([]);
   const [selectedAccountId, setSelectedAccountId] = useState<string>('');
   const [autoSync, setAutoSync] = useState(false);
+  const [showUnnamedContacts, setShowUnnamedContacts] = useState(false);
+  const [selectedContactIds, setSelectedContactIds] = useState<string[]>([]);
+  const [bulkName, setBulkName] = useState('');
+  const [isBulkNaming, setIsBulkNaming] = useState(false);
+
 
   useEffect(() => {
     const fetchSettings = async () => {
