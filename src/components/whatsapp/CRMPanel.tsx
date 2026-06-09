@@ -543,58 +543,133 @@ export default function CRMPanel({ callProxy, onSelectContact }: CRMPanelProps) 
             <p className="text-white/30 text-sm">Nenhum contato encontrado</p>
           </div>
         ) : (
-          <div className="divide-y divide-white/5">
-            {filteredContacts.map(contact => {
-              const status = STATUS_OPTIONS.find(s => s.value === contact.crm_status);
-              return (
-                <div
-                  key={contact.id}
-                  className="flex items-center gap-3 px-4 py-3 hover:bg-[#202c33] cursor-pointer group"
-                  onClick={() => setEditingContact(contact)}
+          <div className="flex flex-col">
+            {/* Unnamed Contacts Queue */}
+            {unnamedContacts.length > 0 && (
+              <div className="border-b border-white/10">
+                <button 
+                  onClick={() => setShowUnnamedContacts(!showUnnamedContacts)}
+                  className="w-full flex items-center justify-between px-4 py-3 bg-[#202c33] hover:bg-[#2a3942] transition-colors"
                 >
-                  <div className="w-10 h-10 rounded-full bg-[#6b7b8d] flex items-center justify-center shrink-0 relative overflow-hidden">
-                    <Users className="w-5 h-5 text-white/40" />
-                    {(contact as any).google_sync_account_id && (
-                      <div className="absolute bottom-0 right-0 bg-[#4285F4] p-0.5 rounded-tl-sm">
-                         <div className="w-2 h-2 bg-white rounded-full flex items-center justify-center">
-                            <span className="text-[6px] font-bold text-[#4285F4]">G</span>
-                         </div>
-                      </div>
-                    )}
-
-                    {contact.is_hot_lead && (
-                      <Flame className="w-3.5 h-3.5 text-orange-400 absolute -top-1 -right-1" />
-                    )}
+                  <div className="flex items-center gap-2">
+                    <UserX className="w-4 h-4 text-orange-400" />
+                    <span className="text-sm font-medium text-white">Contatos sem nome</span>
+                    <span className="bg-orange-500/20 text-orange-400 px-1.5 py-0.5 rounded text-[10px] font-bold">
+                      {unnamedContacts.length}
+                    </span>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-white text-sm font-medium truncate">{contact.name || contact.phone}</span>
-                      {status && (
-                        <span className="px-1.5 py-0.5 rounded text-[9px] font-medium" style={{ backgroundColor: status.color + '20', color: status.color }}>
-                          {status.label}
-                        </span>
+                  {showUnnamedContacts ? <ChevronDown className="w-4 h-4 text-white/40" /> : <ChevronRight className="w-4 h-4 text-white/40" />}
+                </button>
+                
+                {showUnnamedContacts && (
+                  <div className="bg-[#111b21] p-3 space-y-3">
+                    <div className="flex gap-2">
+                      <Input 
+                        placeholder="Nome base (ex: Cliente)" 
+                        value={bulkName}
+                        onChange={(e) => setBulkName(e.target.value)}
+                        className="h-8 bg-[#2a3942] border-white/10 text-xs"
+                      />
+                      <Button 
+                        size="sm" 
+                        disabled={selectedContactIds.length === 0 || !bulkName || isBulkNaming}
+                        onClick={handleBulkUpdate}
+                        className="h-8 bg-[#00a884] hover:bg-[#00a884]/80 text-[10px]"
+                      >
+                        {isBulkNaming ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Salvar em massa'}
+                      </Button>
+                    </div>
+                    
+                    <div className="space-y-1 max-h-[300px] overflow-y-auto">
+                      {unnamedContacts.map(contact => (
+                        <div 
+                          key={contact.id}
+                          className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
+                            selectedContactIds.includes(contact.id) ? 'bg-[#00a884]/10 border border-[#00a884]/20' : 'bg-[#202c33]/50 border border-transparent'
+                          }`}
+                          onClick={() => toggleSelectContact(contact.id)}
+                        >
+                          <div className="shrink-0">
+                            {selectedContactIds.includes(contact.id) ? (
+                              <CheckSquare className="w-4 h-4 text-[#00a884]" />
+                            ) : (
+                              <Square className="w-4 h-4 text-white/20" />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-white text-xs truncate">{contact.phone}</p>
+                          </div>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={(e) => { e.stopPropagation(); setEditingContact(contact); }}
+                            className="h-6 w-6 p-0 text-white/40 hover:text-white"
+                          >
+                            <Edit2 className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Regular Contacts List */}
+            <div className="divide-y divide-white/5">
+              {filteredContacts.filter(c => c.name && c.name !== c.phone).map(contact => {
+                const status = STATUS_OPTIONS.find(s => s.value === contact.crm_status);
+                return (
+                  <div
+                    key={contact.id}
+                    className="flex items-center gap-3 px-4 py-3 hover:bg-[#202c33] cursor-pointer group"
+                    onClick={() => setEditingContact(contact)}
+                  >
+                    <div className="w-10 h-10 rounded-full bg-[#6b7b8d] flex items-center justify-center shrink-0 relative overflow-hidden">
+                      <Users className="w-5 h-5 text-white/40" />
+                      {(contact as any).google_sync_account_id && (
+                        <div className="absolute bottom-0 right-0 bg-[#4285F4] p-0.5 rounded-tl-sm">
+                           <div className="w-2 h-2 bg-white rounded-full flex items-center justify-center">
+                              <span className="text-[6px] font-bold text-[#4285F4]">G</span>
+                           </div>
+                        </div>
+                      )}
+
+                      {contact.is_hot_lead && (
+                        <Flame className="w-3.5 h-3.5 text-orange-400 absolute -top-1 -right-1" />
                       )}
                     </div>
-                    <div className="flex items-center gap-1 mt-0.5">
-                      {contact.tags.slice(0, 3).map(tag => (
-                        <span key={tag} className="bg-[#7c5cfc]/10 text-[#7c5cfc] px-1.5 py-0.5 rounded text-[9px]">{tag}</span>
-                      ))}
-                      {contact.tags.length > 3 && <span className="text-white/20 text-[9px]">+{contact.tags.length - 3}</span>}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-white text-sm font-medium truncate">{contact.name || contact.phone}</span>
+                        {status && (
+                          <span className="px-1.5 py-0.5 rounded text-[9px] font-medium" style={{ backgroundColor: status.color + '20', color: status.color }}>
+                            {status.label}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1 mt-0.5">
+                        {contact.tags.slice(0, 3).map(tag => (
+                          <span key={tag} className="bg-[#7c5cfc]/10 text-[#7c5cfc] px-1.5 py-0.5 rounded text-[9px]">{tag}</span>
+                        ))}
+                        {contact.tags.length > 3 && <span className="text-white/20 text-[9px]">+{contact.tags.length - 3}</span>}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={(e) => { e.stopPropagation(); onSelectContact?.(contact.phone); }}
+                        className="p-1.5 text-white/20 hover:text-[#00a884] opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <MessageSquare className="w-4 h-4" />
+                      </button>
+                      <Edit2 className="w-3.5 h-3.5 text-white/20" />
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={(e) => { e.stopPropagation(); onSelectContact?.(contact.phone); }}
-                      className="p-1.5 text-white/20 hover:text-[#00a884] opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <MessageSquare className="w-4 h-4" />
-                    </button>
-                    <Edit2 className="w-3.5 h-3.5 text-white/20" />
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
+
         )}
       </ScrollArea>
     </div>
