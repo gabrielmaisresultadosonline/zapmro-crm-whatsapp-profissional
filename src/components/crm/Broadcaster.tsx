@@ -503,13 +503,21 @@ const Broadcaster = ({ templates, flows, contacts, statuses }: BroadcasterProps)
                       <SelectValue placeholder="Selecione o público" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="contacts">Todos os Contatos ({contacts.length})</SelectItem>
-                      <SelectItem value="conversation">Contatos em Janela de 24h (Grátis)</SelectItem>
-                      <SelectItem value="tag">Por Etiqueta (Status)</SelectItem>
-                      <SelectItem value="uploaded">Subir Lista (VCard, Excel, Texto)</SelectItem>
+                      {type === 'template' ? (
+                        <>
+                          <SelectItem value="contacts">Todos os Contatos ({contacts.length})</SelectItem>
+                          <SelectItem value="tag">Por Etiqueta (Status)</SelectItem>
+                          <SelectItem value="uploaded">Subir Lista (VCard, Excel, Texto)</SelectItem>
+                        </>
+                      ) : (
+                        <>
+                          <SelectItem value="conversation">Contatos em Janela de 24h (Grátis)</SelectItem>
+                        </>
+                      )}
                     </SelectContent>
                   </Select>
                 </div>
+
               </div>
 
               {targetType === 'tag' && (
