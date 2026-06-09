@@ -206,8 +206,38 @@ export default function CRMPanel({ callProxy, onSelectContact }: CRMPanelProps) 
     const matchSearch = (c.name || c.phone).toLowerCase().includes(searchTerm.toLowerCase());
     const matchStatus = filterStatus === 'all' || c.crm_status === filterStatus;
     const matchHot = !filterHot || c.is_hot_lead;
-    return matchSearch && matchStatus && matchHot;
+    const isUnnamed = !c.name || c.name === c.phone;
+    const matchUnnamedFilter = showUnnamedContacts ? isUnnamed : !isUnnamed;
+    return matchSearch && matchStatus && matchHot && (showUnnamedContacts ? isUnnamed : true);
   });
+
+  const unnamedContacts = contacts.filter(c => !c.name || c.name === c.phone);
+
+  const handleBulkUpdate = async () => {
+    if (!bulkName.trim() || selectedContactIds.length === 0) return;
+    setIsBulkNaming(true);
+    try {
+      await callProxy('update-contacts-bulk', {
+        contactIds: selectedContactIds,
+        name: bulkName.trim()
+      });
+      toast({ title: `${selectedContactIds.length} contatos atualizados!` });
+      await loadContacts();
+      setSelectedContactIds([]);
+      setBulkName('');
+    } catch (e) {
+      toast({ title: 'Erro ao atualizar em massa', variant: 'destructive' });
+    } finally {
+      setIsBulkNaming(false);
+    }
+  };
+
+  const toggleSelectContact = (id: string) => {
+    setSelectedContactIds(prev => 
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+
 
   const stats = {
     total: contacts.length,
