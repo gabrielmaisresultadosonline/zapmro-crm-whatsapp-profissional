@@ -7232,7 +7232,7 @@ const CRM = () => {
                           {contact.last_message_received_at && (
                             <div className={cn(
                               "ml-auto w-2 h-2 rounded-full",
-                              (Date.now() - new Date(contact.last_message_received_at).getTime() < 24 * 60 * 60 * 1000) ? "bg-emerald-500" : "bg-muted-foreground/30"
+                              (Date.now() - new Date(contact.last_message_received_at).getTime() < 24 * 60 * 60 * 1000) ? "bg-emerald-500" : "bg-zinc-300"
                             )} title={(Date.now() - new Date(contact.last_message_received_at).getTime() < 24 * 60 * 60 * 1000) ? "Janela Ativa" : "Janela Expirada"} />
                           )}
                         </div>
