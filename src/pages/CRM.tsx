@@ -7243,7 +7243,7 @@ const CRM = () => {
 
               {selectedCampaignType === 'batch' && (
                 <div className="space-y-3">
-                  <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center justify-between">
+                  <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500 flex items-center justify-between">
                     <span>1. Selecionar Massa de Contatos</span>
                     <span className="text-primary">{selectedContactsForScheduling.length} selecionados</span>
                   </Label>
