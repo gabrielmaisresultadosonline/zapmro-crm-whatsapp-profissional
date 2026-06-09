@@ -3690,25 +3690,30 @@ const CRM = () => {
                             </AccordionTrigger>
                             <AccordionContent>
                                <div className="flex gap-1.5 pb-2 pt-1 overflow-x-auto scrollbar-hide py-1">
-                                {['all', ...(kanbanStatuses.length > 0 ? kanbanStatuses.map(s => s.value) : ['new', 'responded', 'human', 'qualified', 'closed', 'lost'])].map(s => (
-                                  <Badge 
-                                    key={s} 
-                                    variant={statusFilter === s ? 'default' : 'outline'} 
-                                    style={{ 
-                                      height: `${18 * ((metaSettings.tag_size || 100) / 100)}px`, 
-                                      fontSize: `${9 * ((metaSettings.tag_size || 100) / 100)}px`,
-                                      backgroundColor: statusFilter === s ? '#00a884' : undefined,
-                                      borderColor: statusFilter === s ? '#00a884' : undefined
-                                    }}
-                                    className={cn(
-                                      "cursor-pointer capitalize whitespace-nowrap px-3 font-bold transition-all rounded-full shrink-0",
-                                      statusFilter === s ? "text-white shadow-md scale-105" : "hover:bg-muted"
-                                    )}
-                                    onClick={() => setStatusFilter(s)}
-                                  >
-                                    {s === 'all' ? '🚀 Todos' : getStatusLabel(s)}
-                                  </Badge>
-                                ))}
+                                {['all', ...(kanbanStatuses.length > 0 ? kanbanStatuses.map(s => s.value) : ['new', 'responded', 'human', 'qualified', 'closed', 'lost'])].map(s => {
+                                  const statusObj = kanbanStatuses.find(status => status.value === s);
+                                  const label = s === 'all' ? '🚀 Todos' : (statusObj ? statusObj.label : s.toUpperCase());
+                                  
+                                  return (
+                                    <Badge 
+                                      key={s} 
+                                      variant={statusFilter === s ? 'default' : 'outline'} 
+                                      style={{ 
+                                        height: `${18 * ((metaSettings.tag_size || 100) / 100)}px`, 
+                                        fontSize: `${9 * ((metaSettings.tag_size || 100) / 100)}px`,
+                                        backgroundColor: statusFilter === s ? '#00a884' : undefined,
+                                        borderColor: statusFilter === s ? '#00a884' : undefined
+                                      }}
+                                      className={cn(
+                                        "cursor-pointer capitalize whitespace-nowrap px-3 font-bold transition-all rounded-full shrink-0",
+                                        statusFilter === s ? "text-white shadow-md scale-105" : "hover:bg-muted"
+                                      )}
+                                      onClick={() => setStatusFilter(s)}
+                                    >
+                                      {label}
+                                    </Badge>
+                                  );
+                                })}
                               </div>
                             </AccordionContent>
                           </AccordionItem>
