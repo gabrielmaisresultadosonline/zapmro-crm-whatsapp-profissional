@@ -355,23 +355,23 @@ const Broadcaster = ({ templates, flows, contacts, statuses }: BroadcasterProps)
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-8">
         <div className="lg:col-span-8 space-y-4 md:space-y-6">
-          {/* Automação de 24h Trigger */}
-          <Card className="rounded-2xl shadow-xl border border-white/5 overflow-hidden bg-[#111b21]">
-            <CardHeader className="bg-[#202c33] border-b border-white/5 p-4 flex flex-row items-center justify-between">
-              <div className="space-y-1">
-                <CardTitle className="text-base md:text-lg flex items-center gap-2 text-[#00a884]">
-                  <Clock className="w-5 h-5" /> Automação de Janela (24h)
-                </CardTitle>
-                <CardDescription className="text-[10px] md:text-xs">
-                  Disparar mensagem automática antes de expirar as 24h de conversa grátis.
-                </CardDescription>
-              </div>
-              <Switch 
-                checked={countdownEnabled} 
-                onCheckedChange={setCountdownEnabled}
-                className="data-[state=checked]:bg-[#00a884]"
-              />
-            </CardHeader>
+          <Accordion type="single" collapsible className="w-full space-y-4">
+            {/* Automação de 24h Trigger */}
+            <AccordionItem value="countdown" className="border-none">
+              <Card className="rounded-2xl shadow-xl border border-white/5 overflow-hidden bg-[#111b21]">
+                <CardHeader className="bg-[#202c33] border-b border-white/5 p-0 flex flex-row items-center justify-between">
+                  <AccordionTrigger className="flex-1 p-4 hover:no-underline [&[data-state=open]>div>h3]:text-[#00a884] transition-all">
+                    <div className="space-y-1 text-left">
+                      <CardTitle className="text-base md:text-lg flex items-center gap-2 text-[#00a884]">
+                        <Clock className="w-5 h-5" /> Automação de Janela (24h)
+                      </CardTitle>
+                      <CardDescription className="text-[10px] md:text-xs">
+                        Disparar mensagem automática antes de expirar as 24h de conversa grátis.
+                      </CardDescription>
+                    </div>
+                  </AccordionTrigger>
+                </CardHeader>
+                <AccordionContent>
             <CardContent className="p-4 md:p-6 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
