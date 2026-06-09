@@ -7304,7 +7304,7 @@ const CRM = () => {
                     onChange={e => setContactListText(e.target.value)}
                   />
                   <div className="flex items-center gap-2 p-3 rounded-xl bg-zinc-100 border border-zinc-200">
-                    <AlertCircle className="w-4 h-4 text-primary shrink-0" />
+                    <AlertCircle className="w-4 h-4 text-zinc-400 shrink-0" />
                     <p className="text-[10px] text-zinc-500">
                       Os números serão cadastrados automaticamente se não existirem. Formatos aceitos: <span className="font-bold">5511999999999</span> ou <span className="font-bold">vCard (.vcf)</span>.
                     </p>
