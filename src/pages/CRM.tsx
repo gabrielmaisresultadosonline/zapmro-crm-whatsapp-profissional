@@ -5299,6 +5299,20 @@ const CRM = () => {
                                 />
                               </div>
                             </div>
+
+                            <div className="flex items-center justify-between pt-4 border-t">
+                              <div className="flex items-center gap-2 px-3 py-1 bg-muted/50 rounded-lg">
+                                <Label className="text-xs font-bold">Ativar</Label>
+                                <Switch 
+                                  checked={metaSettings.business_hours_enabled}
+                                  onCheckedChange={(val) => setMetaSettings({...metaSettings, business_hours_enabled: val})}
+                                />
+                              </div>
+                              <Button onClick={handleSaveSettings} disabled={saving} size="sm" className="bg-[#00875A] hover:bg-[#00875A]/90">
+                                {saving ? <RefreshCcw className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                                Salvar Horário
+                              </Button>
+                            </div>
                           </CardContent>
                         </AccordionContent>
                       </Card>
