@@ -6159,175 +6159,172 @@ const CRM = () => {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-                    <Card className="shadow-sm border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden hover:shadow-md transition-shadow bg-card">
-                      <CardHeader className="bg-muted/30 border-b">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 rounded-lg bg-primary/10 text-primary"><MessageSquare className="w-5 h-5" /></div>
-                          <div>
-                            <CardTitle className="text-lg">WhatsApp API</CardTitle>
-                            <CardDescription className="text-[11px]">Conecte com a plataforma Business da Meta.</CardDescription>
+                  <div className="space-y-4">
+                    <Accordion type="single" collapsible className="w-full space-y-4">
+                      <AccordionItem value="whatsapp-api" className="border rounded-2xl bg-card overflow-hidden shadow-sm">
+                        <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-muted/30 transition-colors">
+                          <div className="flex items-center gap-3 text-left">
+                            <div className="p-2 rounded-lg bg-primary/10 text-primary"><MessageSquare className="w-5 h-5" /></div>
+                            <div>
+                              <CardTitle className="text-lg">WhatsApp API</CardTitle>
+                              <CardDescription className="text-[11px]">Conecte com a plataforma Business da Meta.</CardDescription>
+                            </div>
                           </div>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="p-4 md:p-6 space-y-5">
-                        <div className="flex items-center gap-2 pt-2">
-                          <div className={cn(
-                            "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest flex items-center gap-2",
-                            (metaSettings.meta_access_token && metaSettings.meta_phone_number_id && metaSettings.meta_waba_id)
-                              ? "bg-red-500 text-white animate-pulse" 
-                              : "bg-muted text-muted-foreground"
-                          )}>
-                            <div className={cn("w-2 h-2 rounded-full", (metaSettings.meta_access_token && metaSettings.meta_phone_number_id && metaSettings.meta_waba_id) ? "bg-white" : "bg-muted-foreground")} />
-                            {(metaSettings.meta_access_token && metaSettings.meta_phone_number_id && metaSettings.meta_waba_id) ? "ATIVADO LIGADO" : "AGUARDANDO CONFIGURAÇÃO"}
+                        </AccordionTrigger>
+                        <AccordionContent className="px-6 pb-6 pt-2 space-y-5 border-t">
+                          <div className="flex items-center gap-2 pt-2">
+                            <div className={cn(
+                              "px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest flex items-center gap-2",
+                              (metaSettings.meta_access_token && metaSettings.meta_phone_number_id && metaSettings.meta_waba_id)
+                                ? "bg-red-500 text-white animate-pulse" 
+                                : "bg-muted text-muted-foreground"
+                            )}>
+                              <div className={cn("w-2 h-2 rounded-full", (metaSettings.meta_access_token && metaSettings.meta_phone_number_id && metaSettings.meta_waba_id) ? "bg-white" : "bg-muted-foreground")} />
+                              {(metaSettings.meta_access_token && metaSettings.meta_phone_number_id && metaSettings.meta_waba_id) ? "ATIVADO LIGADO" : "AGUARDANDO CONFIGURAÇÃO"}
+                            </div>
                           </div>
-                        </div>
 
-                        {(metaSettings.meta_display_phone_number || metaSettings.meta_verified_name) && (
-                          <div className="mt-2 p-3 rounded-xl bg-green-500/10 border border-green-500/30">
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-green-600 dark:text-green-400 mb-1">Número conectado</p>
-                            {metaSettings.meta_display_phone_number && (
-                              <p className="text-sm font-semibold text-foreground">{metaSettings.meta_display_phone_number}</p>
-                            )}
-                            {metaSettings.meta_verified_name && (
-                              <p className="text-xs text-muted-foreground">{metaSettings.meta_verified_name}</p>
-                            )}
-                          </div>
-                        )}
+                          {(metaSettings.meta_display_phone_number || metaSettings.meta_verified_name) && (
+                            <div className="mt-2 p-3 rounded-xl bg-green-500/10 border border-green-500/30">
+                              <p className="text-[10px] font-bold uppercase tracking-widest text-green-600 dark:text-green-400 mb-1">Número conectado</p>
+                              {metaSettings.meta_display_phone_number && (
+                                <p className="text-sm font-semibold text-foreground">{metaSettings.meta_display_phone_number}</p>
+                              )}
+                              {metaSettings.meta_verified_name && (
+                                <p className="text-xs text-muted-foreground">{metaSettings.meta_verified_name}</p>
+                              )}
+                            </div>
+                          )}
 
-                        {!(metaSettings.meta_access_token && metaSettings.meta_phone_number_id && metaSettings.meta_waba_id) && (
-                          <div className="pt-3 border-t border-border/60 space-y-2">
-                            <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-                              <Facebook className="w-3 h-3" /> Embedded Signup (Meta Tech Provider)
-                            </Label>
-                            <p className="text-[11px] text-muted-foreground">
-                              Conecte uma conta WhatsApp Business diretamente pelo Facebook — preenche WABA, Phone Number ID e Access Token automaticamente.
-                            </p>
-                            <Button
-                              type="button"
-                              className="w-full h-11 rounded-xl bg-[#1877F2] hover:bg-[#1668d8] text-white font-semibold"
-                              onClick={() => startEmbeddedSignup()}
-                            >
-                              <Facebook className="w-4 h-4 mr-2" />
-                              Conectar com Facebook
-                            </Button>
-                          </div>
-                        )}
-                      </CardContent>
-                    </Card>
-                    
-                    {/* VPS Transcoder section removed as it's now internal */}
+                          {!(metaSettings.meta_access_token && metaSettings.meta_phone_number_id && metaSettings.meta_waba_id) && (
+                            <div className="pt-3 border-t border-border/60 space-y-2">
+                              <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                                <Facebook className="w-3 h-3" /> Embedded Signup (Meta Tech Provider)
+                              </Label>
+                              <p className="text-[11px] text-muted-foreground">
+                                Conecte uma conta WhatsApp Business diretamente pelo Facebook — preenche WABA, Phone Number ID e Access Token automaticamente.
+                              </p>
+                              <Button
+                                type="button"
+                                className="w-full h-11 rounded-xl bg-[#1877F2] hover:bg-[#1668d8] text-white font-semibold"
+                                onClick={() => startEmbeddedSignup()}
+                              >
+                                <Facebook className="w-4 h-4 mr-2" />
+                                Conectar com Facebook
+                              </Button>
+                            </div>
+                          )}
+                        </AccordionContent>
+                      </AccordionItem>
 
+                      <AccordionItem value="payments" className="border rounded-2xl bg-card overflow-hidden shadow-sm">
+                        <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-muted/30 transition-colors">
+                          <div className="flex items-center gap-3 text-left">
+                            <div className="p-2 rounded-lg bg-amber-100 text-amber-700"><CreditCard className="w-5 h-5" /></div>
+                            <div>
+                              <CardTitle className="text-lg">Saldo e Pagamentos Meta</CardTitle>
+                              <CardDescription className="text-[11px]">Gerencie seus créditos para disparos em massa.</CardDescription>
+                            </div>
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="px-6 pb-6 pt-2 space-y-4 border-t">
+                          <div className="bg-amber-100/50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-4 rounded-xl flex items-start gap-3 mt-2">
+                            <div className="w-8 h-8 rounded-full bg-amber-200 dark:bg-amber-800 flex items-center justify-center shrink-0">
+                              <Zap className="w-4 h-4 text-amber-700 dark:text-amber-400 fill-amber-700 dark:fill-amber-400" />
+                            </div>
+                            <div className="space-y-1">
+                              <h4 className="text-sm font-bold text-amber-800 dark:text-amber-400">Aviso sobre Custos de Envio</h4>
+                              <p className="text-xs text-amber-700/80 dark:text-amber-400/70 leading-relaxed">
+                                Para realizar disparos em massa (Broadcasting) e agendamentos, a Meta cobra uma taxa por mensagem enviada.
+                                Em média, o custo de uma mensagem de marketing é de <strong>R$ 0,33</strong>.
+                              </p>
+                              <p className="text-[11px] text-amber-700/80 dark:text-amber-400/70">
+                                Adicione saldo ou um cartão de crédito na sua conta da Meta para evitar falhas no envio.
+                              </p>
+                            </div>
+                          </div>
 
+                          <Button 
+                            className="w-full h-12 bg-[#00875A] hover:bg-[#00875A]/90 text-white font-bold rounded-xl shadow-lg shadow-[#00875A]/20 gap-2"
+                            onClick={() => {
+                              const wabaId = metaSettings.meta_waba_id;
+                              if (wabaId) {
+                                window.open(`https://business.facebook.com/wa/static/shipping-and-payment/?waba_id=${wabaId}`, '_blank');
+                              } else {
+                                toast({ 
+                                  title: "WABA ID não configurado", 
+                                  description: "Conecte sua conta do WhatsApp Business primeiro para acessar os pagamentos.",
+                                  variant: "destructive"
+                                });
+                              }
+                            }}
+                          >
+                            <CreditCard className="w-5 h-5" />
+                            Ir para Central de Pagamentos Meta
+                          </Button>
+                        </AccordionContent>
+                      </AccordionItem>
 
+                      <AccordionItem value="interface" className="border rounded-2xl bg-card overflow-hidden shadow-sm">
+                        <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-muted/30 transition-colors">
+                          <div className="flex items-center gap-3 text-left">
+                            <div className="p-2 rounded-lg bg-primary/10 text-primary"><Zap className="w-5 h-5" /></div>
+                            <div>
+                              <CardTitle className="text-lg">Customização da Interface</CardTitle>
+                              <CardDescription className="text-[11px]">Ajuste o tamanho dos botões e etiquetas.</CardDescription>
+                            </div>
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="px-6 pb-6 pt-2 space-y-8 border-t">
+                          <div className="space-y-4 mt-2">
+                            <div className="flex justify-between items-center">
+                              <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Tamanho dos Atalhos (Modelos/Fluxos)</Label>
+                              <Badge variant="secondary" className="text-[10px]">{metaSettings.shortcut_size}%</Badge>
+                            </div>
+                            <div className="flex items-center gap-4">
+                              <span className="text-[10px] text-muted-foreground">Menor</span>
+                              <input 
+                                type="range" 
+                                min="70" 
+                                max="150" 
+                                step="5"
+                                value={metaSettings.shortcut_size || 100} 
+                                onChange={e => setMetaSettings({...metaSettings, shortcut_size: parseInt(e.target.value)})}
+                                className="flex-1 h-1.5 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
+                              />
+                              <span className="text-[10px] text-muted-foreground">Maior</span>
+                            </div>
+                            <div className="flex gap-2">
+                              <Button variant="outline" size="sm" style={{ height: `${20 * ((metaSettings.shortcut_size || 100) / 100)}px`, fontSize: `${9 * ((metaSettings.shortcut_size || 100) / 100)}px` }} className="px-2 rounded-md border-primary/20 bg-primary/5 text-primary pointer-events-none">Exemplo Atalho</Button>
+                            </div>
+                          </div>
 
-                    <Card className="shadow-sm border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden hover:shadow-md transition-shadow bg-card">
-                      <CardHeader className="bg-amber-50 dark:bg-amber-900/10 border-b">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 rounded-lg bg-amber-100 text-amber-700"><CreditCard className="w-5 h-5" /></div>
-                          <div>
-                            <CardTitle className="text-lg">Saldo e Pagamentos Meta</CardTitle>
-                            <CardDescription className="text-[11px]">Gerencie seus créditos para disparos em massa.</CardDescription>
+                          <div className="space-y-4">
+                            <div className="flex justify-between items-center">
+                              <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Tamanho das Etiquetas (Status/Filtros)</Label>
+                              <Badge variant="secondary" className="text-[10px]">{metaSettings.tag_size}%</Badge>
+                            </div>
+                            <div className="flex items-center gap-4">
+                              <span className="text-[10px] text-muted-foreground">Menor</span>
+                              <input 
+                                type="range" 
+                                min="70" 
+                                max="150" 
+                                step="5"
+                                value={metaSettings.tag_size || 100} 
+                                onChange={e => setMetaSettings({...metaSettings, tag_size: parseInt(e.target.value)})}
+                                className="flex-1 h-1.5 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
+                              />
+                              <span className="text-[10px] text-muted-foreground">Maior</span>
+                            </div>
+                            <div className="flex gap-2">
+                              <Badge variant="outline" style={{ height: `${14 * ((metaSettings.tag_size || 100) / 100)}px`, fontSize: `${8 * ((metaSettings.tag_size || 100) / 100)}px` }} className="px-1.2 font-bold pointer-events-none">Exemplo Etiqueta</Badge>
+                            </div>
                           </div>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="p-4 md:p-6 space-y-4">
-                        <div className="bg-amber-100/50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-4 rounded-xl flex items-start gap-3">
-                          <div className="w-8 h-8 rounded-full bg-amber-200 dark:bg-amber-800 flex items-center justify-center shrink-0">
-                            <Zap className="w-4 h-4 text-amber-700 dark:text-amber-400 fill-amber-700 dark:fill-amber-400" />
-                          </div>
-                          <div className="space-y-1">
-                            <h4 className="text-sm font-bold text-amber-800 dark:text-amber-400">Aviso sobre Custos de Envio</h4>
-                            <p className="text-xs text-amber-700/80 dark:text-amber-400/70 leading-relaxed">
-                              Para realizar disparos em massa (Broadcasting) e agendamentos, a Meta cobra uma taxa por mensagem enviada.
-                              Em média, o custo de uma mensagem de marketing é de <strong>R$ 0,33</strong>.
-                            </p>
-                            <p className="text-[11px] text-amber-700/80 dark:text-amber-400/70">
-                              Adicione saldo ou um cartão de crédito na sua conta da Meta para evitar falhas no envio.
-                            </p>
-                          </div>
-                        </div>
-
-                        <Button 
-                          className="w-full h-12 bg-[#00875A] hover:bg-[#00875A]/90 text-white font-bold rounded-xl shadow-lg shadow-[#00875A]/20 gap-2"
-                          onClick={() => {
-                            const wabaId = metaSettings.meta_waba_id;
-                            if (wabaId) {
-                              window.open(`https://business.facebook.com/wa/static/shipping-and-payment/?waba_id=${wabaId}`, '_blank');
-                            } else {
-                              toast({ 
-                                title: "WABA ID não configurado", 
-                                description: "Conecte sua conta do WhatsApp Business primeiro para acessar os pagamentos.",
-                                variant: "destructive"
-                              });
-                            }
-                          }}
-                        >
-                          <CreditCard className="w-5 h-5" />
-                          Ir para Central de Pagamentos Meta
-                        </Button>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="shadow-sm border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden hover:shadow-md transition-shadow bg-card">
-                      <CardHeader className="bg-muted/30 border-b">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 rounded-lg bg-primary/10 text-primary"><Zap className="w-5 h-5" /></div>
-                          <div>
-                            <CardTitle className="text-lg">Customização da Interface</CardTitle>
-                            <CardDescription className="text-[11px]">Ajuste o tamanho dos botões e etiquetas.</CardDescription>
-                          </div>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="p-4 md:p-6 space-y-8">
-                        <div className="space-y-4">
-                          <div className="flex justify-between items-center">
-                            <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Tamanho dos Atalhos (Modelos/Fluxos)</Label>
-                            <Badge variant="secondary" className="text-[10px]">{metaSettings.shortcut_size}%</Badge>
-                          </div>
-                          <div className="flex items-center gap-4">
-                            <span className="text-[10px] text-muted-foreground">Menor</span>
-                            <input 
-                              type="range" 
-                              min="70" 
-                              max="150" 
-                              step="5"
-                              value={metaSettings.shortcut_size || 100} 
-                              onChange={e => setMetaSettings({...metaSettings, shortcut_size: parseInt(e.target.value)})}
-                              className="flex-1 h-1.5 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
-                            />
-                            <span className="text-[10px] text-muted-foreground">Maior</span>
-                          </div>
-                          <div className="flex gap-2">
-                            <Button variant="outline" size="sm" style={{ height: `${20 * ((metaSettings.shortcut_size || 100) / 100)}px`, fontSize: `${9 * ((metaSettings.shortcut_size || 100) / 100)}px` }} className="px-2 rounded-md border-primary/20 bg-primary/5 text-primary pointer-events-none">Exemplo Atalho</Button>
-                          </div>
-                        </div>
-
-                        <div className="space-y-4">
-                          <div className="flex justify-between items-center">
-                            <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Tamanho das Etiquetas (Status/Filtros)</Label>
-                            <Badge variant="secondary" className="text-[10px]">{metaSettings.tag_size}%</Badge>
-                          </div>
-                          <div className="flex items-center gap-4">
-                            <span className="text-[10px] text-muted-foreground">Menor</span>
-                            <input 
-                              type="range" 
-                              min="70" 
-                              max="150" 
-                              step="5"
-                              value={metaSettings.tag_size || 100} 
-                              onChange={e => setMetaSettings({...metaSettings, tag_size: parseInt(e.target.value)})}
-                              className="flex-1 h-1.5 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
-                            />
-                            <span className="text-[10px] text-muted-foreground">Maior</span>
-                          </div>
-                          <div className="flex gap-2">
-                            <Badge variant="outline" style={{ height: `${14 * ((metaSettings.tag_size || 100) / 100)}px`, fontSize: `${8 * ((metaSettings.tag_size || 100) / 100)}px` }} className="px-1.2 font-bold pointer-events-none">Exemplo Etiqueta</Badge>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+                        </AccordionContent>
+                      </AccordionItem>
+                    </Accordion>
                   </div>
-
 
                   <div className="flex justify-end pt-4">
                     <Button onClick={handleSaveSettings} disabled={saving} size="lg" className="px-10 h-14 rounded-2xl bg-primary text-white font-bold shadow-xl shadow-primary/20 hover:scale-[1.02] transition-transform">
