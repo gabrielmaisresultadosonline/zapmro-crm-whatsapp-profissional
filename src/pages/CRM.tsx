@@ -5154,7 +5154,7 @@ const CRM = () => {
 
                     <AccordionItem value="triggers" className="border-none">
                       <Card className="rounded-2xl shadow-sm border overflow-hidden">
-                        <CardHeader className="bg-amber-50 dark:bg-amber-900/10 border-b flex flex-row items-center justify-between p-0">
+                        <CardHeader className="bg-amber-50 dark:bg-amber-900/10 border-b p-0">
                           <AccordionTrigger className="flex-1 px-6 py-4 hover:no-underline [&[data-state=open]>div>h3]:text-amber-700 transition-all">
                             <div className="flex flex-col items-start text-left gap-1">
                               <CardTitle className="text-lg flex items-center gap-2 text-amber-700 dark:text-amber-500">
@@ -5163,12 +5163,6 @@ const CRM = () => {
                               <CardDescription>Quando e como o agente entra em ação</CardDescription>
                             </div>
                           </AccordionTrigger>
-                          <div className="px-6 shrink-0">
-                            <Button onClick={handleSaveSettings} disabled={saving} size="sm" className="bg-primary hover:bg-primary/90">
-                              {saving ? <RefreshCcw className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-                              Salvar Gatilhos
-                            </Button>
-                          </div>
                         </CardHeader>
                         <AccordionContent>
                           <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8 pt-6">
