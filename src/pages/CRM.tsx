@@ -1669,7 +1669,8 @@ const CRM = () => {
         value: value,
         color: newStatusData.color,
         sort_order: sortOrder,
-        is_starred: false
+        is_starred: false,
+        user_id: (await supabase.auth.getUser()).data.user?.id
       }]);
 
       if (error) throw error;
