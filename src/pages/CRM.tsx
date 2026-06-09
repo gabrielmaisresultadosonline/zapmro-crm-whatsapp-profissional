@@ -6353,7 +6353,54 @@ const CRM = () => {
                     </Card>
 
                     <Card className="shadow-sm border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden hover:shadow-md transition-shadow bg-card">
+                      <CardHeader className="bg-amber-50 dark:bg-amber-900/10 border-b">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 rounded-lg bg-amber-100 text-amber-700"><CreditCard className="w-5 h-5" /></div>
+                          <div>
+                            <CardTitle className="text-lg">Saldo e Pagamentos Meta</CardTitle>
+                            <CardDescription className="text-[11px]">Gerencie seus créditos para disparos em massa.</CardDescription>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="p-4 md:p-6 space-y-4">
+                        <div className="bg-amber-100/50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-4 rounded-xl flex items-start gap-3">
+                          <div className="w-8 h-8 rounded-full bg-amber-200 dark:bg-amber-800 flex items-center justify-center shrink-0">
+                            <Zap className="w-4 h-4 text-amber-700 dark:text-amber-400 fill-amber-700 dark:fill-amber-400" />
+                          </div>
+                          <div className="space-y-1">
+                            <h4 className="text-sm font-bold text-amber-800 dark:text-amber-400">Aviso sobre Custos de Envio</h4>
+                            <p className="text-xs text-amber-700/80 dark:text-amber-400/70 leading-relaxed">
+                              Para realizar disparos em massa (Broadcasting) e agendamentos, a Meta cobra uma taxa por mensagem enviada.
+                              Em média, o custo de uma mensagem de marketing é de <strong>R$ 0,33</strong>.
+                            </p>
+                            <p className="text-[11px] text-amber-700/80 dark:text-amber-400/70">
+                              Adicione saldo ou um cartão de crédito na sua conta da Meta para evitar falhas no envio.
+                            </p>
+                          </div>
+                        </div>
 
+                        <Button 
+                          className="w-full h-12 bg-[#00875A] hover:bg-[#00875A]/90 text-white font-bold rounded-xl shadow-lg shadow-[#00875A]/20 gap-2"
+                          onClick={() => {
+                            const wabaId = metaSettings.meta_waba_id;
+                            if (wabaId) {
+                              window.open(`https://business.facebook.com/wa/static/shipping-and-payment/?waba_id=${wabaId}`, '_blank');
+                            } else {
+                              toast({ 
+                                title: "WABA ID não configurado", 
+                                description: "Conecte sua conta do WhatsApp Business primeiro para acessar os pagamentos.",
+                                variant: "destructive"
+                              });
+                            }
+                          }}
+                        >
+                          <CreditCard className="w-5 h-5" />
+                          Ir para Central de Pagamentos Meta
+                        </Button>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="shadow-sm border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden hover:shadow-md transition-shadow bg-card">
                       <CardHeader className="bg-muted/30 border-b">
                         <div className="flex items-center gap-3">
                           <div className="p-2 rounded-lg bg-primary/10 text-primary"><Zap className="w-5 h-5" /></div>
