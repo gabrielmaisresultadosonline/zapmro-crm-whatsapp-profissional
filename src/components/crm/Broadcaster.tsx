@@ -372,7 +372,21 @@ const Broadcaster = ({ templates, flows, contacts, statuses }: BroadcasterProps)
                   </AccordionTrigger>
                 </CardHeader>
                 <AccordionContent>
-            <CardContent className="p-4 md:p-6 space-y-4">
+                  <CardContent className="p-4 md:p-6 space-y-4">
+                    <div className="flex items-center justify-between p-3 bg-[#202c33] rounded-xl mb-4 border border-white/5">
+                      <div className="space-y-0.5">
+                        <Label className="text-sm font-bold flex items-center gap-2 text-white">
+                          Status da Automação
+                        </Label>
+                        <p className="text-[10px] text-white/40">Ativar ou desativar o disparo automático.</p>
+                      </div>
+                      <Switch 
+                        checked={countdownEnabled} 
+                        onCheckedChange={setCountdownEnabled}
+                        className="data-[state=checked]:bg-[#00a884]"
+                      />
+                    </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="text-xs md:text-sm">Tempo Restante (minutos)</Label>
