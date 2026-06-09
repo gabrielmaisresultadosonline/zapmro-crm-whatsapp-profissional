@@ -666,9 +666,13 @@ const Broadcaster = ({ templates, flows, contacts, statuses }: BroadcasterProps)
                 {loading ? <RefreshCcw className="w-5 h-5 animate-spin" /> : <Play className="w-5 h-5" />}
                 INICIAR DISPAROS AGORA
               </Button>
-            </CardContent>
-          </Card>
+                  </CardContent>
+                </AccordionContent>
+              </Card>
+            </AccordionItem>
+          </Accordion>
         </div>
+
 
         <div className="lg:col-span-4 space-y-4 md:space-y-6">
           <Card className="rounded-2xl shadow-xl border border-white/5 overflow-hidden bg-[#111b21] flex flex-col">
