@@ -3546,7 +3546,7 @@ const CRM = () => {
                         <h3 className="text-lg font-bold">Nenhuma etiqueta configurada</h3>
                         <p className="text-sm">Clique no botão "+" no topo para criar sua primeira etapa do Kanban.</p>
                       </div>
-                    ) : kanbanStatuses.map(status => (
+                    ) : kanbanStatuses.filter(s => s.value !== 'human' && s.value !== 'new').map(status => (
                       <div 
                         key={status.value} 
                         className="w-72 md:w-80 shrink-0 flex flex-col bg-[#f0f2f5] dark:bg-[#111b21] rounded-2xl border-none shadow-md group/column transition-all hover:shadow-xl snap-center overflow-hidden" 
@@ -3689,7 +3689,7 @@ const CRM = () => {
                             </AccordionTrigger>
                             <AccordionContent>
                                <div className="flex gap-1.5 pb-2 pt-1 overflow-x-auto scrollbar-hide py-1">
-                                {['all', ...kanbanStatuses.map(s => s.value)].map(s => {
+                                {['all', ...kanbanStatuses.filter(s => s.value !== 'human' && s.value !== 'new').map(s => s.value)].map(s => {
                                   const statusObj = kanbanStatuses.find(status => status.value === s);
                                   const label = s === 'all' ? '🚀 Todos' : (statusObj ? statusObj.label : s.toUpperCase());
                                   
@@ -3782,7 +3782,7 @@ const CRM = () => {
                                         contact.last_interaction && (!contact.last_read_at || new Date(contact.last_interaction) > new Date(contact.last_read_at)) && "ring-2 ring-[#25D366]/20"
                                       )}
                                     >
-                                      {getStatusLabel(contact.status)}
+                                      {statusFilter === 'all' && (contact.status === 'human' || contact.status === 'new') ? 'Atendimento' : getStatusLabel(contact.status)}
                                     </Badge>
                                     
                                     {contact.last_message_received_at && (() => {
