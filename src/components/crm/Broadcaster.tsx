@@ -33,6 +33,8 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { Switch } from "@/components/ui/switch";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+
 
 
 interface BroadcasterProps {
@@ -339,6 +341,7 @@ const Broadcaster = ({ templates, flows, contacts, statuses }: BroadcasterProps)
 
   return (
     <div className="w-full max-w-7xl mx-auto space-y-4 md:space-y-6 pb-24 md:pb-8 p-3 md:p-8 animate-in fade-in duration-500 overflow-x-hidden">
+
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[#111b21] p-4 md:p-6 rounded-2xl border border-white/5 shadow-2xl">
         <div className="min-w-0 flex-1">
           <h2 className="text-xl md:text-3xl font-bold tracking-tight text-[#e9edef] truncate">Disparador de Mensagens</h2>
@@ -353,24 +356,38 @@ const Broadcaster = ({ templates, flows, contacts, statuses }: BroadcasterProps)
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-8">
         <div className="lg:col-span-8 space-y-4 md:space-y-6">
-          {/* Automação de 24h Trigger */}
-          <Card className="rounded-2xl shadow-xl border border-white/5 overflow-hidden bg-[#111b21]">
-            <CardHeader className="bg-[#202c33] border-b border-white/5 p-4 flex flex-row items-center justify-between">
-              <div className="space-y-1">
-                <CardTitle className="text-base md:text-lg flex items-center gap-2 text-[#00a884]">
-                  <Clock className="w-5 h-5" /> Automação de Janela (24h)
-                </CardTitle>
-                <CardDescription className="text-[10px] md:text-xs">
-                  Disparar mensagem automática antes de expirar as 24h de conversa grátis.
-                </CardDescription>
-              </div>
-              <Switch 
-                checked={countdownEnabled} 
-                onCheckedChange={setCountdownEnabled}
-                className="data-[state=checked]:bg-[#00a884]"
-              />
-            </CardHeader>
-            <CardContent className="p-4 md:p-6 space-y-4">
+          <Accordion type="single" collapsible className="w-full space-y-4">
+            {/* Automação de 24h Trigger */}
+            <AccordionItem value="countdown" className="border-none">
+              <Card className="rounded-2xl shadow-xl border border-white/5 overflow-hidden bg-[#111b21]">
+                <CardHeader className="bg-[#202c33] border-b border-white/5 p-0 flex flex-row items-center justify-between">
+                  <AccordionTrigger className="flex-1 p-4 hover:no-underline [&[data-state=open]>div>h3]:text-[#00a884] transition-all">
+                    <div className="space-y-1 text-left">
+                      <CardTitle className="text-base md:text-lg flex items-center gap-2 text-[#00a884]">
+                        <Clock className="w-5 h-5" /> Automação de Janela (24h)
+                      </CardTitle>
+                      <CardDescription className="text-[10px] md:text-xs">
+                        Disparar mensagem automática antes de expirar as 24h de conversa grátis.
+                      </CardDescription>
+                    </div>
+                  </AccordionTrigger>
+                </CardHeader>
+                <AccordionContent>
+                  <CardContent className="p-4 md:p-6 space-y-4">
+                    <div className="flex items-center justify-between p-3 bg-[#202c33] rounded-xl mb-4 border border-white/5">
+                      <div className="space-y-0.5">
+                        <Label className="text-sm font-bold flex items-center gap-2 text-white">
+                          Status da Automação
+                        </Label>
+                        <p className="text-[10px] text-white/40">Ativar ou desativar o disparo automático.</p>
+                      </div>
+                      <Switch 
+                        checked={countdownEnabled} 
+                        onCheckedChange={setCountdownEnabled}
+                        className="data-[state=checked]:bg-[#00a884]"
+                      />
+                    </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="text-xs md:text-sm">Tempo Restante (minutos)</Label>
@@ -450,16 +467,25 @@ const Broadcaster = ({ templates, flows, contacts, statuses }: BroadcasterProps)
                 {savingCountdown ? <RefreshCcw className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
                 {countdownEnabled ? "ATIVAR E SALVAR CONFIGURAÇÃO" : "SALVAR CONFIGURAÇÃO"}
               </Button>
-            </CardContent>
-          </Card>
+                    </CardContent>
+                  </AccordionContent>
+                </Card>
+              </AccordionItem>
 
-          <Card className="rounded-2xl shadow-xl border border-white/5 overflow-hidden bg-[#111b21]">
-            <CardHeader className="bg-[#202c33] border-b border-white/5 p-4">
-              <CardTitle className="text-base md:text-lg flex items-center gap-2 text-[#00a884]">
-                <Plus className="w-5 h-5" /> Nova Campanha
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4 md:p-6 space-y-4 md:space-y-6">
+            <AccordionItem value="new-campaign" className="border-none">
+              <Card className="rounded-2xl shadow-xl border border-white/5 overflow-hidden bg-[#111b21]">
+                <CardHeader className="bg-[#202c33] border-b border-white/5 p-0">
+                  <AccordionTrigger className="flex-1 p-4 hover:no-underline [&[data-state=open]>div>h3]:text-[#00a884] transition-all">
+                    <div className="text-left">
+                      <CardTitle className="text-base md:text-lg flex items-center gap-2 text-[#00a884]">
+                        <Plus className="w-5 h-5" /> Nova Campanha
+                      </CardTitle>
+                    </div>
+                  </AccordionTrigger>
+                </CardHeader>
+                <AccordionContent>
+                  <CardContent className="p-4 md:p-6 space-y-4 md:space-y-6">
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div className="space-y-2">
                   <Label className="text-xs md:text-sm">Nome da Campanha</Label>
@@ -639,19 +665,29 @@ const Broadcaster = ({ templates, flows, contacts, statuses }: BroadcasterProps)
                 {loading ? <RefreshCcw className="w-5 h-5 animate-spin" /> : <Play className="w-5 h-5" />}
                 INICIAR DISPAROS AGORA
               </Button>
-            </CardContent>
-          </Card>
+                  </CardContent>
+                </AccordionContent>
+              </Card>
+            </AccordionItem>
+          </Accordion>
         </div>
 
+
         <div className="lg:col-span-4 space-y-4 md:space-y-6">
-          <Card className="rounded-2xl shadow-xl border border-white/5 overflow-hidden bg-[#111b21] flex flex-col">
-            <CardHeader className="bg-[#202c33] border-b border-white/5 p-4">
-              <CardTitle className="text-base md:text-lg flex items-center gap-2 text-[#00a884]">
-                <History className="w-5 h-5" /> Histórico Recente
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0 flex-1">
-              <ScrollArea className="h-[300px] lg:h-[500px]">
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="history" className="border-none">
+              <Card className="rounded-2xl shadow-xl border border-white/5 overflow-hidden bg-[#111b21] flex flex-col">
+                <CardHeader className="bg-[#202c33] border-b border-white/5 p-0">
+                  <AccordionTrigger className="p-4 hover:no-underline [&[data-state=open]>div>h3]:text-[#00a884] transition-all">
+                    <CardTitle className="text-base md:text-lg flex items-center gap-2 text-[#00a884]">
+                      <History className="w-5 h-5" /> Histórico Recente
+                    </CardTitle>
+                  </AccordionTrigger>
+                </CardHeader>
+                <AccordionContent>
+                  <CardContent className="p-0 flex-1">
+                    <ScrollArea className="h-[300px] lg:h-[500px]">
+
                 <div className="p-4 space-y-3">
                   {broadcasts.length === 0 ? (
                     <div className="text-center py-10">
@@ -705,9 +741,13 @@ const Broadcaster = ({ templates, flows, contacts, statuses }: BroadcasterProps)
                     ))
                   )}
                 </div>
-              </ScrollArea>
-            </CardContent>
-          </Card>
+                    </ScrollArea>
+                  </CardContent>
+                </AccordionContent>
+              </Card>
+            </AccordionItem>
+          </Accordion>
+
           
           {/* Tutorial Card */}
           <Card className="rounded-2xl shadow-xl border border-white/5 overflow-hidden bg-[#202c33]">
