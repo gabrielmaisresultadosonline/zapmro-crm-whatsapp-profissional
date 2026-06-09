@@ -4604,6 +4604,14 @@ const CRM = () => {
                                         <Button 
                                           variant="ghost" 
                                           size="icon" 
+                                          onClick={() => { setUploadType('image'); fileInputRef.current?.click(); }} 
+                                          className="text-[#54656f] dark:text-[#aebac1] hover:bg-muted h-9 w-9 rounded-full shrink-0"
+                                        >
+                                          <Plus className="w-6 h-6" />
+                                        </Button>
+                                        <Button 
+                                          variant="ghost" 
+                                          size="icon" 
                                           className="h-9 w-9 text-red-600 hover:text-red-700 hover:bg-red-50 shrink-0 border border-red-100 rounded-full"
                                           title="Limpar Conversa"
                                           onClick={async () => {
@@ -4623,14 +4631,6 @@ const CRM = () => {
                                           }}
                                         >
                                           <Trash2 className="w-5 h-5" />
-                                        </Button>
-                                        <Button 
-                                          variant="ghost" 
-                                          size="icon" 
-                                          onClick={() => { setUploadType('image'); fileInputRef.current?.click(); }} 
-                                          className="text-[#54656f] dark:text-[#aebac1] hover:bg-muted h-9 w-9 rounded-full shrink-0"
-                                        >
-                                          <Plus className="w-6 h-6" />
                                         </Button>
                                         <Button 
                                           variant="ghost" 
