@@ -5093,294 +5093,332 @@ const CRM = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-6">
-                    <Card className="rounded-2xl shadow-sm border overflow-hidden">
-                      <CardHeader className="bg-zinc-50 dark:bg-zinc-900/50 border-b flex flex-row items-center justify-between">
-                        <div>
-                          <CardTitle className="text-lg flex items-center gap-2">
-                            <LinkIcon className="w-4 h-4 text-zinc-600" /> Motor da IA
-                          </CardTitle>
-                          <CardDescription>Conexão e Modo de Operação</CardDescription>
-                        </div>
-                        <Button onClick={handleSaveSettings} disabled={saving} size="sm" className="bg-primary hover:bg-primary/90">
-                          {saving ? <RefreshCcw className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-                          Salvar Motor
-                        </Button>
-                      </CardHeader>
-                      <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <Label className="text-sm font-bold">OpenAI API Key</Label>
-                          <Input 
-                            type="password"
-                            placeholder="sk-..."
-                            value={metaSettings.openai_api_key}
-                            onChange={(e) => setMetaSettings({...metaSettings, openai_api_key: e.target.value})}
-                          />
-                          <p className="text-[10px] text-muted-foreground italic">Use uma chave da OpenAI (GPT-4o recomendado).</p>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label className="text-sm font-bold flex items-center gap-2">
-                            <Zap className="w-4 h-4 text-amber-500" /> Modo de Operação
-                          </Label>
-                          <Select 
-                            value={metaSettings.ai_operation_mode || 'chat'} 
-                            onValueChange={(val) => setMetaSettings({...metaSettings, ai_operation_mode: val})}
-                          >
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="chat">Apenas Conversar (I.A. Ativa)</SelectItem>
-                              <SelectItem value="monitor">Apenas Qualificar (Passiva)</SelectItem>
-                              <SelectItem value="hybrid">Híbrido (Conversa e Qualifica)</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <p className="text-[10px] text-muted-foreground italic">
-                            "Passiva" fará com que a IA não envie mensagens, apenas analise o contato.
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="rounded-2xl shadow-sm border overflow-hidden">
-                      <CardHeader className="bg-amber-50 dark:bg-amber-900/10 border-b flex flex-row items-center justify-between">
-                        <div>
-                          <CardTitle className="text-lg flex items-center gap-2 text-amber-700 dark:text-amber-500">
-                            <TrendingUp className="w-4 h-4" /> Estratégias e Gatilhos
-                          </CardTitle>
-                          <CardDescription>Quando e como o agente entra em ação</CardDescription>
-                        </div>
-                        <Button onClick={handleSaveSettings} disabled={saving} size="sm" className="bg-primary hover:bg-primary/90">
-                          {saving ? <RefreshCcw className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-                          Salvar Gatilhos
-                        </Button>
-                      </CardHeader>
-                      <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="space-y-2">
-                          <Label className="text-sm font-bold">Gatilho de Ativação</Label>
-                          <Select 
-                            value={metaSettings.ai_agent_trigger || 'all'} 
-                            onValueChange={(val) => setMetaSettings({...metaSettings, ai_agent_trigger: val})}
-                          >
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="all">Qualquer Mensagem (Sempre Ativo)</SelectItem>
-                              <SelectItem value="keyword">Mensagem Específica (Palavra-chave)</SelectItem>
-                              <SelectItem value="first_message">Primeira Mensagem do Cliente</SelectItem>
-                              <SelectItem value="manual">Ativação Manual apenas</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          
-                          {metaSettings.ai_agent_trigger === 'keyword' && (
-                            <div className="space-y-2 mt-2 animate-in fade-in slide-in-from-top-1">
+                  <Accordion type="single" collapsible className="w-full space-y-4">
+                    <AccordionItem value="motor" className="border-none">
+                      <Card className="rounded-2xl shadow-sm border overflow-hidden">
+                        <CardHeader className="bg-zinc-50 dark:bg-zinc-900/50 border-b flex flex-row items-center justify-between p-0">
+                          <AccordionTrigger className="flex-1 px-6 py-4 hover:no-underline [&[data-state=open]>div>h3]:text-primary transition-all">
+                            <div className="flex flex-col items-start text-left gap-1">
+                              <CardTitle className="text-lg flex items-center gap-2">
+                                <LinkIcon className="w-4 h-4 text-zinc-600" /> Motor da IA
+                              </CardTitle>
+                              <CardDescription>Conexão e Modo de Operação</CardDescription>
+                            </div>
+                          </AccordionTrigger>
+                          <div className="px-6 shrink-0">
+                            <Button onClick={handleSaveSettings} disabled={saving} size="sm" className="bg-primary hover:bg-primary/90">
+                              {saving ? <RefreshCcw className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                              Salvar Motor
+                            </Button>
+                          </div>
+                        </CardHeader>
+                        <AccordionContent>
+                          <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+                            <div className="space-y-2">
+                              <Label className="text-sm font-bold">OpenAI API Key</Label>
                               <Input 
-                                placeholder="Ex: #aula, oi, quero saber"
-                                value={metaSettings.ai_agent_trigger_keyword || ''}
-                                onChange={(e) => setMetaSettings({...metaSettings, ai_agent_trigger_keyword: e.target.value})}
+                                type="password"
+                                placeholder="sk-..."
+                                value={metaSettings.openai_api_key}
+                                onChange={(e) => setMetaSettings({...metaSettings, openai_api_key: e.target.value})}
                               />
+                              <p className="text-[10px] text-muted-foreground italic">Use uma chave da OpenAI (GPT-4o recomendado).</p>
                             </div>
-                          )}
-                        </div>
 
-                        <div className="space-y-4">
-                          <div className="flex items-center justify-between p-3 bg-indigo-500/5 rounded-xl border border-indigo-200">
-                            <div className="space-y-0.5">
-                              <Label className="text-xs font-bold flex items-center gap-2">
-                                <TrendingUp className="w-3.5 h-3.5 text-indigo-600" /> Auto-Estratégia
+                            <div className="space-y-2">
+                              <Label className="text-sm font-bold flex items-center gap-2">
+                                <Zap className="w-4 h-4 text-amber-500" /> Modo de Operação
                               </Label>
-                              <p className="text-[10px] text-muted-foreground">Gerar estratégias automáticas.</p>
-                            </div>
-                            <Switch 
-                              checked={metaSettings.auto_generate_strategy}
-                              onCheckedChange={(val) => setMetaSettings({...metaSettings, auto_generate_strategy: val})}
-                            />
-                          </div>
-                          <div className="space-y-1">
-                            <Label className="text-[11px] font-bold">Prompt de Estratégia</Label>
-                            <Textarea 
-                              rows={2}
-                              className="resize-none text-xs"
-                              placeholder="Como a IA deve gerar as estratégias..."
-                              value={metaSettings.strategy_generation_prompt}
-                              onChange={(e) => setMetaSettings({...metaSettings, strategy_generation_prompt: e.target.value})}
-                            />
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="rounded-2xl shadow-sm border overflow-hidden">
-                      <CardHeader className="bg-blue-50 dark:bg-blue-900/10 border-b flex flex-row items-center justify-between">
-                        <div>
-                          <CardTitle className="text-lg flex items-center gap-2 text-blue-700 dark:text-blue-400">
-                            <Clock className="w-4 h-4 shrink-0" /> Gestão de Horário Comercial
-                          </CardTitle>
-                          <CardDescription>Defina quando o agente deve avisar sobre ausência</CardDescription>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <div className="flex items-center gap-2 px-3 py-1 bg-muted/50 rounded-lg">
-                            <Label className="text-xs font-bold">Ativar</Label>
-                            <Switch 
-                              checked={metaSettings.business_hours_enabled}
-                              onCheckedChange={(val) => setMetaSettings({...metaSettings, business_hours_enabled: val})}
-                            />
-                          </div>
-                          <Button onClick={handleSaveSettings} disabled={saving} size="sm" className="bg-primary hover:bg-primary/90">
-                            {saving ? <RefreshCcw className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-                            Salvar Horário
-                          </Button>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                          <div className="space-y-4">
-                            <div className="grid grid-cols-2 gap-4">
-                              <div className="space-y-1.5">
-                                <Label className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-1">
-                                  <Clock className="w-3 h-3" /> Início
-                                </Label>
-                                <Input 
-                                  type="time" 
-                                  className="h-10 text-sm"
-                                  value={metaSettings.business_hours_start}
-                                  onChange={(e) => setMetaSettings({...metaSettings, business_hours_start: e.target.value})}
-                                />
-                              </div>
-                              <div className="space-y-1.5">
-                                <Label className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-1">
-                                  <Clock className="w-3 h-3" /> Fim
-                                </Label>
-                                <Input 
-                                  type="time" 
-                                  className="h-10 text-sm"
-                                  value={metaSettings.business_hours_end}
-                                  onChange={(e) => setMetaSettings({...metaSettings, business_hours_end: e.target.value})}
-                                />
-                              </div>
-                            </div>
-                            <div className="space-y-1.5">
-                              <Label className="text-[10px] uppercase font-bold text-muted-foreground">Fuso Horário</Label>
                               <Select 
-                                value={metaSettings.business_hours_tz} 
-                                onValueChange={(val) => setMetaSettings({...metaSettings, business_hours_tz: val})}
+                                value={metaSettings.ai_operation_mode || 'chat'} 
+                                onValueChange={(val) => setMetaSettings({...metaSettings, ai_operation_mode: val})}
                               >
-                                <SelectTrigger className="h-10 text-sm">
+                                <SelectTrigger>
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  <SelectItem value="America/Sao_Paulo">Brasília (GMT-3)</SelectItem>
-                                  <SelectItem value="Europe/Lisbon">Lisboa (GMT+0)</SelectItem>
-                                  <SelectItem value="UTC">UTC</SelectItem>
+                                  <SelectItem value="chat">Apenas Conversar (I.A. Ativa)</SelectItem>
+                                  <SelectItem value="monitor">Apenas Qualificar (Passiva)</SelectItem>
+                                  <SelectItem value="hybrid">Híbrido (Conversa e Qualifica)</SelectItem>
                                 </SelectContent>
                               </Select>
+                              <p className="text-[10px] text-muted-foreground italic">
+                                "Passiva" fará com que a IA não envie mensagens, apenas analise o contato.
+                              </p>
                             </div>
-                          </div>
+                          </CardContent>
+                        </AccordionContent>
+                      </Card>
+                    </AccordionItem>
 
-                          <div className="md:col-span-2 space-y-2">
-                            <Label className="text-sm font-bold">Mensagem de Ausência (Fora de Horário)</Label>
-                            <Textarea 
-                              rows={4}
-                              className="resize-none text-sm"
-                              placeholder="Nossos administradores não estão ativos no momento..."
-                              value={metaSettings.outside_hours_message}
-                              onChange={(e) => setMetaSettings({...metaSettings, outside_hours_message: e.target.value})}
-                            />
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-
-                    <Card className="rounded-2xl shadow-sm border overflow-hidden">
-                      <CardHeader className="bg-primary/5 border-b flex flex-row items-center justify-between">
-                        <div>
-                          <CardTitle className="text-lg flex items-center gap-2">
-                            <Bot className="w-5 h-5 text-primary" /> Instruções do Agente (Cérebro)
-                          </CardTitle>
-                          <CardDescription>Defina a personalidade e o objetivo do seu robô</CardDescription>
-                        </div>
-                        <Button onClick={handleSaveSettings} disabled={saving} size="sm" className="bg-primary hover:bg-primary/90">
-                          {saving ? <RefreshCcw className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-                          Salvar Cérebro
-                        </Button>
-                      </CardHeader>
-                      <CardContent className="p-6 space-y-6">
-                        <div className="space-y-2">
-                          <Label className="text-sm font-bold flex items-center gap-2">
-                            <FileText className="w-4 h-4 text-primary" /> O que sua empresa vende?
-                          </Label>
-                          <Textarea 
-                            rows={4}
-                            className="resize-none text-xs leading-relaxed bg-muted/30 border-none rounded-xl"
-                            placeholder="Descreva detalhadamente seus produtos, serviços e diferenciais..."
-                            value={metaSettings.business_description}
-                            onChange={(e) => setMetaSettings({...metaSettings, business_description: e.target.value})}
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-                            <Label className="text-sm font-bold">Prompt do System</Label>
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              onClick={handleImprovePrompt}
-                              disabled={improvingPrompt}
-                              className="h-7 text-[10px] gap-1.5 bg-indigo-600 hover:bg-indigo-700 border-indigo-500 text-white"
-                            >
-                              {improvingPrompt ? <RefreshCcw className="w-3 h-3 animate-spin" /> : <Zap className="w-3 h-3 fill-amber-500 text-amber-500" />}
-                              Melhorar Prompt
+                    <AccordionItem value="triggers" className="border-none">
+                      <Card className="rounded-2xl shadow-sm border overflow-hidden">
+                        <CardHeader className="bg-amber-50 dark:bg-amber-900/10 border-b flex flex-row items-center justify-between p-0">
+                          <AccordionTrigger className="flex-1 px-6 py-4 hover:no-underline [&[data-state=open]>div>h3]:text-amber-700 transition-all">
+                            <div className="flex flex-col items-start text-left gap-1">
+                              <CardTitle className="text-lg flex items-center gap-2 text-amber-700 dark:text-amber-500">
+                                <TrendingUp className="w-4 h-4" /> Estratégias e Gatilhos
+                              </CardTitle>
+                              <CardDescription>Quando e como o agente entra em ação</CardDescription>
+                            </div>
+                          </AccordionTrigger>
+                          <div className="px-6 shrink-0">
+                            <Button onClick={handleSaveSettings} disabled={saving} size="sm" className="bg-primary hover:bg-primary/90">
+                              {saving ? <RefreshCcw className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                              Salvar Gatilhos
                             </Button>
                           </div>
-                          <Textarea 
-                            rows={6}
-                            className="resize-none font-mono text-xs leading-relaxed bg-muted/30 border-none rounded-xl"
-                            value={metaSettings.ai_system_prompt}
-                            onChange={(e) => setMetaSettings({...metaSettings, ai_system_prompt: e.target.value})}
-                          />
-                        </div>
-                      </CardContent>
-                    </Card>
+                        </CardHeader>
+                        <AccordionContent>
+                          <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8 pt-6">
+                            <div className="space-y-2">
+                              <Label className="text-sm font-bold">Gatilho de Ativação</Label>
+                              <Select 
+                                value={metaSettings.ai_agent_trigger || 'all'} 
+                                onValueChange={(val) => setMetaSettings({...metaSettings, ai_agent_trigger: val})}
+                              >
+                                <SelectTrigger>
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="all">Qualquer Mensagem (Sempre Ativo)</SelectItem>
+                                  <SelectItem value="keyword">Mensagem Específica (Palavra-chave)</SelectItem>
+                                  <SelectItem value="first_message">Primeira Mensagem do Cliente</SelectItem>
+                                  <SelectItem value="manual">Ativação Manual apenas</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              
+                              {metaSettings.ai_agent_trigger === 'keyword' && (
+                                <div className="space-y-2 mt-2 animate-in fade-in slide-in-from-top-1">
+                                  <Input 
+                                    placeholder="Ex: #aula, oi, quero saber"
+                                    value={metaSettings.ai_agent_trigger_keyword || ''}
+                                    onChange={(e) => setMetaSettings({...metaSettings, ai_agent_trigger_keyword: e.target.value})}
+                                  />
+                                </div>
+                              )}
+                            </div>
 
-                    <Card className="rounded-2xl shadow-sm border overflow-hidden">
-                      <CardHeader className="bg-primary/5 border-b flex flex-row items-center justify-between">
-                        <div>
-                          <CardTitle className="text-lg flex items-center gap-2">
-                            <GitBranch className="w-5 h-5 text-primary" /> Conhecimento dos Templates
-                          </CardTitle>
-                          <CardDescription>A IA saberá quais botões e caminhos estão disponíveis</CardDescription>
-                        </div>
-                        <Button onClick={handleSaveSettings} disabled={saving} size="sm" className="bg-primary hover:bg-primary/90">
-                          {saving ? <RefreshCcw className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-                          Salvar Conhecimento
-                        </Button>
-                      </CardHeader>
-                      <CardContent className="p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {templates.map((template) => (
-                            <div key={template.id} className="p-4 rounded-xl border bg-card/50 space-y-3">
-                              <div className="flex justify-between items-center">
-                                <span className="font-bold text-xs truncate max-w-[150px]">{template.name}</span>
-                                <Badge variant="outline" className="text-[9px]">{template.category}</Badge>
+                            <div className="space-y-4">
+                              <div className="flex items-center justify-between p-3 bg-indigo-500/5 rounded-xl border border-indigo-200">
+                                <div className="space-y-0.5">
+                                  <Label className="text-xs font-bold flex items-center gap-2">
+                                    <TrendingUp className="w-3.5 h-3.5 text-indigo-600" /> Auto-Estratégia
+                                  </Label>
+                                  <p className="text-[10px] text-muted-foreground">Gerar estratégias automáticas.</p>
+                                </div>
+                                <Switch 
+                                  checked={metaSettings.auto_generate_strategy}
+                                  onCheckedChange={(val) => setMetaSettings({...metaSettings, auto_generate_strategy: val})}
+                                />
                               </div>
-                              <Textarea 
-                                placeholder="Descreva quando usar este template..."
-                                className="text-[11px] min-h-[60px] bg-muted/20 border-none resize-none"
-                                defaultValue={template.knowledge_description || ''}
-                                onBlur={(e) => {
-                                  if (e.target.value !== (template.knowledge_description || '')) {
-                                    handleUpdateTemplateKnowledge(template.id, e.target.value);
-                                  }
-                                }}
+                              <div className="space-y-1">
+                                <Label className="text-[11px] font-bold">Prompt de Estratégia</Label>
+                                <Textarea 
+                                  rows={2}
+                                  className="resize-none text-xs"
+                                  placeholder="Como a IA deve gerar as estratégias..."
+                                  value={metaSettings.strategy_generation_prompt}
+                                  onChange={(e) => setMetaSettings({...metaSettings, strategy_generation_prompt: e.target.value})}
+                                />
+                              </div>
+                            </div>
+                          </CardContent>
+                        </AccordionContent>
+                      </Card>
+                    </AccordionItem>
+
+                    <AccordionItem value="hours" className="border-none">
+                      <Card className="rounded-2xl shadow-sm border overflow-hidden">
+                        <CardHeader className="bg-blue-50 dark:bg-blue-900/10 border-b flex flex-row items-center justify-between p-0">
+                          <AccordionTrigger className="flex-1 px-6 py-4 hover:no-underline [&[data-state=open]>div>h3]:text-blue-700 transition-all">
+                            <div className="flex flex-col items-start text-left gap-1">
+                              <CardTitle className="text-lg flex items-center gap-2 text-blue-700 dark:text-blue-400">
+                                <Clock className="w-4 h-4 shrink-0" /> Gestão de Horário Comercial
+                              </CardTitle>
+                              <CardDescription>Defina quando o agente deve avisar sobre ausência</CardDescription>
+                            </div>
+                          </AccordionTrigger>
+                          <div className="flex items-center gap-3 px-6 shrink-0">
+                            <div className="flex items-center gap-2 px-3 py-1 bg-muted/50 rounded-lg">
+                              <Label className="text-xs font-bold">Ativar</Label>
+                              <Switch 
+                                checked={metaSettings.business_hours_enabled}
+                                onCheckedChange={(val) => setMetaSettings({...metaSettings, business_hours_enabled: val})}
                               />
                             </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
+                            <Button onClick={handleSaveSettings} disabled={saving} size="sm" className="bg-primary hover:bg-primary/90">
+                              {saving ? <RefreshCcw className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                              Salvar Horário
+                            </Button>
+                          </div>
+                        </CardHeader>
+                        <AccordionContent>
+                          <CardContent className="p-6 pt-6">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                              <div className="space-y-4">
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div className="space-y-1.5">
+                                    <Label className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-1">
+                                      <Clock className="w-3 h-3" /> Início
+                                    </Label>
+                                    <Input 
+                                      type="time" 
+                                      className="h-10 text-sm"
+                                      value={metaSettings.business_hours_start}
+                                      onChange={(e) => setMetaSettings({...metaSettings, business_hours_start: e.target.value})}
+                                    />
+                                  </div>
+                                  <div className="space-y-1.5">
+                                    <Label className="text-[10px] uppercase font-bold text-muted-foreground flex items-center gap-1">
+                                      <Clock className="w-3 h-3" /> Fim
+                                    </Label>
+                                    <Input 
+                                      type="time" 
+                                      className="h-10 text-sm"
+                                      value={metaSettings.business_hours_end}
+                                      onChange={(e) => setMetaSettings({...metaSettings, business_hours_end: e.target.value})}
+                                    />
+                                  </div>
+                                </div>
+                                <div className="space-y-1.5">
+                                  <Label className="text-[10px] uppercase font-bold text-muted-foreground">Fuso Horário</Label>
+                                  <Select 
+                                    value={metaSettings.business_hours_tz} 
+                                    onValueChange={(val) => setMetaSettings({...metaSettings, business_hours_tz: val})}
+                                  >
+                                    <SelectTrigger className="h-10 text-sm">
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="America/Sao_Paulo">Brasília (GMT-3)</SelectItem>
+                                      <SelectItem value="Europe/Lisbon">Lisboa (GMT+0)</SelectItem>
+                                      <SelectItem value="UTC">UTC</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              </div>
+
+                              <div className="md:col-span-2 space-y-2">
+                                <Label className="text-sm font-bold">Mensagem de Ausência (Fora de Horário)</Label>
+                                <Textarea 
+                                  rows={4}
+                                  className="resize-none text-sm"
+                                  placeholder="Nossos administradores não estão ativos no momento..."
+                                  value={metaSettings.outside_hours_message}
+                                  onChange={(e) => setMetaSettings({...metaSettings, outside_hours_message: e.target.value})}
+                                />
+                              </div>
+                            </div>
+                          </CardContent>
+                        </AccordionContent>
+                      </Card>
+                    </AccordionItem>
+
+                    <AccordionItem value="brain" className="border-none">
+                      <Card className="rounded-2xl shadow-sm border overflow-hidden">
+                        <CardHeader className="bg-primary/5 border-b flex flex-row items-center justify-between p-0">
+                          <AccordionTrigger className="flex-1 px-6 py-4 hover:no-underline [&[data-state=open]>div>h3]:text-primary transition-all">
+                            <div className="flex flex-col items-start text-left gap-1">
+                              <CardTitle className="text-lg flex items-center gap-2">
+                                <Bot className="w-5 h-5 text-primary" /> Instruções do Agente (Cérebro)
+                              </CardTitle>
+                              <CardDescription>Defina a personalidade e o objetivo do seu robô</CardDescription>
+                            </div>
+                          </AccordionTrigger>
+                          <div className="px-6 shrink-0">
+                            <Button onClick={handleSaveSettings} disabled={saving} size="sm" className="bg-primary hover:bg-primary/90">
+                              {saving ? <RefreshCcw className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                              Salvar Cérebro
+                            </Button>
+                          </div>
+                        </CardHeader>
+                        <AccordionContent>
+                          <CardContent className="p-6 space-y-6 pt-6">
+                            <div className="space-y-2">
+                              <Label className="text-sm font-bold flex items-center gap-2">
+                                <FileText className="w-4 h-4 text-primary" /> O que sua empresa vende?
+                              </Label>
+                              <Textarea 
+                                rows={4}
+                                className="resize-none text-xs leading-relaxed bg-muted/30 border-none rounded-xl"
+                                placeholder="Descreva detalhadamente seus produtos, serviços e diferenciais..."
+                                value={metaSettings.business_description}
+                                onChange={(e) => setMetaSettings({...metaSettings, business_description: e.target.value})}
+                              />
+                            </div>
+
+                            <div className="space-y-2">
+                              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+                                <Label className="text-sm font-bold">Prompt do System</Label>
+                                <Button 
+                                  variant="outline" 
+                                  size="sm" 
+                                  onClick={handleImprovePrompt}
+                                  disabled={improvingPrompt}
+                                  className="h-7 text-[10px] gap-1.5 bg-indigo-600 hover:bg-indigo-700 border-indigo-500 text-white"
+                                >
+                                  {improvingPrompt ? <RefreshCcw className="w-3 h-3 animate-spin" /> : <Zap className="w-3 h-3 fill-amber-500 text-amber-500" />}
+                                  Melhorar Prompt
+                                </Button>
+                              </div>
+                              <Textarea 
+                                rows={6}
+                                className="resize-none font-mono text-xs leading-relaxed bg-muted/30 border-none rounded-xl"
+                                value={metaSettings.ai_system_prompt}
+                                onChange={(e) => setMetaSettings({...metaSettings, ai_system_prompt: e.target.value})}
+                              />
+                            </div>
+                          </CardContent>
+                        </AccordionContent>
+                      </Card>
+                    </AccordionItem>
+
+                    <AccordionItem value="knowledge" className="border-none">
+                      <Card className="rounded-2xl shadow-sm border overflow-hidden">
+                        <CardHeader className="bg-primary/5 border-b flex flex-row items-center justify-between p-0">
+                          <AccordionTrigger className="flex-1 px-6 py-4 hover:no-underline [&[data-state=open]>div>h3]:text-primary transition-all">
+                            <div className="flex flex-col items-start text-left gap-1">
+                              <CardTitle className="text-lg flex items-center gap-2">
+                                <GitBranch className="w-5 h-5 text-primary" /> Conhecimento dos Templates
+                              </CardTitle>
+                              <CardDescription>A IA saberá quais botões e caminhos estão disponíveis</CardDescription>
+                            </div>
+                          </AccordionTrigger>
+                          <div className="px-6 shrink-0">
+                            <Button onClick={handleSaveSettings} disabled={saving} size="sm" className="bg-primary hover:bg-primary/90">
+                              {saving ? <RefreshCcw className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+                              Salvar Conhecimento
+                            </Button>
+                          </div>
+                        </CardHeader>
+                        <AccordionContent>
+                          <CardContent className="p-6 pt-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {templates.map((template) => (
+                                <div key={template.id} className="p-4 rounded-xl border bg-card/50 space-y-3">
+                                  <div className="flex justify-between items-center">
+                                    <span className="font-bold text-xs truncate max-w-[150px]">{template.name}</span>
+                                    <Badge variant="outline" className="text-[9px]">{template.category}</Badge>
+                                  </div>
+                                  <Textarea 
+                                    placeholder="Descreva quando usar este template..."
+                                    className="text-[11px] min-h-[60px] bg-muted/20 border-none resize-none"
+                                    defaultValue={template.knowledge_description || ''}
+                                    onBlur={(e) => {
+                                      if (e.target.value !== (template.knowledge_description || '')) {
+                                        handleUpdateTemplateKnowledge(template.id, e.target.value);
+                                      }
+                                    }}
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          </CardContent>
+                        </AccordionContent>
+                      </Card>
+                    </AccordionItem>
+                  </Accordion>
                 </div>
               </ScrollArea>
             )}
