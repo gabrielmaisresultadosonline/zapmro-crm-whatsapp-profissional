@@ -7190,7 +7190,7 @@ const CRM = () => {
               {/* Configuração baseada no tipo de campanha */}
               {selectedCampaignType === 'individual' && (
                 <div className="space-y-3">
-                  <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">1. Selecionar Contato</Label>
+                  <Label className="text-xs font-bold uppercase tracking-wider text-zinc-500">1. Selecionar Contato</Label>
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input 
