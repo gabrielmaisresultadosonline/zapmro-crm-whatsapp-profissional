@@ -7386,8 +7386,8 @@ const CRM = () => {
                       <Button
                         variant={"outline"}
                         className={cn(
-                          "w-full h-11 justify-start text-left font-normal rounded-xl bg-muted/30 border-none",
-                          !scheduleDateObj && "text-muted-foreground"
+                          "w-full h-11 justify-start text-left font-normal rounded-xl bg-zinc-100 border-none text-zinc-900",
+                          !scheduleDateObj && "text-zinc-400"
                         )}
                       >
                         <Calendar className="mr-2 h-4 w-4" />
