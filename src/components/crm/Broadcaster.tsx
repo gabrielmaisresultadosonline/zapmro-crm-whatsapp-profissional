@@ -466,12 +466,10 @@ const Broadcaster = ({ templates, flows, contacts, statuses }: BroadcasterProps)
                 {savingCountdown ? <RefreshCcw className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
                 {countdownEnabled ? "ATIVAR E SALVAR CONFIGURAÇÃO" : "SALVAR CONFIGURAÇÃO"}
               </Button>
-            </CardContent>
-          </Card>
-
-                </AccordionContent>
-              </Card>
-            </AccordionItem>
+                    </CardContent>
+                  </AccordionContent>
+                </Card>
+              </AccordionItem>
 
             <AccordionItem value="new-campaign" className="border-none">
               <Card className="rounded-2xl shadow-xl border border-white/5 overflow-hidden bg-[#111b21]">
