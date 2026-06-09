@@ -7216,7 +7216,7 @@ const CRM = () => {
                             "flex items-center gap-3 p-3 rounded-xl border transition-all cursor-pointer",
                             selectedContactsForScheduling.includes(contact.id)
                               ? "border-primary bg-primary/5 shadow-sm"
-                              : "border-transparent bg-muted/20 hover:bg-muted/40"
+                              : "border-transparent bg-zinc-100/50 hover:bg-zinc-100"
                           )}
                         >
                           <div className={cn(
