@@ -154,12 +154,34 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
       if (transcription) {
         messageText = transcription;
         // Salva a transcrição no banco para evitar re-transcrever e para histórico visual
+        console.log(`[AI-AGENT] Saving transcription to DB for ${waId}: ${transcription.slice(0, 50)}...`);
         await supabase.from('crm_messages').update({ content: transcription }).eq('contact_id', contact.id).eq('media_url', lastMessage.media_url).eq('direction', 'inbound');
       } else {
+        console.warn(`[AI-AGENT] Transcription failed for main message of ${waId}`);
         messageText = lastMessage?.content || "";
       }
     } else {
       messageText = lastMessage?.content || "";
+    }
+  }
+
+  // 1.1 Se chegamos aqui e ainda não temos messageText mas o sourceMessageId foi passado, tentamos buscar especificamente essa mensagem
+  if (!messageText && sourceMessageId) {
+    const { data: sourceMsg } = await supabase
+      .from('crm_messages')
+      .select('content, message_type, media_url')
+      .eq('meta_message_id', sourceMessageId)
+      .maybeSingle();
+    
+    if (sourceMsg?.message_type === 'audio' && sourceMsg.media_url) {
+       console.log(`[AI-AGENT] Transcribing specifically requested source audio message for ${waId}...`);
+       const transcription = await transcribeAudioForAi(OPENAI_API_KEY, sourceMsg.media_url);
+       if (transcription) {
+         messageText = transcription;
+         await supabase.from('crm_messages').update({ content: transcription }).eq('meta_message_id', sourceMessageId);
+       }
+    } else {
+      messageText = sourceMsg?.content || "";
     }
   }
 
@@ -173,10 +195,14 @@ async function transcribeAudioForAi(apiKey: string, audioUrl: string) {
 
   const processedRecentMessages = [];
   for (const msg of recentMessages || []) {
-    if (msg.direction === 'inbound' && msg.message_type === 'audio' && msg.media_url && (!msg.content || msg.content === '[Mensagem de Áudio]')) {
+    if (msg.direction === 'inbound' && msg.message_type === 'audio' && msg.media_url && (!msg.content || msg.content === '[Mensagem de Áudio]' || msg.content === '')) {
       console.log(`[AI-AGENT] Transcribing history audio for ${waId}...`);
       const transcription = await transcribeAudioForAi(OPENAI_API_KEY, msg.media_url);
-      if (transcription) msg.content = `[Transcrição de áudio]: ${transcription}`;
+      if (transcription) {
+        msg.content = transcription;
+        // Persistir no banco para não repetir
+        await supabase.from('crm_messages').update({ content: transcription }).eq('contact_id', contact.id).eq('media_url', msg.media_url).eq('direction', 'inbound');
+      }
     }
     processedRecentMessages.push(msg);
   }
@@ -2683,13 +2709,29 @@ async function fetchAndStoreIncomingMedia(
                        has_waited_initial_response: true 
                      }
                    }).eq('id', contactId);
-                   return;
+                    return;
                 }
 
+                // Determinar o texto a processar (transcrição ou texto puro)
+                let finalAiText = text;
+                const { data: currentInbound } = await supabase
+                  .from('crm_messages')
+                  .select('content, message_type, media_url')
+                  .eq('meta_message_id', sourceMessageId)
+                  .maybeSingle();
+                
+                if (currentInbound?.message_type === 'audio' && currentInbound.media_url) {
+                   console.log(`[AI-AGENT-DELAYED] Transcribing audio message ${sourceMessageId} during delayed response...`);
+                   const transcription = await transcribeAudioForAi(OPENAI_API_KEY, currentInbound.media_url);
+                   if (transcription) {
+                     finalAiText = transcription;
+                     await supabase.from('crm_messages').update({ content: transcription }).eq('meta_message_id', sourceMessageId);
+                   }
+                }
 
                 // Delay para parecer mais natural
                 await new Promise(resolve => setTimeout(resolve, 3000));
-                await processAiAgentResponse(supabase, updatedContact, waId, text, sourceMessageId, updatedContact.user_id);
+                await processAiAgentResponse(supabase, updatedContact, waId, finalAiText, sourceMessageId, updatedContact.user_id);
               }
             }, 500);
           } else if (res?.message?.includes('AI handling state') && !text) {
