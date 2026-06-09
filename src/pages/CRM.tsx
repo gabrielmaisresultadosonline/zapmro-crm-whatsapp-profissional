@@ -3772,7 +3772,7 @@ const CRM = () => {
                                     {unnamed.length}
                                   </Badge>
                                 </div>
-                                {showUnnamedContacts ? <ChevronDown className="w-3 h-3 text-muted-foreground" /> : <ChevronRight className="w-3 h-3 text-muted-foreground" />}
+                                {showUnnamedContacts ? <LucideIcons.ChevronDown className="w-3 h-3 text-muted-foreground" /> : <LucideIcons.ChevronRight className="w-3 h-3 text-muted-foreground" />}
                               </button>
                               
                               {showUnnamedContacts && (
@@ -3827,11 +3827,12 @@ const CRM = () => {
                                       >
                                         <div className="shrink-0">
                                           {selectedContactIds.includes(contact.id) ? (
-                                            <CheckSquare className="w-3.5 h-3.5 text-primary" />
+                                            <LucideIcons.CheckSquare className="w-3.5 h-3.5 text-primary" />
                                           ) : (
-                                            <Square className="w-3.5 h-3.5 text-muted-foreground/30" />
+                                            <LucideIcons.Square className="w-3.5 h-3.5 text-muted-foreground/30" />
                                           )}
                                         </div>
+
                                         <div className="flex-1 min-w-0">
                                           <p className="text-[11px] font-bold tabular-nums truncate">{contact.wa_id}</p>
                                         </div>
