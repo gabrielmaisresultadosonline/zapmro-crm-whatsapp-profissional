@@ -7257,8 +7257,8 @@ const CRM = () => {
                     />
                   </div>
                   <div className="flex gap-2 mb-2">
-                    <Button variant="outline" size="sm" className="h-7 text-[10px] flex-1 rounded-lg" onClick={() => setSelectedContactsForScheduling(contacts.map(c => c.id))}>Selecionar Todos</Button>
-                    <Button variant="outline" size="sm" className="h-7 text-[10px] flex-1 rounded-lg" onClick={() => setSelectedContactsForScheduling([])}>Limpar</Button>
+                    <Button variant="outline" size="sm" className="h-7 text-[10px] flex-1 rounded-lg border-zinc-200 bg-white hover:bg-zinc-50" onClick={() => setSelectedContactsForScheduling(contacts.map(c => c.id))}>Selecionar Todos</Button>
+                    <Button variant="outline" size="sm" className="h-7 text-[10px] flex-1 rounded-lg border-zinc-200 bg-white hover:bg-zinc-50" onClick={() => setSelectedContactsForScheduling([])}>Limpar</Button>
                   </div>
                   <div className="grid grid-cols-2 gap-2 max-h-[160px] overflow-y-auto p-1">
                     {contacts
