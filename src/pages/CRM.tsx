@@ -1090,13 +1090,14 @@ const CRM = () => {
   };
 
 
-   const handleSaveSettings = async () => {
+   const handleSaveSettings = async (customSettings?: any) => {
      setSaving(true);
      try {
        const { data: { user } } = await supabase.auth.getUser();
        if (!user) return;
  
-       const { id, created_at, updated_at, webhook_verify_token, vps_status, user_id, ...rest } = metaSettings;
+       const targetSettings = customSettings || metaSettings;
+       const { id, created_at, updated_at, webhook_verify_token, vps_status, user_id, ...rest } = targetSettings;
        
        // Garante que o ID do webhook seja preservado ou gerado
        const settingsToSave = {
@@ -5088,7 +5089,24 @@ const CRM = () => {
                       <Switch 
                         id="ai-agent-enabled"
                         checked={metaSettings.ai_agent_enabled}
-                        onCheckedChange={(val) => setMetaSettings({...metaSettings, ai_agent_enabled: val})}
+                        onCheckedChange={(val) => {
+                          if (val) {
+                            if (!metaSettings.business_description || metaSettings.business_description.length < 10) {
+                              toast({
+                                title: "Cérebro não configurado",
+                                description: "Por favor, preencha as instruções do seu negócio na seção 'Instruções do Agente (Cérebro)' antes de ativar a IA.",
+                                variant: "destructive"
+                              });
+                              return;
+                            }
+                            
+                            if (!confirm("Ao ativar o IA em modo geral, ele responderá automaticamente a toda e qualquer mensagem que chegar. Caso deseje ativar o agente apenas em momentos específicos, controle isso via FLUXOS.\n\nDeseja ativar o agente IA e deixar que ele responda tudo por você? (Você pode assumir o controle a qualquer momento).")) {
+                              return;
+                            }
+                          }
+                          setMetaSettings({...metaSettings, ai_agent_enabled: val});
+                          handleSaveSettings({...metaSettings, ai_agent_enabled: val});
+                        }}
                       />
                     </div>
                   </div>
