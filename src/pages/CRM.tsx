@@ -5096,7 +5096,7 @@ const CRM = () => {
                   <Accordion type="single" collapsible className="w-full space-y-4">
                     <AccordionItem value="motor" className="border-none">
                       <Card className="rounded-2xl shadow-sm border overflow-hidden">
-                        <CardHeader className="bg-zinc-50 dark:bg-zinc-900/50 border-b flex flex-row items-center justify-between p-0">
+                        <CardHeader className="bg-zinc-50 dark:bg-zinc-900/50 border-b p-0">
                           <AccordionTrigger className="flex-1 px-6 py-4 hover:no-underline [&[data-state=open]>div>h3]:text-primary transition-all">
                             <div className="flex flex-col items-start text-left gap-1">
                               <CardTitle className="text-lg flex items-center gap-2">
@@ -5105,12 +5105,6 @@ const CRM = () => {
                               <CardDescription>Conexão e Modo de Operação</CardDescription>
                             </div>
                           </AccordionTrigger>
-                          <div className="px-6 shrink-0">
-                            <Button onClick={handleSaveSettings} disabled={saving} size="sm" className="bg-primary hover:bg-primary/90">
-                              {saving ? <RefreshCcw className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
-                              Salvar Motor
-                            </Button>
-                          </div>
                         </CardHeader>
                         <AccordionContent>
                           <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
